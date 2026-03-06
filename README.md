@@ -1,199 +1,188 @@
-# CLIP
+# Hệ Thống Phát Hiện Action Unit (AU) dựa trên CLIP
 
-[[Blog]](https://openai.com/blog/clip/) [[Paper]](https://arxiv.org/abs/2103.00020) [[Model Card]](model-card.md) [[Colab]](https://colab.research.google.com/github/openai/clip/blob/master/notebooks/Interacting_with_CLIP.ipynb)
+## 1. Giới thiệu dự án
 
-CLIP (Contrastive Language-Image Pre-Training) is a neural network trained on a variety of (image, text) pairs. It can be instructed in natural language to predict the most relevant text snippet, given an image, without directly optimizing for the task, similarly to the zero-shot capabilities of GPT-2 and 3. We found CLIP matches the performance of the original ResNet50 on ImageNet “zero-shot” without using any of the original 1.28M labeled examples, overcoming several major challenges in computer vision.
+**Mục tiêu:**
+Dự án này xây dựng một hệ thống phát hiện Action Unit (AU) trên khuôn mặt bằng cách tận dụng sức mạnh trích xuất đặc trưng hình ảnh vượt trội của mô hình CLIP (Contrastive Language-Image Pre-Training). Hệ thống được thiết kế linh hoạt, dễ dàng fine-tune trên các tập dữ liệu AU, phục vụ cho bài toán phân loại đa nhãn (Multi-label classification).
 
+**Ý nghĩa Action Unit:**
+Facial Action Coding System (FACS) phân chia các chuyển động trên khuôn mặt thành các Action Unit (AU) riêng lẻ. Việc tự động phát hiện chính xác các AU mang ý nghĩa quan trọng trong:
 
-
-## Approach
-
-![CLIP](CLIP.png)
-
-
-
-## Usage
-
-First, [install PyTorch 1.7.1](https://pytorch.org/get-started/locally/) (or later) and torchvision, as well as small additional dependencies, and then install this repo as a Python package. On a CUDA GPU machine, the following will do the trick:
-
-```bash
-$ conda install --yes -c pytorch pytorch=1.7.1 torchvision cudatoolkit=11.0
-$ pip install ftfy regex tqdm
-$ pip install git+https://github.com/openai/CLIP.git
-```
-
-Replace `cudatoolkit=11.0` above with the appropriate CUDA version on your machine or `cpuonly` when installing on a machine without a GPU.
-
-```python
-import torch
-import clip
-from PIL import Image
-
-device = "cuda" if torch.cuda.is_available() else "cpu"
-model, preprocess = clip.load("ViT-B/32", device=device)
-
-image = preprocess(Image.open("CLIP.png")).unsqueeze(0).to(device)
-text = clip.tokenize(["a diagram", "a dog", "a cat"]).to(device)
-
-with torch.no_grad():
-    image_features = model.encode_image(image)
-    text_features = model.encode_text(text)
-    
-    logits_per_image, logits_per_text = model(image, text)
-    probs = logits_per_image.softmax(dim=-1).cpu().numpy()
-
-print("Label probs:", probs)  # prints: [[0.9927937  0.00421068 0.00299572]]
-```
-
-
-## API
-
-The CLIP module `clip` provides the following methods:
-
-#### `clip.available_models()`
-
-Returns the names of the available CLIP models.
-
-#### `clip.load(name, device=..., jit=False)`
-
-Returns the model and the TorchVision transform needed by the model, specified by the model name returned by `clip.available_models()`. It will download the model as necessary. The `name` argument can also be a path to a local checkpoint.
-
-The device to run the model can be optionally specified, and the default is to use the first CUDA device if there is any, otherwise the CPU. When `jit` is `False`, a non-JIT version of the model will be loaded.
-
-#### `clip.tokenize(text: Union[str, List[str]], context_length=77)`
-
-Returns a LongTensor containing tokenized sequences of given text input(s). This can be used as the input to the model
+- Nhận dạng cảm xúc và trạng thái tâm lý.
+- Phân tích hành vi con người trong giao tiếp, y tế (phát hiện trầm cảm, tự kỷ), và giáo dục.
+- Tạo ra các avatar kỹ thuật số hoặc nhân vật hoạt hình chân thực (CGI).
 
 ---
 
-The model returned by `clip.load()` supports the following methods:
+## 2. Kiến trúc hệ thống
 
-#### `model.encode_image(image: Tensor)`
+### 2.1. Giải thích CLIP backbone
 
-Given a batch of images, returns the image features encoded by the vision portion of the CLIP model.
+CLIP (từ OpenAI) bao gồm hai bộ mã hóa (encoder): Text Encoder và Image Encoder (thường dùng cấu trúc ViT - Vision Transformer hoặc ResNet). Mô hình gốc được huấn luyện trên hàng trăm triệu cặp ảnh-văn bản, giúp nó có khả năng trích xuất các đặc trưng hình ảnh (visual features) cực kỳ phong phú và mang tính tổng quát hóa cao.
 
-#### `model.encode_text(text: Tensor)`
+### 2.2. Sơ đồ mô hình cho AU Detection
 
-Given a batch of text tokens, returns the text features encoded by the language portion of the CLIP model.
+Trong bài toán này, hệ thống **chỉ sử dụng Image Encoder (ViT-B/32)** của CLIP và loại bỏ hoàn toàn Text Encoder.
 
-#### `model(image: Tensor, text: Tensor)`
+```mermaid
+flowchart TD
+    A["Input Image<br>(224x224x3)"] --> B("CLIP Vision Encoder<br>(ViT-B/32)")
+    B -->|"Embedding Vector<br>(768-dim)"| C
 
-Given a batch of images and a batch of text tokens, returns two Tensors, containing the logit scores corresponding to each image and text input. The values are cosine similarities between the corresponding image and text features, times 100.
+    subgraph C ["Classification Head"]
+        direction TB
+        C1["Linear layer (768 -> 512)"] --> C2["ReLU Activation"]
+        C2 --> C3["Dropout (0.3)"]
+        C3 --> C4["Linear layer (512 -> num_AUs)"]
+    end
 
-
-
-## More Examples
-
-### Zero-Shot Prediction
-
-The code below performs zero-shot prediction using CLIP, as shown in Appendix B in the paper. This example takes an image from the [CIFAR-100 dataset](https://www.cs.toronto.edu/~kriz/cifar.html), and predicts the most likely labels among the 100 textual labels from the dataset.
-
-```python
-import os
-import clip
-import torch
-from torchvision.datasets import CIFAR100
-
-# Load the model
-device = "cuda" if torch.cuda.is_available() else "cpu"
-model, preprocess = clip.load('ViT-B/32', device)
-
-# Download the dataset
-cifar100 = CIFAR100(root=os.path.expanduser("~/.cache"), download=True, train=False)
-
-# Prepare the inputs
-image, class_id = cifar100[3637]
-image_input = preprocess(image).unsqueeze(0).to(device)
-text_inputs = torch.cat([clip.tokenize(f"a photo of a {c}") for c in cifar100.classes]).to(device)
-
-# Calculate features
-with torch.no_grad():
-    image_features = model.encode_image(image_input)
-    text_features = model.encode_text(text_inputs)
-
-# Pick the top 5 most similar labels for the image
-image_features /= image_features.norm(dim=-1, keepdim=True)
-text_features /= text_features.norm(dim=-1, keepdim=True)
-similarity = (100.0 * image_features @ text_features.T).softmax(dim=-1)
-values, indices = similarity[0].topk(5)
-
-# Print the result
-print("\nTop predictions:\n")
-for value, index in zip(values, indices):
-    print(f"{cifar100.classes[index]:>16s}: {100 * value.item():.2f}%")
+    C -->|"Logits"| D["Sigmoid Activation"]
+    D --> E["AU Probabilities<br>(Multi-label Output)"]
 ```
 
-The output will look like the following (the exact numbers may be slightly different depending on the compute device):
+**Workflow:**
 
-```
-Top predictions:
+1. **Input:** Hình ảnh khuôn mặt (đã resize về `224x224` và chuẩn hóa theo mean/std của CLIP).
+2. **Backbone:** CLIP Vision Encoder (`openai/clip-vit-base-patch32`) trích xuất ra embedding vector (thường có chiều `768` đối với ViT-B/32, sau pooler).
+3. **Classification Head:** Cụm phân loại tùy biến được thêm vào thay thế:
+   - `Linear(768 -> 512)`
+   - `ReLU` (Hàm kích hoạt)
+   - `Dropout(0.3)` (Chống overfitting)
+   - `Linear(512 -> num_AUs)`
+4. **Output:** Logits (kích thước `num_AUs`). Áp dụng hàm `Sigmoid` để tính giá trị xác suất (từ 0 đến 1) cho từng AU độc lập. Hàm Loss sử dụng là `BCEWithLogitsLoss`.
 
-           snake: 65.31%
-          turtle: 12.29%
-    sweet_pepper: 3.83%
-          lizard: 1.88%
-       crocodile: 1.75%
-```
+---
 
-Note that this example uses the `encode_image()` and `encode_text()` methods that return the encoded features of given inputs.
+## 3. Cài đặt môi trường
 
+Hệ thống yêu cầu **Python 3.8+**.
 
-### Linear-probe evaluation
+Các bạn cài đặt các thư viện cần thiết thông qua `pip`:
 
-The example below uses [scikit-learn](https://scikit-learn.org/) to perform logistic regression on image features.
-
-```python
-import os
-import clip
-import torch
-
-import numpy as np
-from sklearn.linear_model import LogisticRegression
-from torch.utils.data import DataLoader
-from torchvision.datasets import CIFAR100
-from tqdm import tqdm
-
-# Load the model
-device = "cuda" if torch.cuda.is_available() else "cpu"
-model, preprocess = clip.load('ViT-B/32', device)
-
-# Load the dataset
-root = os.path.expanduser("~/.cache")
-train = CIFAR100(root, download=True, train=True, transform=preprocess)
-test = CIFAR100(root, download=True, train=False, transform=preprocess)
-
-
-def get_features(dataset):
-    all_features = []
-    all_labels = []
-    
-    with torch.no_grad():
-        for images, labels in tqdm(DataLoader(dataset, batch_size=100)):
-            features = model.encode_image(images.to(device))
-
-            all_features.append(features)
-            all_labels.append(labels)
-
-    return torch.cat(all_features).cpu().numpy(), torch.cat(all_labels).cpu().numpy()
-
-# Calculate the image features
-train_features, train_labels = get_features(train)
-test_features, test_labels = get_features(test)
-
-# Perform logistic regression
-classifier = LogisticRegression(random_state=0, C=0.316, max_iter=1000, verbose=1)
-classifier.fit(train_features, train_labels)
-
-# Evaluate using the logistic regression classifier
-predictions = classifier.predict(test_features)
-accuracy = np.mean((test_labels == predictions).astype(float)) * 100.
-print(f"Accuracy = {accuracy:.3f}")
+```bash
+pip install torch torchvision
+pip install transformers
+pip install pandas numpy scikit-learn pillow
+pip install pyyaml tqdm tensorboard
 ```
 
-Note that the `C` value should be determined via a hyperparameter sweep using a validation split.
+_(Lưu ý: Nếu sử dụng GPU, hãy cài phiên bản PyTorch tương thích với CUDA trên máy của bạn tại [pytorch.org](https://pytorch.org/get-started/locally/))._
 
+---
 
-## See Also
+## 4. Chuẩn bị dữ liệu
 
-* [OpenCLIP](https://github.com/mlfoundations/open_clip): includes larger and independently trained CLIP models up to ViT-G/14
-* [Hugging Face implementation of CLIP](https://huggingface.co/docs/transformers/model_doc/clip): for easier integration with the HF ecosystem
+### 4.1. Cấu trúc thư mục mong đợi
+
+```
+CLIP/
+├── AUs_DATA/
+│   ├── images/
+│   │   ├── img_0001.jpg
+│   │   ├── img_0002.jpg
+│   │   └── ...
+│   └── labels.csv
+```
+
+### 4.2. Format file CSV (`labels.csv`)
+
+File CSV cần có cột đầu tiên là tên file ảnh, các cột tiếp theo là nhãn nhị phân (0 hoặc 1) tượng trưng cho sự xuất hiện của các AUs.
+
+**Ví dụ nhãn AU:**
+
+```csv
+filename,AU1,AU2,AU4,AU6,AU12,AU15
+img_0001.jpg,1,1,0,0,1,0
+img_0002.jpg,0,0,1,1,0,1
+```
+
+---
+
+## 5. Hướng dẫn train (Huấn luyện)
+
+Trước khi train, bạn có thể tinh chỉnh các siêu tham số (Hyperparameters) trong file `config.yaml`:
+
+- `batch_size`: Số lượng ảnh mỗi bước (ví dụ: `32`).
+- `learning_rate`: Tốc độ học (khuyên dùng `2e-5` cho việc fine-tune backbone mạnh như CLIP).
+- `freeze_backbone`: Set thành `true` nếu bạn chỉ muốn train Classification Head, hoặc `false` để fine-tune toàn bộ mô hình (tốn VRam hơn nhưng hiệu quả hơn).
+- `mixed_precision`: Hệ thống hỗ trợ Mixed Precision Training giúp giảm lượng VRAM tiêu thụ và tăng tốc độ huấn luyện.
+
+**Lệnh chạy:**
+
+```bash
+python train.py
+```
+
+Hệ thống sẽ tự động bắt đầu huấn luyện, tính toán các metrics trên tập Validation sau mỗi epoch, lưu log định dạng TensorBoard trong thư mục `logs/`, và tự động lưu mô hình tốt nhất (dựa trên F1-Macro) vào `models/checkpoints/best_clip_au.pth`.
+
+---
+
+## 6. Hướng dẫn test (Đánh giá)
+
+Khi mô hình đã train xong, bạn có thể chạy tệp `eval.py` để tính điểm số chi tiết trên phần dữ liệu test (test split).
+
+**Lệnh evaluate:**
+
+```bash
+python eval.py
+```
+
+**Cách đọc kết quả:**
+Script sẽ xuất ra màn hình (Console) các chỉ số:
+
+- **F1 Macro / Micro:** Sự cân bằng giữa Precision và Recall. Macro trung bình mọi classes như nhau, Micro xem mọi nhãn như nhau.
+- **Precision:** Độ chính xác (Trong số những AU mô hình dự đoán Positive, bao nhiêu là đúng).
+- **Recall:** Độ bao phủ (Trong số những AU thực tế là Positive, mô hình đã tìm ra bao nhiêu).
+- **ROC AUC Macro:** Đo lường khả năng phân tách giữa hai lớp Positive và Negative ở nhiều ngưỡng khác nhau.
+- **Per-class F1:** Chi tiết F1 score cho từng AU (vd: AU 1, AU 2,...).
+
+---
+
+## 7. Hướng dẫn inference (Dự đoán ảnh mới)
+
+Bạn có thể test trực tiếp một hình ảnh mới thông qua hàm `predict` trong tệp `inference.py`. Model sẽ load trọng số lưu lượng tốt nhất tự động.
+
+**Lệnh chạy thử một ảnh:**
+
+```bash
+python inference.py path/to/your/image.jpg
+```
+
+(Có thể truyền cờ `--config path/to/config.yaml` nếu file config tùy biến).
+
+---
+
+## 8. Ví dụ kết quả đầu ra
+
+Kết quả được in ra Console dạng nhị phân và xác suất đi kèm đối với hình ảnh khuôn mặt đưa vào:
+
+```text
+Loaded weights from models/checkpoints/best_clip_au.pth
+Predicted AUs (Threshold 0.5):
+AU 00: 1 (Prob: 0.9421)
+AU 01: 1 (Prob: 0.8102)
+AU 02: 0 (Prob: 0.0514)
+AU 03: 0 (Prob: 0.1235)
+AU 04: 1 (Prob: 0.9856)
+...
+```
+
+Vectơ nhị phân kết quả ví dụ sẽ là `[1, 1, 0, 0, 1]`, diễn giải được là người này có hiện diện các Action Units: 00, 01, và 04.
+
+---
+
+## 9. Cách mở rộng hệ thống
+
+Mã nguồn được cấu trúc module hoá, hỗ trợ dễ dàng mở rộng:
+
+- **Weighted Loss:** Nếu dữ liệu bị lệch chuẩn (Imbalanced Dataset), hãy cập nhật `pos_weight` tại phần cấu hình `nn.BCEWithLogitsLoss()` trong `train.py`.
+- **Intensity Regression:** Thay đổi nhãn dữ liệu thực tế thành các số nguyên cường độ (0-5), đổi Loss Function thành `MSELoss` (và loại bỏ lớp Sigmoid cuối) để giải quyết bài toán hồi quy (Dự đoán mức độ chứ không chỉ Yes/No).
+- **Stratified KFolds:** Cập nhật hàm chia dữ liệu trong `dataset.py` với các thư viện thứ 3 (như `skmultilearn.model_selection`) để cho ra Cross Validation chia đều hơn.
+
+---
+
+## 10. Tài liệu tham khảo
+
+1. Radford, A., et al. (2021). "Learning Transferable Visual Models From Natural Language Supervision." (CLIP Paper).
+2. HuggingFace Transformers: [https://huggingface.co/docs/transformers](https://huggingface.co/docs/transformers)
+3. Ekman, P., & Friesen, W. V. (1978). "Facial Action Coding System."

@@ -1,0 +1,33 @@
+# Action Unit Detection System Configuration
+
+# Data Settings
+data:
+  image_dir: "AUs_DATA/images"
+  annotation_file: "AUs_DATA/labels.csv"
+  image_size: 224
+  num_classes: 12 # Will be dynamically updated or verified
+  split_ratios: [0.7, 0.15, 0.15] # Train, Val, Test
+
+# Model Settings
+model:
+  backbone: "openai/clip-vit-base-patch32"
+  freeze_backbone: false
+  embed_dim: 512
+  hidden_dim: 512
+  dropout: 0.3
+
+# Training Settings
+train:
+  seed: 42
+  epochs: 50
+  batch_size: 32
+  learning_rate: 2.0e-5
+  weight_decay: 0.01
+  mixed_precision: true
+  early_stopping_patience: 10
+  save_dir: "models/checkpoints"
+  log_dir: "logs"
+
+# Evaluation Settings
+eval:
+  threshold: 0.5
