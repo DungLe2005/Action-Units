@@ -12,3 +12,6 @@ thumbs.db
 AUs_DATA/
 *.zip
 *.mat
+Zip_Data/
+*.zip
+*.mat

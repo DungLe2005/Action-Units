@@ -144,6 +144,14 @@ def train(config_path="config.yaml"):
             
     writer.close()
     print("Training complete!")
+    
+    # Run evaluation on the test set and save results
+    print("\nStarting evaluation of the best model on test set...")
+    try:
+        from eval import evaluate
+        evaluate(config_path)
+    except Exception as e:
+        print(f"Failed to run test set evaluation: {e}")
 
 if __name__ == "__main__":
     import yaml

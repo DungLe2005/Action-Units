@@ -2,6 +2,8 @@ import torch
 import numpy as np
 import pprint
 from tqdm import tqdm
+import csv
+import os
 
 from config import load_config
 from utils import compute_metrics
@@ -54,6 +56,30 @@ def evaluate(config_path="config.yaml"):
     print("\nPer-class F1 Scores:")
     for i, score in enumerate(metrics['per_class_f1']):
         print(f"AU {i}: {score:.4f}")
+        
+    os.makedirs(params['train']['save_dir'], exist_ok=True)
+    
+    # Add timestamp or model name to prevent overwriting if needed, but for now fixed name
+    import datetime
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    results_path = os.path.join(params['train']['save_dir'], f'evaluation_metrics_{timestamp}.csv')
+    
+    # Flatten metrics for CSV, turning per_class lists into individual columns
+    flat_metrics = {}
+    for k, v in metrics.items():
+        if isinstance(v, np.ndarray):
+            for i, val in enumerate(v):
+                flat_metrics[f"{k}_AU_{i}"] = float(val)
+        else:
+            flat_metrics[k] = float(v)
+            
+    # Check if file exists to write header or just append (we will create a new one with timestamp here, so write)
+    with open(results_path, 'w', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=flat_metrics.keys())
+        writer.writeheader()
+        writer.writerow(flat_metrics)
+        
+    print(f"\nEvaluation metrics saved to {results_path}")
         
     return metrics
 

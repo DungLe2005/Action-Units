@@ -83,6 +83,7 @@ def prepare_data(data_dir="AUs_DATA"):
     output_path = os.path.join(data_dir, "labels.csv")
     df.to_csv(output_path, index=False)
     print(f"\nGenerated {output_path} with {len(df)} records and {len(columns)-1} AUs.")
+
     
 if __name__ == "__main__":
     prepare_data()
