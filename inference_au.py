@@ -56,7 +56,7 @@ def main():
     
     # 5. Explain
     explainer = AUExplainer()
-    explanation = explainer.explain(au_vector)
+    explanation, emotion = explainer.explain(au_vector)
     
     print("\n" + "="*50)
     print(f"Inference Results for: {args.image_path}")
@@ -73,8 +73,10 @@ def main():
     if not active_aus:
         print("  - None")
         
-    print("\nDescription:")
+    print("\nGenerated Description:")
     print(f"  {explanation}")
+    print(f"\nPredicted Emotion (from Description):")
+    print(f"  {emotion.capitalize()}")
     print("="*50)
 
 if __name__ == "__main__":

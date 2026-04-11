@@ -41,10 +41,16 @@ class DISFA(Dataset):
         img_path, au_label, camid, viewid = self.train[index]
         img = read_image(img_path)
 
+        if not hasattr(self, 'mp_extractor'):
+            from .preprocessing import MediaPipeFaceMeshExtractor
+            self.mp_extractor = MediaPipeFaceMeshExtractor()
+            
+        landmarks = self.mp_extractor(img)
+
         if self.transform is not None:
             img = self.transform(img)
 
         # Convert label to float tensor for BCE loss
         au_label = torch.tensor(au_label, dtype=torch.float32)
         
-        return img, au_label, camid, viewid, os.path.basename(img_path)
+        return img, au_label, camid, viewid, os.path.basename(img_path), landmarks

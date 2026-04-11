@@ -4,6 +4,14 @@ import math
 
 
 import torchvision.transforms as T
+import torch
+import numpy as np
+
+try:
+    import mediapipe as mp
+except ImportError:
+    pass
+
 
 # CLIP normalization constants
 CLIP_MEAN = [0.48145466, 0.4578275, 0.40821073]
@@ -72,3 +80,56 @@ class RandomErasing(object):
 
         return img
 
+
+class MediaPipeFaceMeshExtractor:
+    def __init__(self):
+        import mediapipe as mp
+        self.mp_face_mesh = mp.solutions.face_mesh
+        self.face_mesh = self.mp_face_mesh.FaceMesh(
+            static_image_mode=True,
+            max_num_faces=1,
+            refine_landmarks=True,
+            min_detection_confidence=0.5
+        )
+        
+        self.regions = {
+            "left_eye": [33, 133, 157, 158, 159, 160, 161, 246, 163, 144, 145, 153, 154, 155],
+            "right_eye": [362, 263, 384, 385, 386, 387, 388, 466, 390, 373, 374, 380, 381, 382],
+            "left_eyebrow": [70, 63, 105, 66, 107, 55, 65, 52, 53, 46],
+            "right_eyebrow": [300, 293, 334, 296, 336, 285, 295, 282, 283, 276],
+            "nose": [1, 2, 98, 327, 168, 6, 8, 4, 45, 275],
+            "upper_lip": [61, 185, 40, 39, 37, 0, 267, 269, 270, 409, 291],
+            "lower_lip": [61, 146, 91, 181, 84, 17, 314, 405, 321, 375, 291],
+            "cheeks": [143, 111, 117, 118, 119, 100, 121, 147, 137, 227, 372, 340, 346, 347, 348, 329, 350, 376],
+            "jaw": [234, 93, 132, 58, 172, 136, 150, 149, 176, 148, 152, 377, 400, 378, 379, 365, 397, 288, 361, 323, 454]
+        }
+        
+    def __call__(self, img):
+        import torch
+        import numpy as np
+        
+        if not isinstance(img, np.ndarray):
+            img = np.array(img)
+            
+        results = self.face_mesh.process(img)
+        
+        region_tensors = []
+        max_len = max([len(idx) for idx in self.regions.values()])
+        
+        if not results.multi_face_landmarks:
+            return torch.zeros((9, max_len, 3))
+            
+        landmarks = results.multi_face_landmarks[0].landmark
+        
+        for region_name, indices in self.regions.items():
+            region_points = []
+            for idx in indices:
+                lm = landmarks[idx]
+                region_points.append([lm.x, lm.y, lm.z])
+                
+            while len(region_points) < max_len:
+                region_points.append([0.0, 0.0, 0.0])
+                
+            region_tensors.append(region_points)
+            
+        return torch.tensor(region_tensors, dtype=torch.float32)

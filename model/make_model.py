@@ -6,6 +6,11 @@ _tokenizer = _Tokenizer()
 from timm.models.layers import DropPath, to_2tuple, trunc_normal_
 from .au_head import AUHead
 
+from peft import LoraConfig, get_peft_model
+from .au_modules import FaceRegionLandmarkProjector, FaceRegionGuidedCrossAttention, PatchTokenAttention, AURelationalModeling
+import types
+
+
 def weights_init_kaiming(m):
     classname = m.__class__.__name__
     if classname.find('Linear') != -1:
@@ -45,10 +50,17 @@ class build_transformer(nn.Module):
         self.camera_num = camera_num
         self.view_num = view_num
         self.sie_coe = cfg.MODEL.SIE_COE
+        self.is_au = (cfg.DATASETS.NAMES == 'disfa')
         
-        if cfg.DATASETS.NAMES == 'disfa':
+        if self.is_au:
             self.classifier = AUHead(self.in_planes, 12)
             self.classifier_proj = AUHead(self.in_planes_proj, 12)
+            
+            # AU Modules
+            self.frlp = FaceRegionLandmarkProjector(num_regions=9, max_len=21, embed_dim=self.in_planes)
+            self.frgca = FaceRegionGuidedCrossAttention(embed_dim=self.in_planes, num_heads=8)
+            self.pta = PatchTokenAttention(in_dim=self.in_planes, num_aus=12)
+            self.au_relational = AURelationalModeling(embed_dim=self.in_planes, num_heads=4)
         else:
             self.classifier = nn.Linear(self.in_planes, self.num_classes, bias=False)
             self.classifier.apply(weights_init_classifier)
@@ -68,7 +80,18 @@ class build_transformer(nn.Module):
         clip_model = load_clip_to_cpu(self.model_name, self.h_resolution, self.w_resolution, self.vision_stride_size)
         clip_model.to("cuda")
 
-        self.image_encoder = clip_model.visual
+        if self.is_au:
+            lora_config = LoraConfig(
+                r=16,
+                lora_alpha=16,
+                target_modules=["c_fc", "c_proj"],
+                lora_dropout=0.1,
+                bias="none"
+            )
+            self.image_encoder = get_peft_model(clip_model.visual, lora_config)
+            self.image_encoder.print_trainable_parameters()
+        else:
+            self.image_encoder = clip_model.visual
 
         if cfg.MODEL.SIE_CAMERA and cfg.MODEL.SIE_VIEW:
             self.cv_embed = nn.Parameter(torch.zeros(camera_num * view_num, self.in_planes))
@@ -83,7 +106,7 @@ class build_transformer(nn.Module):
             trunc_normal_(self.cv_embed, std=.02)
             print('camera number is : {}'.format(view_num))
 
-    def forward(self, x, label=None, cam_label= None, view_label=None):
+    def forward(self, x, label=None, cam_label= None, view_label=None, landmarks=None):
         if self.model_name == 'RN50':
             image_features_last, image_features, image_features_proj = self.image_encoder(x) #B,512  B,128,512
             img_feature_last = nn.functional.avg_pool2d(image_features_last, image_features_last.shape[2:4]).view(x.shape[0], -1) 
@@ -99,13 +122,64 @@ class build_transformer(nn.Module):
                 cv_embed = self.sie_coe * self.cv_embed[view_label]
             else:
                 cv_embed = None
-            image_features_last, image_features, image_features_proj = self.image_encoder(x, cv_embed) #B,512  B,128,512
-            img_feature_last = image_features_last[:,0]
-            img_feature = image_features[:,0]
-            img_feature_proj = image_features_proj[:,0]
+                
+            if self.is_au and landmarks is not None:
+                # Get region tokens
+                region_tokens = self.frlp(landmarks)
+                
+                # We need visual tokens. PEFT wraps the visual model, we can call it.
+                # However, visual outputs x11, x12, xproj.
+                # We want multi-level features, so we can monkey patch or just use x11 and x12.
+                x11, x12, xproj = self.image_encoder(x, cv_emb=cv_embed)
+                
+                # Combine Multi-Level Features (concat)
+                # x11 block outputs: [B, 197, 768], x12 block outputs: [B, 197, 768]
+                # Actually, make_model visual returns CLS tokens normally?
+                # Let's check VisionTransformer.forward: returns x11, x12, xproj -> these are full sequence?
+                # Wait, VisionTransformer in clip.py returns x11, x12, xproj as full sequence! ([B, 197, 768])
+                # No, they are LND in clip.py! They get permuted?
+                # Ah, x11 = x11.permute(1, 0, 2) in clip.py! So they are NLD = [B, seq, dim].
+                
+                # We use x11 as visual patches (skip cls token 0)
+                visual_patches = x11[:, 1:, :] # [B, 196, 768]
+                
+                # Apply Face-Region Guided Cross-Attention
+                attended_patches = self.frgca(visual_patches, region_tokens)
+                
+                # Patch Token Attention (PTA) yielding AU-specific embeddings
+                au_embeddings = self.pta(attended_patches) # [B, 12, 768]
+                
+                # RandReAU Training Strategy
+                if self.training:
+                    shuffle_idx = torch.randperm(12)
+                    unshuffle_idx = torch.argsort(shuffle_idx)
+                    au_embeddings = au_embeddings[:, shuffle_idx, :]
+                    
+                # Relational Modeling
+                au_embeddings = self.au_relational(au_embeddings)
+                
+                if self.training:
+                    au_embeddings = au_embeddings[:, unshuffle_idx, :]
+                
+                # We flatten or use average for classification?
+                # Since PTA yields 12 tokens, maybe classifier should operate on each?
+                # We can just average them and pass to self.classifier!
+                # Wait, AUHead typically takes [B, dim] and outputs [B, 12].
+                # If we have 12 specific tokens, we can output probabilities directly by a Linear(dim, 1) per AU?
+                # Let's just pool them to a single vector for compatibility with AUHead.
+                img_feature = au_embeddings.mean(dim=1)
+                img_feature_last = x11[:, 0]
+                img_feature_proj = xproj[:, 0] if xproj is not None else img_feature
+                
+            else:
+                image_features_last, image_features, image_features_proj = self.image_encoder(x, cv_embed) #B,512  B,128,512
+                img_feature_last = image_features_last[:,0]
+                img_feature = image_features[:,0]
+                img_feature_proj = image_features_proj[:,0]
 
         feat = self.bottleneck(img_feature) 
         feat_proj = self.bottleneck_proj(img_feature_proj) 
+
 
         if self.training:
             cls_score = self.classifier(feat)
@@ -115,11 +189,11 @@ class build_transformer(nn.Module):
         else:
             if self.neck_feat == 'after':
                 # print("Test with feature after BN")
-                if cfg.DATASETS.NAMES == 'disfa':
+                if self.is_au:
                     return torch.sigmoid(self.classifier(feat)) # Return AU probabilities
                 return torch.cat([feat, feat_proj], dim=1)
             else:
-                if cfg.DATASETS.NAMES == 'disfa':
+                if self.is_au:
                     # Average of last and current features maybe, but standard is just one
                     return torch.sigmoid(self.classifier(self.bottleneck(img_feature)))
                 return torch.cat([img_feature, img_feature_proj], dim=1)

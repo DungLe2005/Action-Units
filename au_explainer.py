@@ -1,7 +1,39 @@
+import torch
+import torch.nn.functional as F
+from model.clip import clip
+
+class EmotionPredictor:
+    def __init__(self, device="cuda" if torch.cuda.is_available() else "cpu"):
+        self.device = device
+        # Load CLIP
+        print("Loading CLIP for text-based emotion prediction...")
+        self.clip_model, _ = clip.load("ViT-B-16", device=device)
+        self.clip_model.eval()
+        
+        self.emotions = ["happy", "sad", "angry", "surprised", "fearful", "disgusted", "neutral"]
+        # Prompts designed for zero-shot text matching
+        self.emotion_prompts = [f"A face expression that looks {e}" for e in self.emotions]
+        
+        # Precompute emotion embeddings
+        tokens = clip.tokenize(self.emotion_prompts).to(self.device)
+        with torch.no_grad():
+            self.emotion_features = self.clip_model.encode_text(tokens).float()
+            self.emotion_features /= self.emotion_features.norm(dim=-1, keepdim=True)
+
+    def predict(self, description: str):
+        tokens = clip.tokenize([description]).to(self.device)
+        with torch.no_grad():
+            text_features = self.clip_model.encode_text(tokens).float()
+            text_features /= text_features.norm(dim=-1, keepdim=True)
+            
+        similarity = (text_features @ self.emotion_features.T).squeeze(0)
+        best_idx = similarity.argmax().item()
+        return self.emotions[best_idx]
+
+
 class AUExplainer:
     def __init__(self):
         # Mapping AU index (0-11) to its descriptive phrase
-        # AU_LIST = [1, 2, 4, 5, 6, 9, 12, 15, 17, 20, 25, 26]
         self.au_mapping = {
             0: "raises the inner brows",             # AU1
             1: "raises the outer brows",             # AU2
@@ -17,59 +49,45 @@ class AUExplainer:
             11: "drops the jaw"                      # AU26
         }
         
-        # Rule-based emotion inference
-        # keys are set of active AU indices
-        self.emotion_rules = [
-            ({4, 6}, "happy"),          # AU6 + AU12
-            ({2, 7}, "sad"),            # AU4 + AU15
-            ({0, 1, 3}, "surprised"),   # AU1 + AU2 + AU5
-            ({2, 5, 8}, "angry"),       # AU4 + AU9 + AU17
-            ({3, 9}, "fearful"),        # AU5 + AU20
-            ({5}, "disgusted")          # AU9
-        ]
-
-    def infer_emotion(self, active_aus):
-        active_set = set(active_aus)
-        for required_aus, emotion in self.emotion_rules:
-            if required_aus.issubset(active_set):
-                return emotion
-        return "neutral"
+        # EmotionPredictor for text-based classification
+        self.emotion_predictor = EmotionPredictor()
 
     def explain(self, au_vector):
         """
         au_vector: list or array of 12 binary values (0 or 1)
-        Returns: String description
+        Returns: (String description, Predicted emotion)
         """
         active_indices = [i for i, val in enumerate(au_vector) if val == 1]
         
         if not active_indices:
-            return "The person has a neutral facial expression."
+            desc = "The person has a neutral facial expression."
+            return desc, "neutral"
 
         phrases = [self.au_mapping[i] for i in active_indices]
-        emotion = self.infer_emotion(active_indices)
 
         # Build sentence
         if len(phrases) == 1:
-            desc = f"The person {phrases[0]}"
+            desc = f"The person {phrases[0]}."
         elif len(phrases) == 2:
-            desc = f"The person {phrases[0]} and {phrases[1]}"
+            desc = f"The person {phrases[0]} and {phrases[1]}."
         else:
-            desc = f"The person {', '.join(phrases[:-1])}, and {phrases[-1]}"
+            desc = f"The person {', '.join(phrases[:-1])}, and {phrases[-1]}."
 
-        if emotion != "neutral":
-            desc += f", indicating a {emotion} expression."
-        else:
-            desc += "."
+        # Predict emotion purely from the descriptive sentence using CLIP
+        emotion = self.emotion_predictor.predict(desc)
 
-        return desc
+        return desc, emotion
+
 
 # Example usage:
 if __name__ == "__main__":
     explainer = AUExplainer()
     # Mock happy AU vector: AU6 (idx 4) and AU12 (idx 6) are 1
     happy_vec = [0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0]
-    print(explainer.explain(happy_vec))
+    desc, emotion = explainer.explain(happy_vec)
+    print(f"Desc: {desc}\nEmotion: {emotion}\n")
     
     # Mock angry
     angry_vec = [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0]
-    print(explainer.explain(angry_vec))
+    desc, emotion = explainer.explain(angry_vec)
+    print(f"Desc: {desc}\nEmotion: {emotion}\n")

@@ -9,6 +9,7 @@ from .softmax_loss import CrossEntropyLabelSmooth, LabelSmoothingCrossEntropy
 from .triplet_loss import TripletLoss
 from .center_loss import CenterLoss
 from .au_loss import WeightedBCELoss
+import torch
 
 
 def make_loss(cfg, num_classes):    # modified by gu
@@ -29,6 +30,12 @@ def make_loss(cfg, num_classes):    # modified by gu
     if cfg.MODEL.IF_LABELSMOOTH == 'on':
         xent = CrossEntropyLabelSmooth(num_classes=num_classes)
         print("label smooth on, numclasses:", num_classes)
+
+    if cfg.DATASETS.NAMES == 'disfa':
+        pos_weights = torch.tensor([5.0, 6.0, 2.0, 10.0, 3.0, 8.0, 2.0, 15.0, 4.0, 12.0, 1.5, 4.0]).cuda()
+        loss_func = WeightedBCELoss(pos_weight=pos_weights)
+        print("Using WeightedBCELoss for AU detection on DISFA")
+        return loss_func, center_criterion
 
     if sampler == 'softmax':
         def loss_func(score, feat, target):
@@ -82,13 +89,6 @@ def make_loss(cfg, num_classes):    # modified by gu
                 print('expected METRIC_LOSS_TYPE should be triplet'
                       'but got {}'.format(cfg.MODEL.METRIC_LOSS_TYPE))
 
-    elif cfg.DATASETS.NAMES == 'disfa':
-        # Default pos_weights for DISFA (can be calculated dynamically from labels.csv)
-        # Based on N_total / (2 * N_positive_i)
-        # These are approximate based on DISFA statistics, ideally should be loaded from cfg or csv
-        pos_weights = torch.tensor([5.0, 6.0, 2.0, 10.0, 3.0, 8.0, 2.0, 15.0, 4.0, 12.0, 1.5, 4.0]).cuda()
-        loss_func = WeightedBCELoss(pos_weight=pos_weights)
-        print("Using WeightedBCELoss for AU detection on DISFA")
     else:
         print('expected sampler should be softmax, triplet, softmax_triplet or softmax_triplet_center'
               'but got {}'.format(cfg.DATALOADER.SAMPLER))

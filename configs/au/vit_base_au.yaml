@@ -5,7 +5,7 @@ MODEL:
   COS_LAYER: false
   SIE_CAMERA: false
   SIE_VIEW: false
-  DEVICE_ID: '0'
+  DEVICE_ID: "0"
 
 INPUT:
   SIZE_TRAIN: [224, 224]

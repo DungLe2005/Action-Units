@@ -115,14 +115,15 @@ def do_train_au(cfg,
         evaluator.reset()
 
         model.train()
-        for n_iter, (img, target, _, _, _) in enumerate(train_loader):
+        for n_iter, (img, target, _, _, _, landmarks) in enumerate(train_loader):
             optimizer.zero_grad()
             img = img.to(device)
             target = target.to(device)
+            landmarks = landmarks.to(device)
             
             with amp.autocast(enabled=True):
                 # model returns [logits_list], [feat_list]
-                score, _ = model(img)
+                score, _ = model(img, landmarks=landmarks)
                 loss = loss_fn(score, target)
 
             scaler.scale(loss).backward()
@@ -147,11 +148,12 @@ def do_train_au(cfg,
         if epoch % eval_period == 0:
             model.eval()
             evaluator.reset()
-            for n_iter, (img, target, _, _, _) in enumerate(val_loader):
+            for n_iter, (img, target, _, _, _, landmarks) in enumerate(val_loader):
                 with torch.no_grad():
                     img = img.to(device)
+                    landmarks = landmarks.to(device)
                     # Inference mode returns sigmoid probabilities
-                    probs = model(img)
+                    probs = model(img, landmarks=landmarks)
                     evaluator.update(probs, target)
             
             results = evaluator.compute()
@@ -170,10 +172,11 @@ def do_train_au(cfg,
     logger.info("Performing final evaluation and saving summary metrics to CSV...")
     model.eval()
     evaluator.reset()
-    for n_iter, (img, target, _, _, _) in enumerate(val_loader):
+    for n_iter, (img, target, _, _, _, landmarks) in enumerate(val_loader):
         with torch.no_grad():
             img = img.to(device)
-            probs = model(img)
+            landmarks = landmarks.to(device)
+            probs = model(img, landmarks=landmarks)
             evaluator.update(probs, target)
     
     results = evaluator.compute()
