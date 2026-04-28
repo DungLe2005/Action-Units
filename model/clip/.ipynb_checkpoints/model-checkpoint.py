@@ -198,11 +198,10 @@ class Transformer(nn.Module):
 
 
 class VisionTransformer(nn.Module):
-    def __init__(self, h_resolution: int, w_resolution: int, patch_size: int, stride_size: int, width: int, layers: int, heads: int, output_dim: int, input_resolution: int = 224):
+    def __init__(self, h_resolution: int, w_resolution: int, patch_size: int, stride_size: int, width: int, layers: int, heads: int, output_dim: int):
         super().__init__()
         self.h_resolution = h_resolution
         self.w_resolution = w_resolution
-        self.input_resolution = input_resolution
         self.output_dim = output_dim
         self.conv1 = nn.Conv2d(in_channels=3, out_channels=width, kernel_size=patch_size, stride=stride_size, bias=False)
 
@@ -286,8 +285,7 @@ class CLIP(nn.Module):
                 width=vision_width,
                 layers=vision_layers,
                 heads=vision_heads,
-                output_dim=embed_dim,
-                input_resolution=image_resolution
+                output_dim=embed_dim
             )
             
         self.transformer = Transformer(

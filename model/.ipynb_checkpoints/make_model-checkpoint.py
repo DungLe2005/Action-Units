@@ -262,11 +262,6 @@ class build_transformer(nn.Module):
 
         feat = self.bottleneck(img_feature) 
         feat_proj = self.bottleneck_proj(img_feature_proj) 
-        
-        if not self.training:
-            # Debug classifier weights
-            w = self.classifier.classifier.weight
-            print(f"[DEBUG] classifier weight stats: mean={w.mean().item():.6f}, std={w.std().item():.6f}, norm={w.norm().item():.4f}")
 
         if self.training:
             cls_score = self.classifier(feat)
