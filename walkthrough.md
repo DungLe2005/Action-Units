@@ -52,6 +52,15 @@ python train_au_2stage.py --config_file configs/au/vit_base_au_2stage.yaml
 - **Giai đoạn 1**: Học các AU Prompts bằng cách căn chỉnh với ảnh khuôn mặt.
 - **Giai đoạn 2**: Fine-tune toàn bộ hệ thống để đạt độ chính xác phân loại cao nhất.
 
+**Các tùy chọn bổ sung:**
+- `--resume [path/to/checkpoint.pth]`: Tiếp tục huấn luyện từ một checkpoint có sẵn.
+- `--skip_stage1`: Bỏ qua Giai đoạn 1 và bắt đầu ngay từ Giai đoạn 2 (thường dùng khi đã có trọng số Stage 1 tốt).
+
+Ví dụ chạy thẳng Stage 2 từ trọng số Stage 1:
+```bash
+python train_au_2stage.py --resume logs/au_vit_base_2stage/ViT-B-16_au_stage1_10.pth --skip_stage1
+```
+
 ### 3. Suy luận (Inference)
 ```bash
 python inference_au.py --image_path path/to/face.jpg --weight_path logs/au_vit_base_2stage/ViT-B-16_au_stage2_30.pth

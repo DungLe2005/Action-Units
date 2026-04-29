@@ -13,6 +13,7 @@ from solver.lr_scheduler import WarmupMultiStepLR
 from loss.make_loss import make_loss
 from processor.processor_au_2stage import do_train_stage1, do_train_stage2
 
+
 def set_seed(seed):
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
@@ -22,20 +23,34 @@ def set_seed(seed):
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = True
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="AU Detection Two-Stage Training")
     parser.add_argument(
-        "--config_file", default="configs/au/vit_base_au_2stage.yaml", help="path to config file", type=str
+        "--config_file",
+        default="configs/au/vit_base_au_2stage.yaml",
+        help="path to config file",
+        type=str,
     )
-    parser.add_argument("opts", help="Modify config options using the command-line", default=None,
-                        nargs=argparse.REMAINDER)
+    parser.add_argument(
+        "opts",
+        help="Modify config options using the command-line",
+        default=None,
+        nargs=argparse.REMAINDER,
+    )
     parser.add_argument("--local_rank", default=0, type=int)
+    parser.add_argument(
+        "--resume", default="", help="path to checkpoint to resume", type=str
+    )
+    parser.add_argument(
+        "--skip_stage1", action="store_true", help="skip stage 1 and start from stage 2"
+    )
     args = parser.parse_args()
 
     if args.config_file != "":
         cfg.merge_from_file(args.config_file)
     cfg.merge_from_list(args.opts)
-    cfg.DATASETS.NAMES = 'disfa' # Ensure disfa for AU
+    cfg.DATASETS.NAMES = "disfa"  # Ensure disfa for AU
     cfg.freeze()
 
     set_seed(cfg.SOLVER.SEED)
@@ -50,11 +65,11 @@ if __name__ == '__main__':
 
     if args.config_file != "":
         logger.info("Loaded configuration file {}".format(args.config_file))
-        with open(args.config_file, 'r') as cf:
+        with open(args.config_file, "r") as cf:
             config_str = "\n" + cf.read()
             logger.info(config_str)
-    
-    os.environ['CUDA_VISIBLE_DEVICES'] = cfg.MODEL.DEVICE_ID
+
+    os.environ["CUDA_VISIBLE_DEVICES"] = str(cfg.MODEL.DEVICE_ID)
 
     # 1. Load Data
     train_loader, val_loader, num_aus = make_au_dataloader(cfg)
@@ -65,26 +80,36 @@ if __name__ == '__main__':
     # 3. Build Loss
     loss_func, center_criterion = make_loss(cfg, num_classes=num_aus)
 
+    # --- Resume Logic ---
+    if args.resume:
+        model.load_param(args.resume)
+        logger.info(f"Resuming from {args.resume}")
+
     # -------------------------------------------------------------------------
     # STAGE 1: Image-Text Alignment
     # -------------------------------------------------------------------------
-    logger.info("Starting Stage 1...")
-    optimizer_1stage = make_optimizer_1stage(cfg, model)
-    scheduler_1stage = create_scheduler(optimizer_1stage, 
-                                        num_epochs = cfg.SOLVER.STAGE1.MAX_EPOCHS, 
-                                        lr_min = cfg.SOLVER.STAGE1.LR_MIN, 
-                                        warmup_lr_init = cfg.SOLVER.STAGE1.WARMUP_LR_INIT, 
-                                        warmup_t = cfg.SOLVER.STAGE1.WARMUP_EPOCHS, 
-                                        noise_range = None)
+    if not args.skip_stage1:
+        logger.info("Starting Stage 1...")
+        optimizer_1stage = make_optimizer_1stage(cfg, model)
+        scheduler_1stage = create_scheduler(
+            optimizer_1stage,
+            num_epochs=cfg.SOLVER.STAGE1.MAX_EPOCHS,
+            lr_min=cfg.SOLVER.STAGE1.LR_MIN,
+            warmup_lr_init=cfg.SOLVER.STAGE1.WARMUP_LR_INIT,
+            warmup_t=cfg.SOLVER.STAGE1.WARMUP_EPOCHS,
+            noise_range=None,
+        )
 
-    do_train_stage1(
-        cfg,
-        model,
-        train_loader,
-        optimizer_1stage,
-        scheduler_1stage,
-        args.local_rank
-    )
+        do_train_stage1(
+            cfg,
+            model,
+            train_loader,
+            optimizer_1stage,
+            scheduler_1stage,
+            args.local_rank,
+        )
+    else:
+        logger.info("Skipping Stage 1 as requested.")
 
     # -------------------------------------------------------------------------
     # STAGE 2: Full Fine-tuning
@@ -93,13 +118,17 @@ if __name__ == '__main__':
     # Optional: Load best Stage 1 checkpoint if needed
     # model.load_state_dict(torch.load(os.path.join(cfg.OUTPUT_DIR, cfg.MODEL.NAME + '_au_stage1_10.pth')))
 
-    optimizer_2stage, optimizer_center_2stage = make_optimizer_2stage(cfg, model, center_criterion)
-    scheduler_2stage = WarmupMultiStepLR(optimizer_2stage, 
-                                          cfg.SOLVER.STAGE2.STEPS, 
-                                          cfg.SOLVER.STAGE2.GAMMA, 
-                                          cfg.SOLVER.STAGE2.WARMUP_FACTOR,
-                                          cfg.SOLVER.STAGE2.WARMUP_ITERS, 
-                                          cfg.SOLVER.STAGE2.WARMUP_METHOD)
+    optimizer_2stage, optimizer_center_2stage = make_optimizer_2stage(
+        cfg, model, center_criterion
+    )
+    scheduler_2stage = WarmupMultiStepLR(
+        optimizer_2stage,
+        cfg.SOLVER.STAGE2.STEPS,
+        cfg.SOLVER.STAGE2.GAMMA,
+        cfg.SOLVER.STAGE2.WARMUP_FACTOR,
+        cfg.SOLVER.STAGE2.WARMUP_ITERS,
+        cfg.SOLVER.STAGE2.WARMUP_METHOD,
+    )
 
     do_train_stage2(
         cfg,
@@ -109,5 +138,5 @@ if __name__ == '__main__':
         optimizer_2stage,
         scheduler_2stage,
         loss_func,
-        args.local_rank
+        args.local_rank,
     )

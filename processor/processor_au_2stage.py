@@ -27,10 +27,10 @@ def do_train_stage1(cfg,
         model = nn.DataParallel(model)
 
     loss_meter = AverageMeter()
-    scaler = amp.GradScaler()
+    scaler = torch.amp.GradScaler('cuda', enabled=True)
     
     # Multi-label Contrastive Loss using BCE
-    loss_fn = nn.BCEWithLogitsLoss()
+    loss_fn_itc = nn.BCEWithLogitsLoss()
     temperature = 0.07 # Standard CLIP temperature
 
     all_start_time = time.time()
@@ -48,7 +48,7 @@ def do_train_stage1(cfg,
             img = img.to(device)
             target = target.to(device) # Binary labels [B, 12]
             
-            with amp.autocast(enabled=True):
+            with torch.amp.autocast('cuda', enabled=True):
                 # Get Image Features
                 image_features = model(x=img, get_image=True) # [B, 512]
                 # Get Text Features for all 12 AUs
@@ -60,7 +60,7 @@ def do_train_stage1(cfg,
                 
                 # Compute logits: [B, 12]
                 logits = (image_features @ text_features.t()) / temperature
-                loss = loss_fn(logits, target)
+                loss = loss_fn_itc(logits, target)
 
             scaler.scale(loss).backward()
             scaler.step(optimizer)
@@ -106,7 +106,7 @@ def do_train_stage2(cfg,
 
     loss_meter = AverageMeter()
     evaluator = AUEvaluator()
-    scaler = amp.GradScaler()
+    scaler = torch.amp.GradScaler('cuda', enabled=True)
     
     all_start_time = time.time()
 
@@ -121,7 +121,7 @@ def do_train_stage2(cfg,
             img = img.to(device)
             target = target.to(device)
             
-            with amp.autocast(enabled=True):
+            with torch.amp.autocast('cuda', enabled=True):
                 # model returns [logits_list], [feat_list], img_feat_proj
                 score, _, img_feat_proj = model(img)
                 
