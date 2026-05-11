@@ -12,6 +12,13 @@ import os
 import argparse
 from config import cfg_base as cfg
 
+
+def _format_cuda_visible_devices(device_id):
+    if isinstance(device_id, (list, tuple)):
+        return ",".join(str(gpu_id) for gpu_id in device_id)
+    return str(device_id)
+
+
 def set_seed(seed):
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
@@ -61,7 +68,7 @@ if __name__ == '__main__':
     if cfg.MODEL.DIST_TRAIN:
         torch.distributed.init_process_group(backend='nccl', init_method='env://')
 
-    os.environ['CUDA_VISIBLE_DEVICES'] = cfg.MODEL.DEVICE_ID
+    os.environ['CUDA_VISIBLE_DEVICES'] = _format_cuda_visible_devices(cfg.MODEL.DEVICE_ID)
     train_loader, train_loader_normal, val_loader, num_query, num_classes, camera_num, view_num = make_dataloader(cfg)
 
     model = make_model(cfg, num_class=num_classes, camera_num=camera_num, view_num = view_num)

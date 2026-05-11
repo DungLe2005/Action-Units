@@ -9,6 +9,10 @@ from torch.cuda import amp
 from processor.processor_au import AUEvaluator
 
 
+def _unwrap_data_parallel(model):
+    return model.module if isinstance(model, nn.DataParallel) else model
+
+
 def _evaluate_au_model(model, val_loader, device):
     evaluator = AUEvaluator()
     model.eval()
@@ -38,6 +42,7 @@ def do_train_stage1(cfg,
     model.to(device)
     if torch.cuda.device_count() > 1:
         model = nn.DataParallel(model)
+    text_model = _unwrap_data_parallel(model)
 
     loss_meter = AverageMeter()
     scaler = torch.amp.GradScaler('cuda', enabled=True)
@@ -65,7 +70,7 @@ def do_train_stage1(cfg,
                 # Get Image Features
                 image_features = model(x=img, get_image=True) # [B, 512]
                 # Get Text Features for all 12 AUs
-                text_features = model(get_text=True) # [12, 512]
+                text_features = text_model(get_text=True) # [12, 512]
                 
                 # Normalize features
                 image_features = F.normalize(image_features, dim=-1)
@@ -116,6 +121,7 @@ def do_train_stage2(cfg,
     model.to(device)
     if torch.cuda.device_count() > 1:
         model = nn.DataParallel(model)
+    text_model = _unwrap_data_parallel(model)
 
     loss_meter = AverageMeter()
     scaler = torch.amp.GradScaler('cuda', enabled=True)
@@ -142,7 +148,7 @@ def do_train_stage2(cfg,
                 loss_cls = loss_fn(score, target)
                 
                 # Optional: Maintain Image-Text Alignment
-                text_features = model(get_text=True)
+                text_features = text_model(get_text=True)
                 img_feat_proj = F.normalize(img_feat_proj, dim=-1)
                 text_features = F.normalize(text_features, dim=-1)
                 logits_itc = (img_feat_proj @ text_features.t()) / 0.07

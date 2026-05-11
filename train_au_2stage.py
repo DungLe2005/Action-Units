@@ -34,6 +34,12 @@ def _reset_logger_handlers():
         handler.close()
 
 
+def _format_cuda_visible_devices(device_id):
+    if isinstance(device_id, (list, tuple)):
+        return ",".join(str(gpu_id) for gpu_id in device_id)
+    return str(device_id)
+
+
 def _make_fold_cfg(base_cfg, fold_idx, output_dir):
     fold_cfg = base_cfg.clone()
     fold_cfg.defrost()
@@ -78,6 +84,11 @@ def run_fold(cfg, args, fold_idx):
 
     train_loader, val_loader, num_aus, pos_weight, fold_info = make_au_dataloader(
         cfg, fold_idx=fold_idx
+    )
+    logger.info(
+        "Effective batch sizes - train: {}, val: {}, num_workers: {}".format(
+            train_loader.batch_size, val_loader.batch_size, train_loader.num_workers
+        )
     )
     logger.info("Fold info: {}".format(fold_info))
 
@@ -163,7 +174,9 @@ if __name__ == "__main__":
     cfg.DATASETS.NAMES = "disfa"  # Ensure disfa for AU
     cfg.freeze()
 
-    os.environ["CUDA_VISIBLE_DEVICES"] = str(cfg.MODEL.DEVICE_ID)
+    os.environ["CUDA_VISIBLE_DEVICES"] = _format_cuda_visible_devices(
+        cfg.MODEL.DEVICE_ID
+    )
 
     if args.all_folds:
         if args.resume:

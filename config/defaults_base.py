@@ -17,8 +17,8 @@ _C = CN()
 _C.MODEL = CN()
 # Using cuda or cpu for training
 _C.MODEL.DEVICE = "cuda"
-# ID number of GPU
-_C.MODEL.DEVICE_ID = 0
+# GPU IDs exposed to the training process, e.g. [0] or [0, 1].
+_C.MODEL.DEVICE_ID = [0]
 # Name of backbone
 _C.MODEL.NAME = "resnet50"
 # Last stride of backbone
