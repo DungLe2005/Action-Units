@@ -1,0 +1,210 @@
+<mxfile host="65bd71144e">
+    <diagram id="future-research-roadmap" name="Future Research Roadmap">
+        <mxGraphModel dx="1700" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" value="Planned Research Extensions for CLIP-Based AU Occurrence Detection" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=26;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="170" y="20" width="1360" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="subtitle" value="From the current subject-exclusive CLIP AU detector to a stronger, region-aware, calibrated, and interpretable AU system" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=14;fontColor=#666666" parent="1" vertex="1">
+                    <mxGeometry x="240" y="70" width="1220" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="current-band" value="Current implemented pipeline" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=16;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="50" y="120" width="1600" height="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="future-band" value="Completed protocol baseline and planned next research directions" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;dashed=1;dashPattern=6 4;fontSize=16;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="50" y="330" width="1600" height="720" as="geometry"/>
+                </mxCell>
+                <mxCell id="current-data" value="DISFA frames + AU intensity labels&#xa;binary labels y in {0,1}^12" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="90" y="175" width="260" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="current-stage1" value="Stage I&#xa;CLIP image-text AU alignment&#xa;learn T_AU prompt embeddings" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fffaf0;strokeColor=#d79b00;fontSize=14;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="445" y="165" width="300" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="current-stage2" value="Stage II&#xa;CLIP ViT-B/16 + BNNeck + AUHead&#xa;Weighted BCE + 0.1 L_ITC" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f7fbff;strokeColor=#6c8ebf;fontSize=14;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="850" y="165" width="360" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="current-output" value="Current output&#xa;AU probabilities p&#xa;thresholded vector hat{y}&#xa;rule-based text description" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eadcf8;strokeColor=#9673a6;fontSize=14;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="1340" y="160" width="260" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane-protocol" value="Completed v1: Scientific evaluation protocol" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e2f0d9;strokeColor=#70ad47;fontSize=15;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="90" y="370" width="450" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="split" value="3-fold subject-exclusive split&#xa;train/val separated by subject&#xa;DISFA-8 Avg F1 mean/std" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f8e8;strokeColor=#70ad47;fontSize=13" parent="1" vertex="1">
+                    <mxGeometry x="90" y="460" width="200" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="weights" value="Data-safe training setup&#xa;separate train/val transforms&#xa;train-fold pos_weight" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f8e8;strokeColor=#70ad47;fontSize=13" parent="1" vertex="1">
+                    <mxGeometry x="330" y="460" width="210" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="evaluator" value="Robust AU evaluator&#xa;macro/micro F1, AUROC&#xa;per-AU precision, recall, F1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f8e8;strokeColor=#70ad47;fontSize=13" parent="1" vertex="1">
+                    <mxGeometry x="90" y="620" width="200" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="calibration" value="Threshold calibration&#xa;AU-specific thresholds&#xa;selected on validation set only" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f8e8;strokeColor=#70ad47;fontSize=13" parent="1" vertex="1">
+                    <mxGeometry x="330" y="620" width="210" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane-model" value="Priority 2: Region-aware and relation-aware AU model" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=15;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="620" y="370" width="470" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="alignment" value="Face detection and alignment&#xa;stable crop, scale, and pose normalization" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef5ff;strokeColor=#6c8ebf;fontSize=13" parent="1" vertex="1">
+                    <mxGeometry x="620" y="460" width="210" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="region-attn" value="Landmark / AU-region attention&#xa;brow, eye, nose, mouth, jaw regions&#xa;local AU cues" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef5ff;strokeColor=#6c8ebf;fontSize=13;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="880" y="460" width="210" height="105" as="geometry"/>
+                </mxCell>
+                <mxCell id="relation" value="AU relation modeling&#xa;co-occurrence graph or transformer relation block&#xa;learn AU dependencies" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef5ff;strokeColor=#6c8ebf;fontSize=13" parent="1" vertex="1">
+                    <mxGeometry x="620" y="620" width="210" height="105" as="geometry"/>
+                </mxCell>
+                <mxCell id="temporal" value="Temporal modeling for video frames&#xa;short window aggregation&#xa;reduce frame-level noise" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef5ff;strokeColor=#6c8ebf;fontSize=13" parent="1" vertex="1">
+                    <mxGeometry x="880" y="620" width="210" height="105" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane-semantic" value="Priority 3: Semantic prompting and interpretable output" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eadcf8;strokeColor=#9673a6;fontSize=15;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="1170" y="370" width="430" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="semantic-prompt" value="Explicit AU semantic prompts&#xa;AU1 inner brow raiser&#xa;AU12 lip corner puller&#xa;combine text names + learned context" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5edff;strokeColor=#9673a6;fontSize=13;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="1170" y="460" width="210" height="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="uncertainty" value="Confidence-aware explanation&#xa;show probability, threshold, uncertainty&#xa;avoid overclaiming emotion" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5edff;strokeColor=#9673a6;fontSize=13" parent="1" vertex="1">
+                    <mxGeometry x="1390" y="460" width="210" height="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="reporting" value="Scientific reporting&#xa;per-AU table, mean/std over folds&#xa;compare baseline vs proposed modules" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5edff;strokeColor=#9673a6;fontSize=13" parent="1" vertex="1">
+                    <mxGeometry x="1170" y="625" width="210" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="external" value="External validation&#xa;cross-dataset or held-out subjects&#xa;test generalization robustness" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5edff;strokeColor=#9673a6;fontSize=13" parent="1" vertex="1">
+                    <mxGeometry x="1390" y="625" width="210" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="outcome" value="Expected research outcome&#xa;A stronger CLIP-based AU detector with subject-independent evidence, local AU reasoning, calibrated decisions, and transparent explanations" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f4cccc;strokeColor=#cc0000;fontSize=15;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="480" y="890" width="740" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-current-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#999999;strokeWidth=2" parent="1" source="current-data" target="current-stage1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-current-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#999999;strokeWidth=2" parent="1" source="current-stage1" target="current-stage2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-current-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#999999;strokeWidth=2" parent="1" source="current-stage2" target="current-output" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-data-to-split" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#70ad47;strokeWidth=2;dashed=1;dashPattern=4 3" parent="1" source="current-data" target="lane-protocol" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="220" y="320"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="edge-data-to-weights" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;strokeColor=none" parent="1" source="current-data" target="weights" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="460" y="320"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="edge-stage1-to-prompt" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#9673a6;strokeWidth=2;dashed=1;dashPattern=4 3" parent="1" source="current-stage1" target="lane-semantic" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="595" y="315"/>
+                            <mxPoint x="1275" y="315"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="edge-stage2-to-align" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#6c8ebf;strokeWidth=2;dashed=1;dashPattern=4 3" parent="1" source="current-stage2" target="lane-model" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-stage2-to-region" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;strokeColor=none" parent="1" source="current-stage2" target="region-attn" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-stage2-to-relation" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;strokeColor=none" parent="1" source="current-stage2" target="relation" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1030" y="560"/>
+                            <mxPoint x="725" y="560"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="edge-stage2-to-temporal" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;strokeColor=none" parent="1" source="current-stage2" target="temporal" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1030" y="560"/>
+                            <mxPoint x="985" y="560"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="edge-output-to-calibration" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;strokeColor=none" parent="1" source="current-output" target="calibration" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1470" y="315"/>
+                            <mxPoint x="435" y="315"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="edge-output-to-uncertainty" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#9673a6;strokeWidth=2;dashed=1;dashPattern=4 3" parent="1" source="current-output" target="lane-semantic" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-split-evaluator" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#70ad47;strokeWidth=2" parent="1" source="split" target="evaluator" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-weights-calib" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#70ad47;strokeWidth=2" parent="1" source="weights" target="calibration" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-align-region" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#6c8ebf;strokeWidth=2" parent="1" source="alignment" target="region-attn" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-region-relation" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#6c8ebf;strokeWidth=2" parent="1" source="region-attn" target="relation" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="985" y="570"/>
+                            <mxPoint x="725" y="570"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="edge-relation-temporal" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#6c8ebf;strokeWidth=2" parent="1" source="relation" target="temporal" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-prompt-reporting" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#9673a6;strokeWidth=2" parent="1" source="semantic-prompt" target="reporting" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-uncertainty-external" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#9673a6;strokeWidth=2" parent="1" source="uncertainty" target="external" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-eval-outcome" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#cc0000;strokeWidth=2" parent="1" source="evaluator" target="outcome" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="190" y="820"/>
+                            <mxPoint x="850" y="820"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="edge-calib-outcome" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#cc0000;strokeWidth=2" parent="1" source="calibration" target="outcome" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="435" y="820"/>
+                            <mxPoint x="850" y="820"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="edge-relation-outcome" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#cc0000;strokeWidth=2" parent="1" source="relation" target="outcome" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-temporal-outcome" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#cc0000;strokeWidth=2" parent="1" source="temporal" target="outcome" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-reporting-outcome" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#cc0000;strokeWidth=2" parent="1" source="reporting" target="outcome" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1275" y="820"/>
+                            <mxPoint x="850" y="820"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="edge-external-outcome" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#cc0000;strokeWidth=2" parent="1" source="external" target="outcome" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1495" y="820"/>
+                            <mxPoint x="850" y="820"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

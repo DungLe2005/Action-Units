@@ -1,0 +1,248 @@
+<mxfile host="65bd71144e">
+    <diagram id="action-units-system" name="Action-Units System Architecture">
+        <mxGraphModel dx="761" dy="749" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1200" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" value="Action-Units System Architecture&#xa;CLIP-ReID-derived AU occurrence detection pipeline" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="420" y="20" width="920" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane-entry" value="Entrypoints" style="swimlane;html=1;rounded=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;fontSize=16;startSize=32" parent="1" vertex="1">
+                    <mxGeometry x="40" y="120" width="300" height="560" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane-config" value="Config + Data" style="swimlane;html=1;rounded=0;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=16;startSize=32" parent="1" vertex="1">
+                    <mxGeometry x="410" y="120" width="350" height="560" as="geometry"/>
+                </mxCell>
+                <mxCell id="labels" value="AUs_DATA/labels.csv&#xa;image_path + 12 binary AU occurrence labels" style="shape=cylinder3d;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13" parent="lane-config" vertex="1">
+                    <mxGeometry x="20" y="170" width="250" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane-model" value="Model + Loss" style="swimlane;html=1;rounded=0;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=16;startSize=32" parent="1" vertex="1">
+                    <mxGeometry x="770" y="120" width="390" height="560" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane-run" value="Processors + Evaluation" style="swimlane;html=1;rounded=0;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=16;startSize=32" parent="1" vertex="1">
+                    <mxGeometry x="1200" y="120" width="360" height="560" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane-output" value="Outputs" style="swimlane;html=1;rounded=0;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=16;startSize=32" parent="1" vertex="1">
+                    <mxGeometry x="1600" y="120" width="170" height="560" as="geometry"/>
+                </mxCell>
+                <mxCell id="out-au" value="AU probabilities&#xa;thresholded AU vector&#xa;rule-based text" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;fontStyle=1" parent="lane-output" vertex="1">
+                    <mxGeometry x="15" y="440" width="140" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="config" value="config/ + configs/&#xa;YACS defaults&#xa;person/*.yml&#xa;au/vit_base_au(_2stage).yaml" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=13" parent="1" vertex="1">
+                    <mxGeometry x="420" y="165" width="270" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="prepare" value="prepare_data.py&#xa;DISFA frame-level intensity labels/images&#xa;- parse AU*.txt&#xa;- binarize intensity &gt;= 2&#xa;- write labels.csv" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13" parent="1" vertex="1">
+                    <mxGeometry x="80" y="165" width="220" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="entry-reid" value="train.py / test.py&#xa;ReID baseline" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=13" parent="1" vertex="1">
+                    <mxGeometry x="80" y="300" width="220" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="entry-clip" value="train_clipreid.py&#xa;test_clipreid.py&#xa;two-stage CLIP-ReID" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=13" parent="1" vertex="1">
+                    <mxGeometry x="80" y="405" width="220" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="entry-au" value="train_au_2stage.py&#xa;AU occurrence training&#xa;Stage I alignment + Stage II fine-tuning" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="80" y="515" width="220" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="entry-infer" value="inference_au.py&#xa;single-image AU occurrence inference&#xa;p &gt; 0.5 + rule-based explanation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="80" y="620" width="220" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="datasets" value="datasets/&#xa;make_dataloader.py&#xa;make_dataloader_clipreid.py&#xa;DISFA Dataset + ReID datasets&#xa;AU split: 3-fold subject-exclusive" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13" parent="1" vertex="1">
+                    <mxGeometry x="420" y="410" width="270" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="transforms" value="preprocessing.py&#xa;Resize 224 x 224&#xa;CLIP normalization&#xa;light face-preserving augmentation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13" parent="1" vertex="1">
+                    <mxGeometry x="420" y="535" width="270" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="model-base" value="model/make_model.py&#xa;build_transformer&#xa;CLIP ViT-B/16 visual encoder&#xa;PromptLearner + TextEncoder&#xa;BNNeck + linear AUHead" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13" parent="1" vertex="1">
+                    <mxGeometry x="810" y="170" width="290" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="" style="edgeStyle=none;html=1;" edge="1" parent="1" source="model-clip" target="au-head">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="model-clip" value="model/make_model_clipreid.py&#xa;original CLIP-ReID implementation&#xa;PromptLearner / TextEncoder baseline" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13" parent="1" vertex="1">
+                    <mxGeometry x="810" y="300" width="290" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="au-head" value="model/au_head.py&#xa;linear AU occurrence heads&#xa;12 logits for multi-label BCE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="810" y="430" width="290" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="losses" value="loss/&#xa;Weighted BCEWithLogitsLoss&#xa;multi-label ITC BCE&#xa;CE / Triplet for ReID" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13" parent="1" vertex="1">
+                    <mxGeometry x="810" y="545" width="290" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="proc-reid" value="processor.py&#xa;ReID train/inference&#xa;R1_mAP_eval" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13" parent="1" vertex="1">
+                    <mxGeometry x="1240" y="170" width="260" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="proc-stage1" value="processor_clipreid_stage1.py&#xa;original CLIP-ReID Stage I&#xa;cached image features&#xa;SupCon image-text prompt learning" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13" parent="1" vertex="1">
+                    <mxGeometry x="1240" y="290" width="260" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="proc-stage2" value="processor_clipreid_stage2.py&#xa;original CLIP-ReID Stage II&#xa;logits = image @ text.T&#xa;mAP / CMC" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13" parent="1" vertex="1">
+                    <mxGeometry x="1240" y="410" width="260" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="proc-au" value="processor_au_2stage.py&#xa;Stage I: learn AU prompts with ITC BCE&#xa;handoff: freeze learned T_AU&#xa;Stage II: Weighted BCE + 0.1 ITC&#xa;uses processor_au.AUEvaluator" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="1240" y="535" width="260" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="out-stage1-prompts" value="Stage I learned prompts&#xa;T_AU / prompt_learner.cls_ctx&#xa;in-memory, checkpoint optional" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d79b00;fontSize=12;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="1605" y="260" width="160" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="out-ckpt" value="checkpoints&#xa;logs/" style="shape=folder;tabWidth=60;tabHeight=18;tabPosition=left;html=1;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13" parent="1" vertex="1">
+                    <mxGeometry x="1625" y="180" width="120" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="out-metrics" value="metrics&#xa;ReID: mAP / CMC&#xa;AU: macro/micro-F1, AUROC" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13" parent="1" vertex="1">
+                    <mxGeometry x="1610" y="335" width="150" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="explainer" value="au_explainer.py&#xa;rule-based AU verbalizer&#xa;facial-action phrases&#xa;affective heuristic hints" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="1240" y="665" width="260" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="note" value="Scientific protocol&#xa;AU evaluation uses subject-exclusive 3-fold split.&#xa;Report DISFA-8 Avg F1 mean/std." style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12" parent="1" vertex="1">
+                    <mxGeometry x="420" y="860" width="420" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="risk" value="Remaining implementation caveats&#xa;1. CUDA paths are still hard-coded in model/processor&#xa;2. threshold is fixed at 0.5&#xa;3. region/relation/temporal AU modules are future work" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12" parent="1" vertex="1">
+                    <mxGeometry x="920" y="870" width="390" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-prepare-labels" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;endArrow=block;endFill=1;strokeColor=#d79b00" parent="1" source="prepare" target="labels" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="400" y="213"/>
+                            <mxPoint x="400" y="330"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-config-datasets" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#d79b00" parent="1" source="config" target="datasets" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="710" y="213"/>
+                            <mxPoint x="710" y="440"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-labels-datasets" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#d79b00" parent="1" source="labels" target="datasets" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-transforms-datasets" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#d79b00" parent="1" source="transforms" target="datasets" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-entry-reid-data" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#666666;" parent="1" source="entry-reid" target="datasets" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="400" y="335"/>
+                            <mxPoint x="400" y="430"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-entry-clip-data" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#666666" parent="1" source="entry-clip" target="datasets" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-entry-au-data" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b85450;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" parent="1" source="entry-au" target="datasets" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="370" y="555"/>
+                            <mxPoint x="370" y="481"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-entry-infer-transform" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b85450;strokeWidth=2" parent="1" source="entry-infer" target="transforms" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-data-model-base" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#6c8ebf" parent="1" source="datasets" target="model-base" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="780" y="457"/>
+                            <mxPoint x="780" y="240"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-data-model-clip" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#6c8ebf" parent="1" source="datasets" target="model-clip" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-base-auhead" value="if DATASETS.NAMES == 'disfa'" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b85450;strokeWidth=2;fontSize=11" parent="1" source="model-base" target="au-head" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1120" y="217.5"/>
+                            <mxPoint x="1120" y="470"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-model-loss" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#6c8ebf" parent="1" source="model-base" target="losses" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1130" y="217.5"/>
+                            <mxPoint x="1130" y="592.5"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-clip-loss" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#6c8ebf" parent="1" source="model-clip" target="losses" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="790" y="347.5"/>
+                            <mxPoint x="790" y="592.5"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-base-proc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#82b366" parent="1" source="model-base" target="proc-reid" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-clip-stage1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#82b366" parent="1" source="model-clip" target="proc-stage1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-stage1-stage2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#82b366" parent="1" source="proc-stage1" target="proc-stage2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-au-proc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b85450;strokeWidth=2" parent="1" source="au-head" target="proc-au" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1190" y="470"/>
+                            <mxPoint x="1190" y="520"/>
+                            <mxPoint x="1370" y="520"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-loss-proc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#82b366" parent="1" source="losses" target="proc-au" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-au-stage1-prompts" value="Stage I result" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#d79b00;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" source="proc-au" target="out-stage1-prompts" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1530" y="595"/>
+                            <mxPoint x="1530" y="295"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-prompts-stage2-reuse" value="reused frozen in Stage II" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#d79b00;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" source="out-stage1-prompts" target="proc-au" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1585" y="295"/>
+                            <mxPoint x="1585" y="575"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-proc-ckpt" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b85450" parent="1" source="proc-reid" target="out-ckpt" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-stage2-metrics" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b85450" parent="1" source="proc-stage2" target="out-metrics" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-au-metrics" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b85450;strokeWidth=2" parent="1" source="proc-au" target="out-metrics" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1520" y="587"/>
+                            <mxPoint x="1520" y="500"/>
+                            <mxPoint x="1680" y="500"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-infer-model" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b85450;strokeWidth=2" parent="1" source="entry-infer" target="model-base" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="750" y="665"/>
+                            <mxPoint x="750" y="217"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-infer-explainer" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b85450;strokeWidth=2" parent="1" source="entry-infer" target="explainer" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-explainer-output" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b85450;strokeWidth=2" parent="1" source="explainer" target="out-au" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

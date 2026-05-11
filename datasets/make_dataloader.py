@@ -1,5 +1,6 @@
 import torch
 import torchvision.transforms as T
+import numpy as np
 from torch.utils.data import DataLoader
 
 from .bases import ImageDataset
@@ -110,22 +111,89 @@ def make_dataloader(cfg):
     )
     return train_loader, train_loader_normal, val_loader, len(dataset.query), num_classes, cam_num, view_num
 
-def make_au_dataloader(cfg):
+def build_disfa_subject_folds(root, num_folds=3, seed=42):
+    dataset = DISFA(root=root, transform=None)
+    subjects = np.array(dataset.all_subjects, dtype=object)
+    if len(subjects) < num_folds:
+        raise ValueError(
+            f"DISFA subject-exclusive split needs at least {num_folds} subjects, "
+            f"got {len(subjects)}"
+        )
+
+    rng = np.random.default_rng(seed)
+    rng.shuffle(subjects)
+    return [sorted(fold.tolist()) for fold in np.array_split(subjects, num_folds)]
+
+
+def compute_au_pos_weight(dataset):
+    labels = dataset.df[dataset.au_cols].to_numpy(dtype=np.float32)
+    positives = labels.sum(axis=0)
+    negatives = labels.shape[0] - positives
+    weights = np.divide(
+        negatives,
+        positives,
+        out=np.ones_like(positives, dtype=np.float32),
+        where=positives > 0,
+    )
+    zero_positive_aus = [
+        dataset.au_cols[index]
+        for index, positive_count in enumerate(positives)
+        if positive_count == 0
+    ]
+    if zero_positive_aus:
+        print(
+            "Warning: no positive samples in train split for "
+            f"{zero_positive_aus}; using pos_weight=1.0 for those AUs"
+        )
+    return torch.tensor(weights, dtype=torch.float32)
+
+
+def make_au_dataloader(cfg, fold_idx=0, num_folds=3):
     train_transforms = build_au_train_transforms(cfg)
     val_transforms = build_au_val_transforms(cfg)
 
     num_workers = cfg.DATALOADER.NUM_WORKERS
 
-    dataset = DISFA(root=cfg.DATASETS.ROOT_DIR, transform=train_transforms)
-    
-    # Simple random split for now if not pre-defined
-    # In practice, subject-independent split is better
-    train_size = int(0.8 * len(dataset))
-    val_size = len(dataset) - train_size
-    train_set, val_set = torch.utils.data.random_split(dataset, [train_size, val_size])
-    
-    # Re-apply val_transforms to val_set
-    val_set.dataset.transform = val_transforms
+    folds = build_disfa_subject_folds(
+        root=cfg.DATASETS.ROOT_DIR,
+        num_folds=num_folds,
+        seed=cfg.SOLVER.SEED,
+    )
+    fold_idx = int(fold_idx)
+    if fold_idx < 0 or fold_idx >= len(folds):
+        raise ValueError(f"fold_idx must be in [0, {len(folds) - 1}], got {fold_idx}")
+
+    val_subjects = folds[fold_idx]
+    train_subjects = [
+        subject
+        for index, fold in enumerate(folds)
+        if index != fold_idx
+        for subject in fold
+    ]
+    overlap = set(train_subjects).intersection(val_subjects)
+    if overlap:
+        raise AssertionError(f"DISFA train/val subject overlap: {sorted(overlap)}")
+
+    train_set = DISFA(
+        root=cfg.DATASETS.ROOT_DIR,
+        transform=train_transforms,
+        subjects=train_subjects,
+    )
+    val_set = DISFA(
+        root=cfg.DATASETS.ROOT_DIR,
+        transform=val_transforms,
+        subjects=val_subjects,
+    )
+    pos_weight = compute_au_pos_weight(train_set)
+    fold_info = {
+        "fold_idx": fold_idx,
+        "num_folds": num_folds,
+        "train_subjects": sorted(train_subjects),
+        "val_subjects": sorted(val_subjects),
+        "train_samples": len(train_set),
+        "val_samples": len(val_set),
+        "pos_weight": pos_weight.tolist(),
+    }
 
     train_loader = DataLoader(
         train_set, batch_size=cfg.SOLVER.IMS_PER_BATCH, shuffle=True,
@@ -137,4 +205,4 @@ def make_au_dataloader(cfg):
         num_workers=num_workers, pin_memory=True
     )
 
-    return train_loader, val_loader, 12 # 12 Action Units
+    return train_loader, val_loader, 12, pos_weight, fold_info # 12 Action Units

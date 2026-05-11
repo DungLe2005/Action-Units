@@ -1,0 +1,100 @@
+<mxfile host="app.diagrams.net" modified="2026-04-29T00:00:00.000Z" agent="Codex" version="26.0.0" type="device">
+  <diagram id="pre-au-system-architecture" name="Pre-AU Original System Architecture">
+    <mxGraphModel dx="1500" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="950" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="Original CLIP-ReID System Architecture&#xa;Pre-AU baseline: no DISFA, no AUHead, no AU semantic verbalization" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=24;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="300" y="25" width="1100" height="65" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="lane-entry" value="Entrypoints" style="swimlane;html=1;rounded=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;fontSize=16;startSize=32" vertex="1" parent="1">
+          <mxGeometry x="50" y="120" width="290" height="560" as="geometry"/>
+        </mxCell>
+        <mxCell id="lane-data" value="ReID Configuration + Data" style="swimlane;html=1;rounded=0;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=16;startSize=32" vertex="1" parent="1">
+          <mxGeometry x="385" y="120" width="330" height="560" as="geometry"/>
+        </mxCell>
+        <mxCell id="lane-model" value="Visual-Language Model + Losses" style="swimlane;html=1;rounded=0;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=16;startSize=32" vertex="1" parent="1">
+          <mxGeometry x="760" y="120" width="395" height="560" as="geometry"/>
+        </mxCell>
+        <mxCell id="lane-run" value="Training + Inference" style="swimlane;html=1;rounded=0;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=16;startSize=32" vertex="1" parent="1">
+          <mxGeometry x="1200" y="120" width="320" height="560" as="geometry"/>
+        </mxCell>
+        <mxCell id="lane-out" value="Outputs" style="swimlane;html=1;rounded=0;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=16;startSize=32" vertex="1" parent="1">
+          <mxGeometry x="1555" y="120" width="110" height="560" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="entry-base" value="train.py&#xa;test.py&#xa;CNN/ViT ReID baseline" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=13" vertex="1" parent="1">
+          <mxGeometry x="85" y="185" width="220" height="95" as="geometry"/>
+        </mxCell>
+        <mxCell id="entry-clip" value="train_clipreid.py&#xa;test_clipreid.py&#xa;two-stage CLIP-ReID" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=13" vertex="1" parent="1">
+          <mxGeometry x="85" y="345" width="220" height="95" as="geometry"/>
+        </mxCell>
+        <mxCell id="entry-none" value="No AU-specific entrypoints&#xa;no train_au.py&#xa;no inference_au.py" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eeeeee;strokeColor=#999999;fontSize=12;fontStyle=2" vertex="1" parent="1">
+          <mxGeometry x="85" y="505" width="220" height="85" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="config" value="config/ + configs/person/&#xa;YACS configuration&#xa;person re-identification settings" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=13" vertex="1" parent="1">
+          <mxGeometry x="425" y="175" width="250" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="datasets" value="ReID datasets&#xa;Market-1501, DukeMTMC&#xa;MSMT17, Occluded-Duke&#xa;VeRi, VehicleID" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13" vertex="1" parent="1">
+          <mxGeometry x="425" y="310" width="250" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="dataloader" value="Data loading pipeline&#xa;make_dataloader.py&#xa;make_dataloader_clipreid.py&#xa;identity sampler + transforms" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13" vertex="1" parent="1">
+          <mxGeometry x="425" y="475" width="250" height="105" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="base-model" value="Baseline image encoder&#xa;make_model.py&#xa;CLIP visual encoder&#xa;BNNeck + identity classifier" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13" vertex="1" parent="1">
+          <mxGeometry x="800" y="165" width="305" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="clip-model" value="CLIP-ReID model&#xa;make_model_clipreid.py&#xa;PromptLearner + TextEncoder&#xa;image/text feature projection" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13" vertex="1" parent="1">
+          <mxGeometry x="800" y="315" width="305" height="105" as="geometry"/>
+        </mxCell>
+        <mxCell id="losses" value="ReID training objectives&#xa;cross entropy / label smoothing&#xa;triplet loss / center loss&#xa;image-text contrastive loss" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13" vertex="1" parent="1">
+          <mxGeometry x="800" y="480" width="305" height="105" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="proc-base" value="processor.py&#xa;single-stage ReID training&#xa;feature extraction&#xa;R1/mAP evaluation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13" vertex="1" parent="1">
+          <mxGeometry x="1235" y="165" width="250" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="proc-stage1" value="processor_clipreid_stage1.py&#xa;Stage 1 prompt learning&#xa;image-text contrastive alignment" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13" vertex="1" parent="1">
+          <mxGeometry x="1235" y="315" width="250" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="proc-stage2" value="processor_clipreid_stage2.py&#xa;Stage 2 ReID fine-tuning&#xa;identity + triplet + I2T loss" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13" vertex="1" parent="1">
+          <mxGeometry x="1235" y="475" width="250" height="105" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="out-ckpt" value="model&#xa;checkpoints" style="shape=folder;tabWidth=55;tabHeight=18;tabPosition=left;html=1;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="1570" y="195" width="80" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="out-metrics" value="mAP&#xa;CMC&#xa;Rank-k" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="1570" y="380" width="80" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="out-note" value="No AU vector&#xa;No emotion text" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eeeeee;strokeColor=#999999;fontSize=12;fontStyle=2" vertex="1" parent="1">
+          <mxGeometry x="1570" y="540" width="80" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="note" value="Pre-AU original baseline for future comparison&#xa;Source checked: E:\Source\CLIP-ReID&#xa;Scope: CLIP-ReID person/vehicle re-identification only" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="425" y="705" width="430" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#666666" edge="1" parent="1" source="entry-base" target="config"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#666666" edge="1" parent="1" source="entry-clip" target="config"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#d6b656" edge="1" parent="1" source="config" target="datasets"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#d6b656" edge="1" parent="1" source="datasets" target="dataloader"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#6c8ebf" edge="1" parent="1" source="dataloader" target="base-model"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#6c8ebf" edge="1" parent="1" source="dataloader" target="clip-model"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#6c8ebf" edge="1" parent="1" source="base-model" target="losses"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#6c8ebf" edge="1" parent="1" source="clip-model" target="losses"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#82b366" edge="1" parent="1" source="base-model" target="proc-base"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#82b366" edge="1" parent="1" source="clip-model" target="proc-stage1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#82b366" edge="1" parent="1" source="proc-stage1" target="proc-stage2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#82b366" edge="1" parent="1" source="losses" target="proc-base"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#82b366" edge="1" parent="1" source="losses" target="proc-stage2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#b85450" edge="1" parent="1" source="proc-base" target="out-ckpt"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#b85450" edge="1" parent="1" source="proc-stage2" target="out-metrics"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

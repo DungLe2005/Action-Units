@@ -9,3 +9,6 @@
 /model/clip/__pycache__
 
 /AUs_DATA
+.grapuco
+__pycache__
+*.pyc

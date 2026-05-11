@@ -2,15 +2,19 @@ import os
 import pandas as pd
 import torch
 from torch.utils.data import Dataset
-from PIL import Image
 from .bases import read_image
+
+
+def subject_from_image_path(image_path):
+    return str(image_path).replace("\\", "/").split("/")[0]
+
 
 class DISFA(Dataset):
     """
     DISFA Dataset for Facial Action Unit Detection.
     Expects labels.csv created by prepare_data.py
     """
-    def __init__(self, root="AUs_DATA", transform=None):
+    def __init__(self, root="AUs_DATA", transform=None, subjects=None):
         self.root = root
         self.transform = transform
         self.csv_path = os.path.join(self.root, "labels.csv")
@@ -20,6 +24,16 @@ class DISFA(Dataset):
             
         self.df = pd.read_csv(self.csv_path)
         self.au_cols = [c for c in self.df.columns if c.startswith('AU')]
+        self.df["subject_id"] = self.df["image_path"].map(subject_from_image_path)
+        self.all_subjects = sorted(self.df["subject_id"].unique().tolist())
+
+        if subjects is not None:
+            subject_set = {str(subject) for subject in subjects}
+            self.df = self.df[self.df["subject_id"].isin(subject_set)].reset_index(drop=True)
+            if self.df.empty:
+                raise ValueError(f"No DISFA samples found for subjects: {sorted(subject_set)}")
+
+        self.subjects = sorted(self.df["subject_id"].unique().tolist())
         
         # Prepare data list for consistency with BaseImageDataset if needed
         # Format: (img_path, au_vector, dummy_cam, dummy_view)

@@ -1,5 +1,6 @@
 import os
 import argparse
+import logging
 import random
 import torch
 import numpy as np
@@ -12,16 +13,119 @@ from solver.scheduler_factory import create_scheduler
 from solver.lr_scheduler import WarmupMultiStepLR
 from loss.make_loss import make_loss
 from processor.processor_au_2stage import do_train_stage1, do_train_stage2
+from utils.au_fold_report import flatten_fold_metrics, write_fold_reports
 
 
 def set_seed(seed):
     torch.manual_seed(seed)
-    torch.cuda.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)
+        torch.cuda.manual_seed_all(seed)
     np.random.seed(seed)
     random.seed(seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = True
+
+
+def _reset_logger_handlers():
+    logger = logging.getLogger("transreid")
+    for handler in list(logger.handlers):
+        logger.removeHandler(handler)
+        handler.close()
+
+
+def _make_fold_cfg(base_cfg, fold_idx, output_dir):
+    fold_cfg = base_cfg.clone()
+    fold_cfg.defrost()
+    fold_cfg.OUTPUT_DIR = os.path.join(output_dir, f"fold_{fold_idx}")
+    fold_cfg.freeze()
+    return fold_cfg
+
+
+def _make_stage1_scheduler(cfg, optimizer):
+    return create_scheduler(
+        optimizer,
+        num_epochs=cfg.SOLVER.STAGE1.MAX_EPOCHS,
+        lr_min=cfg.SOLVER.STAGE1.LR_MIN,
+        warmup_lr_init=cfg.SOLVER.STAGE1.WARMUP_LR_INIT,
+        warmup_t=cfg.SOLVER.STAGE1.WARMUP_EPOCHS,
+        noise_range=None,
+    )
+
+
+def _make_stage2_scheduler(cfg, optimizer):
+    return WarmupMultiStepLR(
+        optimizer,
+        cfg.SOLVER.STAGE2.STEPS,
+        cfg.SOLVER.STAGE2.GAMMA,
+        cfg.SOLVER.STAGE2.WARMUP_FACTOR,
+        cfg.SOLVER.STAGE2.WARMUP_ITERS,
+        cfg.SOLVER.STAGE2.WARMUP_METHOD,
+    )
+
+
+def run_fold(cfg, args, fold_idx):
+    set_seed(cfg.SOLVER.SEED)
+
+    if cfg.OUTPUT_DIR and not os.path.exists(cfg.OUTPUT_DIR):
+        os.makedirs(cfg.OUTPUT_DIR)
+
+    _reset_logger_handlers()
+    logger = setup_logger("transreid", cfg.OUTPUT_DIR, if_train=True)
+    logger.info("Saving model in the path :{}".format(cfg.OUTPUT_DIR))
+    logger.info(args)
+    logger.info("Starting DISFA subject-exclusive fold {}".format(fold_idx))
+
+    train_loader, val_loader, num_aus, pos_weight, fold_info = make_au_dataloader(
+        cfg, fold_idx=fold_idx
+    )
+    logger.info("Fold info: {}".format(fold_info))
+
+    model = make_model(cfg, num_class=num_aus, camera_num=1, view_num=1)
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    loss_func, center_criterion = make_loss(
+        cfg, num_classes=num_aus, pos_weight=pos_weight, device=device
+    )
+
+    if args.resume:
+        model.load_param(args.resume)
+        logger.info(f"Resuming from {args.resume}")
+
+    if not args.skip_stage1:
+        logger.info("Starting Stage 1...")
+        optimizer_1stage = make_optimizer_1stage(cfg, model)
+        scheduler_1stage = _make_stage1_scheduler(cfg, optimizer_1stage)
+        do_train_stage1(
+            cfg,
+            model,
+            train_loader,
+            optimizer_1stage,
+            scheduler_1stage,
+            args.local_rank,
+        )
+    else:
+        logger.info("Skipping Stage 1 as requested.")
+
+    logger.info("Starting Stage 2...")
+    optimizer_2stage, optimizer_center_2stage = make_optimizer_2stage(
+        cfg, model, center_criterion
+    )
+    scheduler_2stage = _make_stage2_scheduler(cfg, optimizer_2stage)
+    metrics = do_train_stage2(
+        cfg,
+        model,
+        train_loader,
+        val_loader,
+        optimizer_2stage,
+        scheduler_2stage,
+        loss_func,
+        args.local_rank,
+    )
+    return {
+        "fold_info": fold_info,
+        "metrics": metrics,
+        "row": flatten_fold_metrics(metrics, fold_info),
+    }
 
 
 if __name__ == "__main__":
@@ -45,6 +149,12 @@ if __name__ == "__main__":
     parser.add_argument(
         "--skip_stage1", action="store_true", help="skip stage 1 and start from stage 2"
     )
+    parser.add_argument("--fold_idx", default=0, type=int, help="DISFA fold index")
+    parser.add_argument(
+        "--all_folds",
+        action="store_true",
+        help="run all 3 subject-exclusive DISFA folds and export CSV/JSON summary",
+    )
     args = parser.parse_args()
 
     if args.config_file != "":
@@ -53,90 +163,20 @@ if __name__ == "__main__":
     cfg.DATASETS.NAMES = "disfa"  # Ensure disfa for AU
     cfg.freeze()
 
-    set_seed(cfg.SOLVER.SEED)
-
-    output_dir = cfg.OUTPUT_DIR
-    if output_dir and not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-
-    logger = setup_logger("transreid", output_dir, if_train=True)
-    logger.info("Saving model in the path :{}".format(cfg.OUTPUT_DIR))
-    logger.info(args)
-
-    if args.config_file != "":
-        logger.info("Loaded configuration file {}".format(args.config_file))
-        with open(args.config_file, "r") as cf:
-            config_str = "\n" + cf.read()
-            logger.info(config_str)
-
     os.environ["CUDA_VISIBLE_DEVICES"] = str(cfg.MODEL.DEVICE_ID)
 
-    # 1. Load Data
-    train_loader, val_loader, num_aus = make_au_dataloader(cfg)
-
-    # 2. Build Model
-    model = make_model(cfg, num_class=num_aus, camera_num=1, view_num=1)
-
-    # 3. Build Loss
-    loss_func, center_criterion = make_loss(cfg, num_classes=num_aus)
-
-    # --- Resume Logic ---
-    if args.resume:
-        model.load_param(args.resume)
-        logger.info(f"Resuming from {args.resume}")
-
-    # -------------------------------------------------------------------------
-    # STAGE 1: Image-Text Alignment
-    # -------------------------------------------------------------------------
-    if not args.skip_stage1:
-        logger.info("Starting Stage 1...")
-        optimizer_1stage = make_optimizer_1stage(cfg, model)
-        scheduler_1stage = create_scheduler(
-            optimizer_1stage,
-            num_epochs=cfg.SOLVER.STAGE1.MAX_EPOCHS,
-            lr_min=cfg.SOLVER.STAGE1.LR_MIN,
-            warmup_lr_init=cfg.SOLVER.STAGE1.WARMUP_LR_INIT,
-            warmup_t=cfg.SOLVER.STAGE1.WARMUP_EPOCHS,
-            noise_range=None,
-        )
-
-        do_train_stage1(
-            cfg,
-            model,
-            train_loader,
-            optimizer_1stage,
-            scheduler_1stage,
-            args.local_rank,
-        )
+    if args.all_folds:
+        if args.resume:
+            raise ValueError("--resume is only supported for a single fold run")
+        base_output_dir = cfg.OUTPUT_DIR
+        if base_output_dir and not os.path.exists(base_output_dir):
+            os.makedirs(base_output_dir)
+        fold_records = []
+        for fold_idx in range(3):
+            fold_cfg = _make_fold_cfg(cfg, fold_idx, base_output_dir)
+            fold_records.append(run_fold(fold_cfg, args, fold_idx))
+        report_info = write_fold_reports(base_output_dir, fold_records)
+        print("Fold metrics CSV: {}".format(report_info["csv_path"]))
+        print("Fold metrics JSON: {}".format(report_info["json_path"]))
     else:
-        logger.info("Skipping Stage 1 as requested.")
-
-    # -------------------------------------------------------------------------
-    # STAGE 2: Full Fine-tuning
-    # -------------------------------------------------------------------------
-    logger.info("Starting Stage 2...")
-    # Optional: Load best Stage 1 checkpoint if needed
-    # model.load_state_dict(torch.load(os.path.join(cfg.OUTPUT_DIR, cfg.MODEL.NAME + '_au_stage1_10.pth')))
-
-    optimizer_2stage, optimizer_center_2stage = make_optimizer_2stage(
-        cfg, model, center_criterion
-    )
-    scheduler_2stage = WarmupMultiStepLR(
-        optimizer_2stage,
-        cfg.SOLVER.STAGE2.STEPS,
-        cfg.SOLVER.STAGE2.GAMMA,
-        cfg.SOLVER.STAGE2.WARMUP_FACTOR,
-        cfg.SOLVER.STAGE2.WARMUP_ITERS,
-        cfg.SOLVER.STAGE2.WARMUP_METHOD,
-    )
-
-    do_train_stage2(
-        cfg,
-        model,
-        train_loader,
-        val_loader,
-        optimizer_2stage,
-        scheduler_2stage,
-        loss_func,
-        args.local_rank,
-    )
+        run_fold(cfg, args, args.fold_idx)

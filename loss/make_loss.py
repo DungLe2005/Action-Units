@@ -12,11 +12,12 @@ from .au_loss import WeightedBCELoss
 import torch
 
 
-def make_loss(cfg, num_classes):  # modified by gu
+def make_loss(cfg, num_classes, pos_weight=None, device=None):  # modified by gu
     sampler = cfg.DATALOADER.SAMPLER
     feat_dim = 2048
+    use_gpu = torch.cuda.is_available() if device is None else device == "cuda"
     center_criterion = CenterLoss(
-        num_classes=num_classes, feat_dim=feat_dim, use_gpu=True
+        num_classes=num_classes, feat_dim=feat_dim, use_gpu=use_gpu
     )  # center loss
     if "triplet" in cfg.MODEL.METRIC_LOSS_TYPE:
         if cfg.MODEL.NO_MARGIN:
@@ -36,12 +37,13 @@ def make_loss(cfg, num_classes):  # modified by gu
         print("label smooth on, numclasses:", num_classes)
 
     if cfg.DATASETS.NAMES == "disfa":
-        # Default pos_weights for DISFA (can be calculated dynamically from labels.csv)
-        pos_weights = torch.tensor(
-            [5.0, 6.0, 2.0, 10.0, 3.0, 8.0, 2.0, 15.0, 4.0, 12.0, 1.5, 4.0]
-        ).cuda()
-        loss_func = WeightedBCELoss(pos_weight=pos_weights)
-        print("Using WeightedBCELoss for AU detection on DISFA")
+        if pos_weight is not None:
+            if device is not None:
+                pos_weight = pos_weight.to(device)
+            print(f"Using train-split pos_weight for DISFA: {pos_weight.tolist()}")
+        else:
+            print("Using unweighted BCE for DISFA; no train-split pos_weight was provided")
+        loss_func = WeightedBCELoss(pos_weight=pos_weight)
     elif sampler == "softmax":
 
         def loss_func(score, feat, target):

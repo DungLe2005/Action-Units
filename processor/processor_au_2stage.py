@@ -8,6 +8,19 @@ from utils.meter import AverageMeter
 from torch.cuda import amp
 from processor.processor_au import AUEvaluator
 
+
+def _evaluate_au_model(model, val_loader, device):
+    evaluator = AUEvaluator()
+    model.eval()
+    evaluator.reset()
+    for n_iter, (img, target, _, _, _) in enumerate(val_loader):
+        with torch.no_grad():
+            img = img.to(device)
+            probs = model(img)
+            evaluator.update(probs, target)
+    return evaluator.compute()
+
+
 def do_train_stage1(cfg,
                     model,
                     train_loader,
@@ -105,15 +118,15 @@ def do_train_stage2(cfg,
         model = nn.DataParallel(model)
 
     loss_meter = AverageMeter()
-    evaluator = AUEvaluator()
     scaler = torch.amp.GradScaler('cuda', enabled=True)
+    final_results = None
+    best_disfa8_f1 = -1.0
     
     all_start_time = time.time()
 
     for epoch in range(1, epochs + 1):
         start_time = time.time()
         loss_meter.reset()
-        evaluator.reset()
 
         model.train()
         for n_iter, (img, target, _, _, _) in enumerate(train_loader):
@@ -155,18 +168,18 @@ def do_train_stage2(cfg,
             torch.save(model.state_dict(),
                        os.path.join(cfg.OUTPUT_DIR, cfg.MODEL.NAME + '_au_stage2_{}.pth'.format(epoch)))
 
-        if epoch % eval_period == 0:
-            model.eval()
-            evaluator.reset()
-            for n_iter, (img, target, _, _, _) in enumerate(val_loader):
-                with torch.no_grad():
-                    img = img.to(device)
-                    probs = model(img)
-                    evaluator.update(probs, target)
-            
-            results = evaluator.compute()
+        if epoch % eval_period == 0 or epoch == epochs:
+            results = _evaluate_au_model(model, val_loader, device)
+            final_results = results
+            best_disfa8_f1 = max(best_disfa8_f1, results['disfa8_f1_macro'])
             logger.info("Validation Results - Epoch: {}".format(epoch))
             logger.info("Avg F1: {:.4f}, Avg AUC: {:.4f}, Accuracy: {:.4f}"
                         .format(results['avg_f1'], results['avg_auc'], results['accuracy']))
+            logger.info("DISFA-8 Avg F1: {:.4f}, Best DISFA-8 Avg F1: {:.4f}"
+                        .format(results['disfa8_f1_macro'], best_disfa8_f1))
+
+    if final_results is None:
+        final_results = _evaluate_au_model(model, val_loader, device)
 
     logger.info("Total training time: {:.1f}s".format(time.time() - all_start_time))
+    return final_results
