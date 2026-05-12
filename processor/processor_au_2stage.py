@@ -13,6 +13,43 @@ def _unwrap_data_parallel(model):
     return model.module if isinstance(model, nn.DataParallel) else model
 
 
+def _assert_finite_loss(loss, stage_name, epoch, iteration):
+    if torch.isfinite(loss.detach()):
+        return
+    raise FloatingPointError(
+        "{} produced a non-finite loss at epoch {}, iteration {}".format(
+            stage_name, epoch, iteration
+        )
+    )
+
+
+def _assert_finite_tensor(tensor, name, stage_name, epoch=None, iteration=None):
+    values = tensor if torch.is_tensor(tensor) else torch.as_tensor(tensor)
+    if torch.isfinite(values.detach()).all():
+        return
+    location = ""
+    if epoch is not None and iteration is not None:
+        location = " at epoch {}, iteration {}".format(epoch, iteration)
+    raise FloatingPointError(
+        "{} produced non-finite {}{}".format(stage_name, name, location)
+    )
+
+
+def _as_float_tensor_list(values):
+    if isinstance(values, (list, tuple)):
+        return [value.float() for value in values]
+    return values.float()
+
+
+def _freeze_text_encoder(model):
+    base_model = _unwrap_data_parallel(model)
+    module = getattr(base_model, "text_encoder", None)
+    if module is None:
+        return
+    for param in module.parameters():
+        param.requires_grad_(False)
+
+
 def _evaluate_au_model(model, val_loader, device):
     evaluator = AUEvaluator()
     model.eval()
@@ -21,6 +58,7 @@ def _evaluate_au_model(model, val_loader, device):
         with torch.no_grad():
             img = img.to(device)
             probs = model(img)
+            _assert_finite_tensor(probs, "validation probabilities", "Evaluation")
             evaluator.update(probs, target)
     return evaluator.compute()
 
@@ -43,6 +81,7 @@ def do_train_stage1(cfg,
     if torch.cuda.device_count() > 1:
         model = nn.DataParallel(model)
     text_model = _unwrap_data_parallel(model)
+    _freeze_text_encoder(model)
 
     loss_meter = AverageMeter()
     scaler = torch.amp.GradScaler('cuda', enabled=True)
@@ -60,27 +99,34 @@ def do_train_stage1(cfg,
         
         # In Stage 1, we only want to optimize the prompt learner
         # The optimizer passed here should already be configured for that
+        logger.info("Stage 1 LR: {:.2e}".format(optimizer.param_groups[0]["lr"]))
         
         for n_iter, (img, target, _, _, _) in enumerate(train_loader):
             optimizer.zero_grad()
             img = img.to(device)
-            target = target.to(device) # Binary labels [B, 12]
+            target = target.to(device).float() # Binary labels [B, 12]
             
             with torch.amp.autocast('cuda', enabled=True):
                 # Get Image Features
-                image_features = model(x=img, get_image=True) # [B, 512]
+                with torch.no_grad():
+                    image_features = model(x=img, get_image=True) # [B, 512]
                 # Get Text Features for all 12 AUs
                 text_features = text_model(get_text=True) # [12, 512]
-                
-                # Normalize features
-                image_features = F.normalize(image_features, dim=-1)
-                text_features = F.normalize(text_features, dim=-1)
-                
+
+            # Keep similarity and BCE math in fp32; fp16 normalize can easily
+            # create NaNs when a feature norm gets very small.
+            image_features = F.normalize(image_features.float(), dim=-1, eps=1e-6)
+            text_features = F.normalize(text_features.float(), dim=-1, eps=1e-6)
+
+            with torch.amp.autocast('cuda', enabled=False):
                 # Compute logits: [B, 12]
                 logits = (image_features @ text_features.t()) / temperature
                 loss = loss_fn_itc(logits, target)
+            _assert_finite_loss(loss, "Stage 1", epoch, n_iter + 1)
 
             scaler.scale(loss).backward()
+            scaler.unscale_(optimizer)
+            torch.nn.utils.clip_grad_norm_(text_model.prompt_learner.parameters(), 1.0)
             scaler.step(optimizer)
             scaler.update()
 
@@ -138,25 +184,48 @@ def do_train_stage2(cfg,
         for n_iter, (img, target, _, _, _) in enumerate(train_loader):
             optimizer.zero_grad()
             img = img.to(device)
-            target = target.to(device)
+            target = target.to(device).float()
             
             with torch.amp.autocast('cuda', enabled=True):
                 # model returns [logits_list], [feat_list], img_feat_proj
                 score, _, img_feat_proj = model(img)
-                
-                # Classification Loss
-                loss_cls = loss_fn(score, target)
-                
+
                 # Optional: Maintain Image-Text Alignment
                 text_features = text_model(get_text=True)
-                img_feat_proj = F.normalize(img_feat_proj, dim=-1)
-                text_features = F.normalize(text_features, dim=-1)
+
+            score = _as_float_tensor_list(score)
+            score_tensors = score if isinstance(score, list) else [score]
+            for index, score_tensor in enumerate(score_tensors):
+                _assert_finite_tensor(
+                    score_tensor,
+                    "classifier logits[{}]".format(index),
+                    "Stage 2",
+                    epoch,
+                    n_iter + 1,
+                )
+
+            img_feat_proj = F.normalize(img_feat_proj.float(), dim=-1, eps=1e-6)
+            text_features = F.normalize(text_features.float(), dim=-1, eps=1e-6)
+            with torch.amp.autocast('cuda', enabled=False):
+                # Classification and BCE/ITC math stay in fp32. Weighted BCE can
+                # overflow in fp16 before GradScaler has a chance to react.
+                loss_cls = loss_fn(score, target)
                 logits_itc = (img_feat_proj @ text_features.t()) / 0.07
+                _assert_finite_tensor(
+                    logits_itc,
+                    "ITC logits",
+                    "Stage 2",
+                    epoch,
+                    n_iter + 1,
+                )
                 loss_itc = F.binary_cross_entropy_with_logits(logits_itc, target)
                 
                 loss = loss_cls + 0.1 * loss_itc # Small weight for ITC
+            _assert_finite_loss(loss, "Stage 2", epoch, n_iter + 1)
 
             scaler.scale(loss).backward()
+            scaler.unscale_(optimizer)
+            torch.nn.utils.clip_grad_norm_(model.parameters(), 5.0)
             scaler.step(optimizer)
             scaler.update()
 

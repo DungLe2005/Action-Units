@@ -16,8 +16,9 @@ class WeightedBCELoss(nn.Module):
         logits: [Batch, 12]
         targets: [Batch, 12]
         """
+        targets = targets.float()
         if isinstance(logits, list):
             # If multiple classifiers output (like in CLIP-ReID)
-            loss = sum([self.bce(l, targets) for l in logits])
+            loss = sum([self.bce(l.float(), targets) for l in logits])
             return loss
-        return self.bce(logits, targets)
+        return self.bce(logits.float(), targets)

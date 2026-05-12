@@ -213,11 +213,11 @@ class PromptLearner(nn.Module):
         
         tokenized_prompts = clip.tokenize(ctx_init).cuda() 
         with torch.no_grad():
-            embedding = token_embedding(tokenized_prompts).type(dtype) 
+            embedding = token_embedding(tokenized_prompts).type(dtype)
         self.tokenized_prompts = tokenized_prompts  # torch.Tensor
 
         n_cls_ctx = 4
-        cls_vectors = torch.empty(num_class, n_cls_ctx, ctx_dim, dtype=dtype) 
+        cls_vectors = torch.empty(num_class, n_cls_ctx, ctx_dim, dtype=torch.float32)
         nn.init.normal_(cls_vectors, std=0.02)
         self.cls_ctx = nn.Parameter(cls_vectors) 
 
@@ -241,6 +241,7 @@ class PromptLearner(nn.Module):
             
         prefix = self.token_prefix.expand(b, -1, -1) 
         suffix = self.token_suffix.expand(b, -1, -1) 
+        cls_ctx = cls_ctx.to(dtype=prefix.dtype)
             
         prompts = torch.cat(
             [
