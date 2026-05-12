@@ -5,6 +5,7 @@ import numpy as np
 import torch
 
 from processor.processor_au import AUEvaluator
+from processor.processor_au_2stage import _au_probabilities_from_logits
 
 
 def _alternating_targets():
@@ -13,6 +14,17 @@ def _alternating_targets():
 
 
 class TestAUEvaluator(unittest.TestCase):
+    def test_stage2_eval_converts_dual_head_logits_to_probabilities(self):
+        logits_a = torch.zeros(2, 12)
+        logits_b = torch.ones(2, 12) * 2.0
+
+        probs = _au_probabilities_from_logits([logits_a, logits_b])
+
+        self.assertEqual(tuple(probs.shape), (2, 12))
+        self.assertTrue(torch.all(probs >= 0.0))
+        self.assertTrue(torch.all(probs <= 1.0))
+        self.assertTrue(torch.allclose(probs, torch.sigmoid(torch.ones(2, 12))))
+
     def test_perfect_prediction_scores_one(self):
         targets = _alternating_targets()
         probs = np.where(targets == 1.0, 0.9, 0.1)

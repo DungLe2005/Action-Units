@@ -90,6 +90,21 @@ def _as_float_tensor_list(values):
     return values.float()
 
 
+def _au_probabilities_from_logits(output):
+    if isinstance(output, tuple):
+        output = output[0]
+    if isinstance(output, list):
+        output = torch.stack([value.float() for value in output], dim=0).mean(dim=0)
+    logits = output.float()
+    if logits.ndim != 2 or logits.shape[1] != 12:
+        raise ValueError(
+            "AU evaluation expected AU logits shape [B, 12], got {}".format(
+                tuple(logits.shape)
+            )
+        )
+    return torch.sigmoid(logits)
+
+
 def _freeze_text_encoder(model):
     base_model = _unwrap_data_parallel(model)
     module = getattr(base_model, "text_encoder", None)
@@ -106,7 +121,8 @@ def _evaluate_au_model(model, val_loader, device):
     for n_iter, (img, target, _, _, _) in enumerate(val_loader):
         with torch.no_grad():
             img = img.to(device)
-            probs = model(img)
+            logits = model(img, return_au_logits=True)
+            probs = _au_probabilities_from_logits(logits)
             _assert_finite_tensor(probs, "validation probabilities", "Evaluation")
             evaluator.update(probs, target)
     return evaluator.compute()

@@ -134,7 +134,7 @@ class build_transformer(nn.Module):
         self.prompt_learner = PromptLearner(num_classes, cfg.DATASETS.NAMES, clip_model.dtype, clip_model.token_embedding)
         self.text_encoder = TextEncoder(clip_model)
 
-    def forward(self, x=None, label=None, get_image=False, get_text=False, cam_label=None, view_label=None):
+    def forward(self, x=None, label=None, get_image=False, get_text=False, cam_label=None, view_label=None, return_au_logits=False):
         if get_text:
             prompts = self.prompt_learner(label) 
             text_features = self.text_encoder(prompts, self.prompt_learner.tokenized_prompts)
@@ -170,6 +170,9 @@ class build_transformer(nn.Module):
         feat = self.bottleneck(img_feature) 
         feat_proj = self.bottleneck_proj(img_feature_proj) 
 
+        if self.num_classes == 12 and return_au_logits:
+            return [self.classifier(feat), self.classifier_proj(feat_proj)]
+
         if self.training:
             cls_score = self.classifier(feat)
             cls_score_proj = self.classifier_proj(feat_proj)
@@ -179,11 +182,16 @@ class build_transformer(nn.Module):
             if self.neck_feat == 'after':
                 # print("Test with feature after BN")
                 if self.num_classes == 12: # DISFA
-                    return torch.sigmoid(self.classifier(feat)) # Return AU probabilities
+                    logits = 0.5 * (self.classifier(feat) + self.classifier_proj(feat_proj))
+                    return torch.sigmoid(logits) # Return AU probabilities
                 return torch.cat([feat, feat_proj], dim=1)
             else:
                 if self.num_classes == 12: # DISFA
-                    return torch.sigmoid(self.classifier(img_feature))
+                    logits = 0.5 * (
+                        self.classifier(img_feature)
+                        + self.classifier_proj(img_feature_proj)
+                    )
+                    return torch.sigmoid(logits)
                 return torch.cat([img_feature, img_feature_proj], dim=1)
 
 
