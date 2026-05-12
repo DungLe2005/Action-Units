@@ -153,6 +153,9 @@ def make_au_dataloader(cfg, fold_idx=0, num_folds=3):
     val_transforms = build_au_val_transforms(cfg)
 
     num_workers = cfg.DATALOADER.NUM_WORKERS
+    train_batch_size = cfg.SOLVER.IMS_PER_BATCH
+    if hasattr(cfg.SOLVER, "STAGE2"):
+        train_batch_size = cfg.SOLVER.STAGE2.IMS_PER_BATCH
 
     folds = build_disfa_subject_folds(
         root=cfg.DATASETS.ROOT_DIR,
@@ -196,7 +199,7 @@ def make_au_dataloader(cfg, fold_idx=0, num_folds=3):
     }
 
     train_loader = DataLoader(
-        train_set, batch_size=cfg.SOLVER.IMS_PER_BATCH, shuffle=True,
+        train_set, batch_size=train_batch_size, shuffle=True,
         num_workers=num_workers, pin_memory=True
     )
 

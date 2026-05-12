@@ -238,7 +238,7 @@ def do_train_stage2(cfg,
     text_model = _unwrap_data_parallel(model)
 
     loss_meter = AverageMeter()
-    scaler = torch.amp.GradScaler('cuda', enabled=True)
+    scaler = torch.amp.GradScaler('cuda', enabled=False)
     final_results = None
     best_disfa8_f1 = -1.0
     
@@ -255,7 +255,7 @@ def do_train_stage2(cfg,
             target = target.to(device).float()
             _assert_binary_targets(target, "Stage 2", epoch, n_iter + 1)
             
-            with torch.amp.autocast('cuda', enabled=True):
+            with torch.amp.autocast('cuda', enabled=False):
                 # model returns [logits_list], [feat_list], img_feat_proj
                 score, _, img_feat_proj = model(img)
 

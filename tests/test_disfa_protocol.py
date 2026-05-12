@@ -149,6 +149,16 @@ class TestDISFAProtocol(unittest.TestCase):
                 set(fold_info["train_subjects"]).intersection(fold_info["val_subjects"])
             )
 
+    def test_make_au_dataloader_prefers_stage2_batch_size(self):
+        with tempfile.TemporaryDirectory() as root:
+            _write_labels_csv(root)
+            cfg = _cfg(root)
+            cfg.SOLVER.STAGE2 = SimpleNamespace(IMS_PER_BATCH=3)
+
+            train_loader, _, _, _, _ = make_au_dataloader(cfg, fold_idx=0)
+
+            self.assertEqual(train_loader.batch_size, 3)
+
     def test_pos_weight_uses_train_split_labels(self):
         with tempfile.TemporaryDirectory() as root:
             _write_labels_csv(root)
