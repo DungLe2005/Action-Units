@@ -28,6 +28,20 @@ def weights_init_classifier(m):
         if m.bias:
             nn.init.constant_(m.bias, 0.0)
 
+
+def _assert_finite_state_dict(state_dict, checkpoint_path):
+    for name, value in state_dict.items():
+        if not torch.is_tensor(value) or not value.is_floating_point():
+            continue
+        if torch.isfinite(value).all():
+            continue
+        raise ValueError(
+            "Checkpoint {} contains non-finite values in {}".format(
+                checkpoint_path, name
+            )
+        )
+
+
 class TextEncoder(nn.Module):
     def __init__(self, clip_model):
         super().__init__()
@@ -38,6 +52,7 @@ class TextEncoder(nn.Module):
         self.dtype = clip_model.dtype
 
     def forward(self, prompts, tokenized_prompts): 
+        tokenized_prompts = tokenized_prompts.to(prompts.device)
         x = prompts + self.positional_embedding.type(self.dtype) 
         x = x.permute(1, 0, 2)  # NLD -> LND 
         x = self.transformer(x) 
@@ -46,7 +61,8 @@ class TextEncoder(nn.Module):
 
         # x.shape = [batch_size, n_ctx, transformer.width]
         # take features from the eot embedding (eot_token is the highest number in each sequence)
-        x = x[torch.arange(x.shape[0]), tokenized_prompts.argmax(dim=-1)] @ self.text_projection 
+        eot_indices = tokenized_prompts.argmax(dim=-1)
+        x = x[torch.arange(x.shape[0], device=x.device), eot_indices] @ self.text_projection 
         return x
 
 class build_transformer(nn.Module):
@@ -87,6 +103,9 @@ class build_transformer(nn.Module):
         self.w_resolution = int((cfg.INPUT.SIZE_TRAIN[1]-16)//cfg.MODEL.STRIDE_SIZE[1] + 1)
         self.vision_stride_size = cfg.MODEL.STRIDE_SIZE[0]
         clip_model = load_clip_to_cpu(self.model_name, self.h_resolution, self.w_resolution, self.vision_stride_size)
+        # Keep CLIP in fp32 for AU prompt tuning. Multi-label BCE over prompt
+        # similarities is more sensitive to fp16 overflow than the ReID path.
+        clip_model.float()
         clip_model.to("cuda")
 
         self.image_encoder = clip_model.visual
@@ -163,12 +182,14 @@ class build_transformer(nn.Module):
 
     def load_param(self, trained_path):
         param_dict = torch.load(trained_path)
+        _assert_finite_state_dict(param_dict, trained_path)
         for i in param_dict:
             self.state_dict()[i.replace('module.', '')].copy_(param_dict[i])
         print('Loading pretrained model from {}'.format(trained_path))
 
     def load_param_finetune(self, model_path):
         param_dict = torch.load(model_path)
+        _assert_finite_state_dict(param_dict, model_path)
         for i in param_dict:
             self.state_dict()[i].copy_(param_dict[i])
         print('Loading pretrained model for finetuning from {}'.format(model_path))
@@ -200,21 +221,63 @@ class PromptLearner(nn.Module):
     def __init__(self, num_class, dataset_name, dtype, token_embedding):
         super().__init__()
         if dataset_name == 'disfa':
-            ctx_init = "A photo of a face showing X X X X."
-        elif dataset_name == "VehicleID" or dataset_name == "veri":
+            self.is_au_prompt = True
+            self.num_class = num_class
+            self.n_ctx = 6
+            ctx_init = "A photo of a face showing"
+            au_descriptions = [
+                "inner brow raiser",
+                "outer brow raiser",
+                "brow lowerer",
+                "upper lid raiser",
+                "cheek raiser",
+                "nose wrinkler",
+                "lip corner puller",
+                "lip corner depressor",
+                "chin raiser",
+                "lip stretcher",
+                "lips part",
+                "jaw drop",
+            ]
+            if num_class != len(au_descriptions):
+                raise ValueError(
+                    "DISFA AU prompt learner expects {} classes, got {}".format(
+                        len(au_descriptions), num_class
+                    )
+                )
+
+            prompts = [
+                "{} {}.".format(ctx_init, description)
+                for description in au_descriptions
+            ]
+            tokenized_prompts = torch.cat([clip.tokenize(prompt) for prompt in prompts]).cuda()
+            ctx_tokenized = clip.tokenize(ctx_init).cuda()
+            with torch.no_grad():
+                embedding = token_embedding(tokenized_prompts).float()
+                ctx_embedding = token_embedding(ctx_tokenized).float()
+
+            ctx_vectors = ctx_embedding[0, 1: 1 + self.n_ctx, :].clone()
+            self.ctx = nn.Parameter(ctx_vectors)
+            self.register_buffer("token_prefix", embedding[:, :1, :])
+            self.register_buffer("token_suffix", embedding[:, 1 + self.n_ctx:, :])
+            self.register_buffer("tokenized_prompts", tokenized_prompts)
+            return
+
+        self.is_au_prompt = False
+        if dataset_name == "VehicleID" or dataset_name == "veri":
             ctx_init = "A photo of a X X X X vehicle."
         else:
             ctx_init = "A photo of a X X X X person."
 
-        ctx_dim = 512
+        ctx_dim = token_embedding.embedding_dim
         # use given words to initialize context vectors
         ctx_init = ctx_init.replace("_", " ")
         n_ctx = 4
         
         tokenized_prompts = clip.tokenize(ctx_init).cuda() 
         with torch.no_grad():
-            embedding = token_embedding(tokenized_prompts).type(dtype)
-        self.tokenized_prompts = tokenized_prompts  # torch.Tensor
+            embedding = token_embedding(tokenized_prompts).float()
+        self.register_buffer("tokenized_prompts", tokenized_prompts)
 
         n_cls_ctx = 4
         cls_vectors = torch.empty(num_class, n_cls_ctx, ctx_dim, dtype=torch.float32)
@@ -231,6 +294,22 @@ class PromptLearner(nn.Module):
         self.n_cls_ctx = n_cls_ctx
 
     def forward(self, label):
+        if self.is_au_prompt:
+            ctx = self.ctx
+            if label is None:
+                prefix = self.token_prefix
+                suffix = self.token_suffix
+                ctx = ctx.unsqueeze(0).expand(self.num_class, -1, -1)
+            else:
+                if label.ndim == 0:
+                    label = label.unsqueeze(0)
+                prefix = self.token_prefix[label]
+                suffix = self.token_suffix[label]
+                ctx = ctx.unsqueeze(0).expand(prefix.shape[0], -1, -1)
+
+            ctx = ctx.to(dtype=prefix.dtype)
+            return torch.cat([prefix, ctx, suffix], dim=1)
+
         if label is None:
             # Return all prompts for Stage 1 similarity
             cls_ctx = self.cls_ctx

@@ -17,8 +17,39 @@ def _assert_finite_loss(loss, stage_name, epoch, iteration):
     if torch.isfinite(loss.detach()):
         return
     raise FloatingPointError(
-        "{} produced a non-finite loss at epoch {}, iteration {}".format(
-            stage_name, epoch, iteration
+        "{} produced a non-finite loss at epoch {}, iteration {}. {}".format(
+            stage_name, epoch, iteration, _tensor_debug_summary(loss)
+        )
+    )
+
+
+def _tensor_debug_summary(tensor):
+    values = tensor.detach()
+    total = values.numel()
+    finite = torch.isfinite(values)
+    finite_count = int(finite.sum().item())
+    nan_count = int(torch.isnan(values).sum().item())
+    posinf_count = int(torch.isposinf(values).sum().item())
+    neginf_count = int(torch.isneginf(values).sum().item())
+    if finite_count > 0:
+        finite_values = values[finite]
+        min_value = float(finite_values.min().item())
+        max_value = float(finite_values.max().item())
+        finite_range = "finite_min={:.4e}, finite_max={:.4e}".format(
+            min_value, max_value
+        )
+    else:
+        finite_range = "no finite values"
+    return (
+        "shape={}, dtype={}, finite={}/{}, nan={}, +inf={}, -inf={}, {}".format(
+            tuple(values.shape),
+            values.dtype,
+            finite_count,
+            total,
+            nan_count,
+            posinf_count,
+            neginf_count,
+            finite_range,
         )
     )
 
@@ -31,7 +62,20 @@ def _assert_finite_tensor(tensor, name, stage_name, epoch=None, iteration=None):
     if epoch is not None and iteration is not None:
         location = " at epoch {}, iteration {}".format(epoch, iteration)
     raise FloatingPointError(
-        "{} produced non-finite {}{}".format(stage_name, name, location)
+        "{} produced non-finite {}{}. {}".format(
+            stage_name, name, location, _tensor_debug_summary(values)
+        )
+    )
+
+
+def _assert_binary_targets(target, stage_name, epoch, iteration):
+    _assert_finite_tensor(target, "targets", stage_name, epoch, iteration)
+    if torch.logical_or(target == 0.0, target == 1.0).all():
+        return
+    raise ValueError(
+        "{} received non-binary targets at epoch {}, iteration {}. {}".format(
+            stage_name, epoch, iteration, _tensor_debug_summary(target)
+        )
     )
 
 
@@ -84,7 +128,7 @@ def do_train_stage1(cfg,
     _freeze_text_encoder(model)
 
     loss_meter = AverageMeter()
-    scaler = torch.amp.GradScaler('cuda', enabled=True)
+    scaler = torch.amp.GradScaler('cuda', enabled=False)
     
     # Multi-label Contrastive Loss using BCE
     loss_fn_itc = nn.BCEWithLogitsLoss()
@@ -105,8 +149,9 @@ def do_train_stage1(cfg,
             optimizer.zero_grad()
             img = img.to(device)
             target = target.to(device).float() # Binary labels [B, 12]
+            _assert_binary_targets(target, "Stage 1", epoch, n_iter + 1)
             
-            with torch.amp.autocast('cuda', enabled=True):
+            with torch.amp.autocast('cuda', enabled=False):
                 # Get Image Features
                 with torch.no_grad():
                     image_features = model(x=img, get_image=True) # [B, 512]
@@ -115,12 +160,35 @@ def do_train_stage1(cfg,
 
             # Keep similarity and BCE math in fp32; fp16 normalize can easily
             # create NaNs when a feature norm gets very small.
+            _assert_finite_tensor(
+                image_features, "image features", "Stage 1", epoch, n_iter + 1
+            )
+            _assert_finite_tensor(
+                text_features, "text features", "Stage 1", epoch, n_iter + 1
+            )
             image_features = F.normalize(image_features.float(), dim=-1, eps=1e-6)
             text_features = F.normalize(text_features.float(), dim=-1, eps=1e-6)
+            _assert_finite_tensor(
+                image_features,
+                "normalized image features",
+                "Stage 1",
+                epoch,
+                n_iter + 1,
+            )
+            _assert_finite_tensor(
+                text_features,
+                "normalized text features",
+                "Stage 1",
+                epoch,
+                n_iter + 1,
+            )
 
             with torch.amp.autocast('cuda', enabled=False):
                 # Compute logits: [B, 12]
                 logits = (image_features @ text_features.t()) / temperature
+                _assert_finite_tensor(
+                    logits, "ITC logits", "Stage 1", epoch, n_iter + 1
+                )
                 loss = loss_fn_itc(logits, target)
             _assert_finite_loss(loss, "Stage 1", epoch, n_iter + 1)
 
@@ -185,12 +253,15 @@ def do_train_stage2(cfg,
             optimizer.zero_grad()
             img = img.to(device)
             target = target.to(device).float()
+            _assert_binary_targets(target, "Stage 2", epoch, n_iter + 1)
             
             with torch.amp.autocast('cuda', enabled=True):
                 # model returns [logits_list], [feat_list], img_feat_proj
                 score, _, img_feat_proj = model(img)
 
-                # Optional: Maintain Image-Text Alignment
+            # Optional: Maintain Image-Text Alignment. This branch is frozen in
+            # Stage 2, so keep it in fp32 and out of the autograd graph.
+            with torch.no_grad(), torch.amp.autocast('cuda', enabled=False):
                 text_features = text_model(get_text=True)
 
             score = _as_float_tensor_list(score)
