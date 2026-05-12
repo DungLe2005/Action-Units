@@ -8,7 +8,8 @@
 /model/backbones/__pycache__
 /model/clip/__pycache__
 
-/AUs_DATA
+/face_DATA
 .grapuco
 __pycache__
 *.pyc
+/docs
