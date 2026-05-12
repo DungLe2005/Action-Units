@@ -42,6 +42,13 @@ def _assert_finite_state_dict(state_dict, checkpoint_path):
         )
 
 
+def _load_weights(path, map_location=None):
+    try:
+        return torch.load(path, map_location=map_location, weights_only=True)
+    except TypeError:
+        return torch.load(path, map_location=map_location)
+
+
 class TextEncoder(nn.Module):
     def __init__(self, clip_model):
         super().__init__()
@@ -181,14 +188,14 @@ class build_transformer(nn.Module):
 
 
     def load_param(self, trained_path):
-        param_dict = torch.load(trained_path)
+        param_dict = _load_weights(trained_path)
         _assert_finite_state_dict(param_dict, trained_path)
         for i in param_dict:
             self.state_dict()[i.replace('module.', '')].copy_(param_dict[i])
         print('Loading pretrained model from {}'.format(trained_path))
 
     def load_param_finetune(self, model_path):
-        param_dict = torch.load(model_path)
+        param_dict = _load_weights(model_path)
         _assert_finite_state_dict(param_dict, model_path)
         for i in param_dict:
             self.state_dict()[i].copy_(param_dict[i])
@@ -211,7 +218,7 @@ def load_clip_to_cpu(backbone_name, h_resolution, w_resolution, vision_stride_si
         state_dict = None
 
     except RuntimeError:
-        state_dict = torch.load(model_path, map_location="cpu")
+        state_dict = _load_weights(model_path, map_location="cpu")
 
     model = clip.build_model(state_dict or model.state_dict(), h_resolution, w_resolution, vision_stride_size)
 

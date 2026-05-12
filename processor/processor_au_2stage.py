@@ -68,6 +68,11 @@ def _assert_finite_tensor(tensor, name, stage_name, epoch=None, iteration=None):
     )
 
 
+def _is_finite_tensor(tensor):
+    values = tensor if torch.is_tensor(tensor) else torch.as_tensor(tensor)
+    return bool(torch.isfinite(values.detach()).all().item())
+
+
 def _assert_binary_targets(target, stage_name, epoch, iteration):
     _assert_finite_tensor(target, "targets", stage_name, epoch, iteration)
     if torch.logical_or(target == 0.0, target == 1.0).all():
@@ -241,6 +246,8 @@ def do_train_stage2(cfg,
     scaler = torch.amp.GradScaler('cuda', enabled=False)
     final_results = None
     best_disfa8_f1 = -1.0
+    disable_itc = False
+    itc_loss_weight = 0.1
     
     all_start_time = time.time()
 
@@ -259,11 +266,6 @@ def do_train_stage2(cfg,
                 # model returns [logits_list], [feat_list], img_feat_proj
                 score, _, img_feat_proj = model(img)
 
-            # Optional: Maintain Image-Text Alignment. This branch is frozen in
-            # Stage 2, so keep it in fp32 and out of the autograd graph.
-            with torch.no_grad(), torch.amp.autocast('cuda', enabled=False):
-                text_features = text_model(get_text=True)
-
             score = _as_float_tensor_list(score)
             score_tensors = score if isinstance(score, list) else [score]
             for index, score_tensor in enumerate(score_tensors):
@@ -275,23 +277,46 @@ def do_train_stage2(cfg,
                     n_iter + 1,
                 )
 
-            img_feat_proj = F.normalize(img_feat_proj.float(), dim=-1, eps=1e-6)
-            text_features = F.normalize(text_features.float(), dim=-1, eps=1e-6)
             with torch.amp.autocast('cuda', enabled=False):
                 # Classification and BCE/ITC math stay in fp32. Weighted BCE can
                 # overflow in fp16 before GradScaler has a chance to react.
                 loss_cls = loss_fn(score, target)
-                logits_itc = (img_feat_proj @ text_features.t()) / 0.07
-                _assert_finite_tensor(
-                    logits_itc,
-                    "ITC logits",
-                    "Stage 2",
-                    epoch,
-                    n_iter + 1,
-                )
-                loss_itc = F.binary_cross_entropy_with_logits(logits_itc, target)
-                
-                loss = loss_cls + 0.1 * loss_itc # Small weight for ITC
+                loss = loss_cls
+
+                if itc_loss_weight > 0.0 and not disable_itc:
+                    # Optional: Maintain Image-Text Alignment. This branch is
+                    # frozen in Stage 2, so keep it in fp32 and out of the
+                    # autograd graph. If an old/unstable Stage 1 prompt makes
+                    # ITC non-finite, continue with the main AU BCE objective.
+                    with torch.no_grad(), torch.amp.autocast('cuda', enabled=False):
+                        text_features = text_model(get_text=True)
+
+                    img_feat_proj_itc = F.normalize(
+                        img_feat_proj.float(), dim=-1, eps=1e-6
+                    )
+                    text_features_itc = F.normalize(
+                        text_features.float(), dim=-1, eps=1e-6
+                    )
+                    logits_itc = (img_feat_proj_itc @ text_features_itc.t()) / 0.07
+
+                    if _is_finite_tensor(logits_itc):
+                        loss_itc = F.binary_cross_entropy_with_logits(
+                            logits_itc, target
+                        )
+                        loss = loss_cls + itc_loss_weight * loss_itc
+                    else:
+                        disable_itc = True
+                        logger.warning(
+                            "Disabling Stage 2 ITC regularization after non-finite "
+                            "ITC logits at epoch {}, iteration {}. {}. "
+                            "Continuing with Weighted BCE only; regenerate the "
+                            "Stage 1 checkpoint if you need ITC regularization."
+                            .format(
+                                epoch,
+                                n_iter + 1,
+                                _tensor_debug_summary(logits_itc),
+                            )
+                        )
             _assert_finite_loss(loss, "Stage 2", epoch, n_iter + 1)
 
             scaler.scale(loss).backward()
