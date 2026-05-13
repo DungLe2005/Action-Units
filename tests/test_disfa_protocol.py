@@ -59,6 +59,7 @@ from datasets.make_dataloader import (
 )
 from loss.make_loss import make_loss
 from utils.au_fold_report import flatten_fold_metrics, summarize_fold_rows
+from utils.au_training_history import history_row, write_stage2_history
 
 
 AU_COLUMNS = [
@@ -220,6 +221,36 @@ class TestDISFAProtocol(unittest.TestCase):
         self.assertAlmostEqual(summary["mean"]["disfa8_f1_macro"], 0.6)
         self.assertIn("disfa8_f1_AU1", rows[0])
         self.assertIn("disfa8_f1_AU26", rows[0])
+
+    def test_stage2_history_writes_metric_files(self):
+        metrics = {
+            "disfa8_f1_macro": 0.6,
+            "disfa8_auc_macro": 0.7,
+            "avg_f1": 0.5,
+            "avg_auc": 0.65,
+            "accuracy": 0.8,
+            "f1_macro": 0.45,
+            "f1_micro": 0.55,
+        }
+
+        with tempfile.TemporaryDirectory() as root:
+            row = history_row(
+                epoch=1,
+                train_loss=2.0,
+                lr=3.5e-6,
+                metrics=metrics,
+                best_metric=0.6,
+                is_best=True,
+                itc_enabled=False,
+            )
+            paths = write_stage2_history(root, [row])
+
+            self.assertTrue(os.path.exists(paths["csv_path"]))
+            self.assertTrue(os.path.exists(paths["json_path"]))
+            with open(paths["csv_path"], newline="") as csv_file:
+                rows = list(csv.DictReader(csv_file))
+            self.assertEqual(rows[0]["epoch"], "1")
+            self.assertEqual(rows[0]["is_best"], "True")
 
 
 if __name__ == "__main__":

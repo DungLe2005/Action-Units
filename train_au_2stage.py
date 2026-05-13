@@ -40,6 +40,31 @@ def _format_cuda_visible_devices(device_id):
     return str(device_id)
 
 
+def _log_cuda_setup(logger):
+    logger.info(
+        "CUDA_VISIBLE_DEVICES={}".format(
+            os.environ.get("CUDA_VISIBLE_DEVICES", "<unset>")
+        )
+    )
+    if not torch.cuda.is_available():
+        logger.warning("CUDA is not available; training will run on CPU.")
+        return
+
+    device_count = torch.cuda.device_count()
+    device_summaries = []
+    for device_index in range(device_count):
+        props = torch.cuda.get_device_properties(device_index)
+        total_gb = props.total_memory / (1024 ** 3)
+        device_summaries.append(
+            "{}:{} ({:.1f}GB)".format(device_index, props.name, total_gb)
+        )
+    logger.info(
+        "PyTorch visible CUDA devices: {} [{}]".format(
+            device_count, "; ".join(device_summaries)
+        )
+    )
+
+
 def _make_fold_cfg(base_cfg, fold_idx, output_dir):
     fold_cfg = base_cfg.clone()
     fold_cfg.defrost()
@@ -80,6 +105,7 @@ def run_fold(cfg, args, fold_idx):
     logger = setup_logger("transreid", cfg.OUTPUT_DIR, if_train=True)
     logger.info("Saving model in the path :{}".format(cfg.OUTPUT_DIR))
     logger.info(args)
+    _log_cuda_setup(logger)
     logger.info("Starting DISFA subject-exclusive fold {}".format(fold_idx))
 
     train_loader, val_loader, num_aus, pos_weight, fold_info = make_au_dataloader(
