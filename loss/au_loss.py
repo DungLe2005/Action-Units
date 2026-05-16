@@ -18,7 +18,7 @@ class WeightedBCELoss(nn.Module):
         """
         targets = targets.float()
         if isinstance(logits, list):
-            # If multiple classifiers output (like in CLIP-ReID)
-            loss = sum([self.bce(l.float(), targets) for l in logits])
-            return loss
+            # Keep dual-head training on the same loss scale as a single AU head.
+            losses = [self.bce(logit.float(), targets) for logit in logits]
+            return torch.stack(losses).mean()
         return self.bce(logits.float(), targets)

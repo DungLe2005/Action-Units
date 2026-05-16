@@ -23,6 +23,8 @@ def make_optimizer_1stage(cfg, model):
 def make_optimizer_2stage(cfg, model, center_criterion):
     params = []
     keys = []
+    base_lr = cfg.SOLVER.STAGE2.BASE_LR
+    backbone_lr_factor = getattr(cfg.SOLVER.STAGE2, "BACKBONE_LR_FACTOR", 1.0)
     for key, value in model.named_parameters():
         if "text_encoder" in key:
             value.requires_grad_(False)
@@ -32,17 +34,30 @@ def make_optimizer_2stage(cfg, model, center_criterion):
             continue
         if not value.requires_grad:
             continue
-        lr = cfg.SOLVER.STAGE2.BASE_LR
+        lr_group = "head"
+        lr = base_lr
         weight_decay = cfg.SOLVER.STAGE2.WEIGHT_DECAY
+        if "image_encoder" in key:
+            lr_group = "backbone"
+            lr = base_lr * backbone_lr_factor
         if "bias" in key:
-            lr = cfg.SOLVER.STAGE2.BASE_LR * cfg.SOLVER.STAGE2.BIAS_LR_FACTOR
+            lr = lr * cfg.SOLVER.STAGE2.BIAS_LR_FACTOR
             weight_decay = cfg.SOLVER.STAGE2.WEIGHT_DECAY_BIAS
         if cfg.SOLVER.STAGE2.LARGE_FC_LR:
             if "classifier" in key or "arcface" in key:
-                lr = cfg.SOLVER.BASE_LR * 2
+                lr = base_lr * 2
+                lr_group = "classifier"
                 print('Using two times learning rate for fc ')
         
-        params += [{"params": [value], "lr": lr, "weight_decay": weight_decay}]
+        params += [
+            {
+                "params": [value],
+                "lr": lr,
+                "weight_decay": weight_decay,
+                "name": key,
+                "stage2_group": lr_group,
+            }
+        ]
         keys += [key]
     if cfg.SOLVER.STAGE2.OPTIMIZER_NAME == 'SGD':
         optimizer = getattr(torch.optim, cfg.SOLVER.STAGE2.OPTIMIZER_NAME)(params, momentum=cfg.SOLVER.STAGE2.MOMENTUM)

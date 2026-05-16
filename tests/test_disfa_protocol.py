@@ -242,6 +242,9 @@ class TestDISFAProtocol(unittest.TestCase):
                 best_metric=0.6,
                 is_best=True,
                 itc_enabled=False,
+                grad_norm=1.25,
+                max_logit_abs=3.5,
+                train_positive_rate=0.42,
             )
             paths = write_stage2_history(root, [row])
 
@@ -251,6 +254,9 @@ class TestDISFAProtocol(unittest.TestCase):
                 rows = list(csv.DictReader(csv_file))
             self.assertEqual(rows[0]["epoch"], "1")
             self.assertEqual(rows[0]["is_best"], "True")
+            self.assertEqual(rows[0]["grad_norm"], "1.25")
+            self.assertEqual(rows[0]["max_logit_abs"], "3.5")
+            self.assertEqual(rows[0]["stopped_early"], "False")
 
 
 if __name__ == "__main__":

@@ -29,6 +29,37 @@ def _current_lr(optimizer):
     return optimizer.param_groups[0]["lr"]
 
 
+def _cfg_value(section, name, default):
+    return getattr(section, name, default)
+
+
+def _stage2_amp_enabled(cfg):
+    return bool(_cfg_value(cfg.SOLVER.STAGE2, "AMP", False)) and torch.cuda.is_available()
+
+
+def _lr_group_summary(optimizer):
+    grouped = {}
+    for group in optimizer.param_groups:
+        group_name = group.get("stage2_group", "default")
+        grouped.setdefault(group_name, {"count": 0, "lrs": []})
+        grouped[group_name]["count"] += 1
+        grouped[group_name]["lrs"].append(float(group["lr"]))
+
+    parts = []
+    for group_name in sorted(grouped):
+        lrs = grouped[group_name]["lrs"]
+        if min(lrs) == max(lrs):
+            lr_text = "{:.2e}".format(lrs[0])
+        else:
+            lr_text = "{:.2e}-{:.2e}".format(min(lrs), max(lrs))
+        parts.append(
+            "{}:{} tensors lr={}".format(
+                group_name, grouped[group_name]["count"], lr_text
+            )
+        )
+    return "; ".join(parts)
+
+
 def _reset_cuda_peak_memory():
     if not torch.cuda.is_available():
         return
@@ -147,6 +178,81 @@ def _as_float_tensor_list(values):
     return values.float()
 
 
+def _score_tensors(values):
+    values = _as_float_tensor_list(values)
+    return values if isinstance(values, list) else [values]
+
+
+def _max_abs_tensor_value(tensors):
+    max_value = 0.0
+    for tensor in tensors:
+        current = float(tensor.detach().float().abs().max().item())
+        max_value = max(max_value, current)
+    return max_value
+
+
+def _positive_rate_from_logits(tensors):
+    if len(tensors) == 1:
+        logits = tensors[0].detach().float()
+    else:
+        logits = torch.stack([tensor.detach().float() for tensor in tensors], dim=0).mean(dim=0)
+    return float((torch.sigmoid(logits) > 0.5).float().mean().item())
+
+
+def _assert_finite_model_parameters(model, stage_name, epoch=None, iteration=None):
+    base_model = _unwrap_data_parallel(model)
+    for name, param in base_model.named_parameters():
+        if not param.is_floating_point():
+            continue
+        if torch.isfinite(param.detach()).all().item():
+            continue
+        location = ""
+        if epoch is not None and iteration is not None:
+            location = " at epoch {}, iteration {}".format(epoch, iteration)
+        elif epoch is not None:
+            location = " at epoch {}".format(epoch)
+        raise FloatingPointError(
+            "{} found non-finite parameter {}{}. {}".format(
+                stage_name, name, location, _tensor_debug_summary(param)
+            )
+        )
+
+
+def _save_stage2_diagnostic(model, cfg, epoch, iteration, reason, logger):
+    safe_reason = "".join(
+        character if character.isalnum() else "_" for character in str(reason).lower()
+    ).strip("_")[:48]
+    if not safe_reason:
+        safe_reason = "diagnostic"
+    checkpoint_path = os.path.join(
+        cfg.OUTPUT_DIR,
+        "{}_au_stage2_diagnostic_e{}_i{}_{}.pth".format(
+            cfg.MODEL.NAME, epoch, iteration, safe_reason
+        ),
+    )
+    _save_model_state(model, checkpoint_path)
+    logger.error("Saved Stage 2 diagnostic checkpoint: {}".format(checkpoint_path))
+    return checkpoint_path
+
+
+def _raise_stage2_diagnostic(model, cfg, epoch, iteration, reason, message, logger):
+    checkpoint_path = _save_stage2_diagnostic(
+        model, cfg, epoch, iteration, reason, logger
+    )
+    raise FloatingPointError("{} Diagnostic checkpoint: {}".format(message, checkpoint_path))
+
+
+def _update_stage2_early_stop(
+    current_metric,
+    best_metric_for_stop,
+    epochs_without_improvement,
+    min_delta,
+):
+    if math.isfinite(current_metric) and current_metric > best_metric_for_stop + min_delta:
+        return current_metric, 0, True
+    return best_metric_for_stop, epochs_without_improvement + 1, False
+
+
 def _au_probabilities_from_logits(output):
     if isinstance(output, tuple):
         output = output[0]
@@ -175,6 +281,8 @@ def _evaluate_au_model(model, val_loader, device, desc="Eval AU"):
     evaluator = AUEvaluator()
     model.eval()
     evaluator.reset()
+    positive_predictions = 0
+    total_predictions = 0
     progress = tqdm(
         val_loader,
         desc=desc,
@@ -188,8 +296,16 @@ def _evaluate_au_model(model, val_loader, device, desc="Eval AU"):
             logits = model(img, return_au_logits=True)
             probs = _au_probabilities_from_logits(logits)
             _assert_finite_tensor(probs, "validation probabilities", "Evaluation")
+            positive_predictions += int((probs > 0.5).sum().item())
+            total_predictions += int(probs.numel())
             evaluator.update(probs, target)
-    return evaluator.compute()
+    results = evaluator.compute()
+    results["eval_positive_rate"] = (
+        float(positive_predictions) / float(total_predictions)
+        if total_predictions > 0
+        else float("nan")
+    )
+    return results
 
 
 def _run_stage2_eval(
@@ -204,6 +320,11 @@ def _run_stage2_eval(
     history_records,
     itc_enabled,
     logger,
+    grad_norm=None,
+    max_logit_abs=None,
+    train_positive_rate=None,
+    stopped_early=False,
+    stop_reason="",
 ):
     results = _evaluate_au_model(
         model, val_loader, device, desc="Eval Stage2 E{}".format(epoch)
@@ -232,6 +353,11 @@ def _run_stage2_eval(
             best_metric=best_metric,
             is_best=is_best,
             itc_enabled=itc_enabled,
+            grad_norm=grad_norm,
+            max_logit_abs=max_logit_abs,
+            train_positive_rate=train_positive_rate,
+            stopped_early=stopped_early,
+            stop_reason=stop_reason,
         )
     )
     history_paths = write_stage2_history(cfg.OUTPUT_DIR, history_records)
@@ -245,6 +371,19 @@ def _run_stage2_eval(
     logger.info(
         "DISFA-8 Avg F1: {:.4f}, Best DISFA-8 Avg F1: {:.4f}".format(
             current_metric, best_metric
+        )
+    )
+    logger.info(
+        "Stage 2 diagnostics - GradNorm: {}, MaxLogitAbs: {}, TrainPosRate: {}, "
+        "EvalPosRate: {:.4f}".format(
+            "n/a" if grad_norm is None else "{:.3f}".format(float(grad_norm)),
+            "n/a" if max_logit_abs is None else "{:.3f}".format(float(max_logit_abs)),
+            (
+                "n/a"
+                if train_positive_rate is None
+                else "{:.4f}".format(float(train_positive_rate))
+            ),
+            float(results.get("eval_positive_rate", float("nan"))),
         )
     )
     logger.info(
@@ -366,7 +505,7 @@ def do_train_stage1(cfg,
                 refresh=False,
             )
 
-            if iteration % log_period == 0:
+            if log_period > 0 and iteration % log_period == 0:
                 logger.info(
                     "Epoch[{}] Iteration[{}/{}] Loss: {:.3f}, Img/s: {:.1f}, "
                     "GPU peak GB: {}".format(
@@ -416,18 +555,35 @@ def do_train_stage2(cfg,
 
     logger = logging.getLogger("transreid.train")
     logger.info('Start AU Training Stage 2 (Fine-tuning)')
-    
+
     model = _prepare_cuda_model(model, logger, "Stage 2", train_loader.batch_size)
     text_model = _unwrap_data_parallel(model)
 
     loss_meter = AverageMeter()
-    scaler = torch.amp.GradScaler('cuda', enabled=False)
+    grad_norm_meter = AverageMeter()
+    logit_abs_meter = AverageMeter()
+    positive_rate_meter = AverageMeter()
+    amp_enabled = _stage2_amp_enabled(cfg)
+    scaler = torch.amp.GradScaler('cuda', enabled=amp_enabled)
     final_results = None
     best_disfa8_f1 = -1.0
+    best_metric_for_early_stop = -1.0
+    epochs_without_improvement = 0
     history_records = []
     disable_itc = False
     itc_loss_weight = 0.1
-    
+    max_grad_norm = float(_cfg_value(cfg.SOLVER.STAGE2, "MAX_GRAD_NORM", 5.0))
+    max_logit_abs_limit = float(_cfg_value(cfg.SOLVER.STAGE2, "MAX_LOGIT_ABS", 0.0))
+    early_stop_patience = int(
+        _cfg_value(cfg.SOLVER.STAGE2, "EARLY_STOP_PATIENCE", 0)
+    )
+    early_stop_min_delta = float(
+        _cfg_value(cfg.SOLVER.STAGE2, "EARLY_STOP_MIN_DELTA", 0.0)
+    )
+
+    logger.info("Stage 2 AMP: {}".format("enabled" if amp_enabled else "disabled"))
+    logger.info("Stage 2 LR groups: {}".format(_lr_group_summary(optimizer)))
+
     all_start_time = time.time()
 
     for epoch in range(1, epochs + 1):
@@ -435,10 +591,17 @@ def do_train_stage2(cfg,
         _reset_cuda_peak_memory()
         samples_seen = 0
         loss_meter.reset()
+        grad_norm_meter.reset()
+        logit_abs_meter.reset()
+        positive_rate_meter.reset()
 
         model.train()
         epoch_train_lr = _current_lr(optimizer)
-        logger.info("Stage 2 LR: {:.2e}".format(epoch_train_lr))
+        logger.info(
+            "Stage 2 LR: {:.2e} ({})".format(
+                epoch_train_lr, _lr_group_summary(optimizer)
+            )
+        )
         progress = tqdm(
             train_loader,
             desc="Stage2 E{}/{}".format(epoch, epochs),
@@ -447,25 +610,44 @@ def do_train_stage2(cfg,
             leave=False,
         )
         for iteration, (img, target, _, _, _) in enumerate(progress, start=1):
-            optimizer.zero_grad()
+            optimizer.zero_grad(set_to_none=True)
             img = img.to(device)
             target = target.to(device).float()
             _assert_binary_targets(target, "Stage 2", epoch, iteration)
-            
-            with torch.amp.autocast('cuda', enabled=False):
+
+            with torch.amp.autocast('cuda', enabled=amp_enabled):
                 # model returns [logits_list], [feat_list], img_feat_proj
                 score, _, img_feat_proj = model(img)
 
             score = _as_float_tensor_list(score)
-            score_tensors = score if isinstance(score, list) else [score]
+            score_tensors = _score_tensors(score)
             for index, score_tensor in enumerate(score_tensors):
-                _assert_finite_tensor(
-                    score_tensor,
-                    "classifier logits[{}]".format(index),
-                    "Stage 2",
+                if not _is_finite_tensor(score_tensor):
+                    _raise_stage2_diagnostic(
+                        model,
+                        cfg,
+                        epoch,
+                        iteration,
+                        "non_finite_logits",
+                        "Stage 2 produced non-finite classifier logits[{}]. {}".format(
+                            index, _tensor_debug_summary(score_tensor)
+                        ),
+                        logger,
+                    )
+            max_logit_abs = _max_abs_tensor_value(score_tensors)
+            if max_logit_abs_limit > 0.0 and max_logit_abs > max_logit_abs_limit:
+                _raise_stage2_diagnostic(
+                    model,
+                    cfg,
                     epoch,
                     iteration,
+                    "logit_guardrail",
+                    "Stage 2 max logit abs {:.3f} exceeded limit {:.3f}".format(
+                        max_logit_abs, max_logit_abs_limit
+                    ),
+                    logger,
                 )
+            train_positive_rate = _positive_rate_from_logits(score_tensors)
 
             loss_itc_value = None
             with torch.amp.autocast('cuda', enabled=False):
@@ -510,15 +692,47 @@ def do_train_stage2(cfg,
                                 _tensor_debug_summary(logits_itc),
                             )
                         )
-            _assert_finite_loss(loss, "Stage 2", epoch, iteration)
+            if not torch.isfinite(loss.detach()).item():
+                _raise_stage2_diagnostic(
+                    model,
+                    cfg,
+                    epoch,
+                    iteration,
+                    "non_finite_loss",
+                    "Stage 2 produced a non-finite loss. {}".format(
+                        _tensor_debug_summary(loss)
+                    ),
+                    logger,
+                )
 
             scaler.scale(loss).backward()
             scaler.unscale_(optimizer)
-            torch.nn.utils.clip_grad_norm_(model.parameters(), 5.0)
+            grad_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), max_grad_norm)
+            grad_norm_value = float(
+                grad_norm.detach().float().item()
+                if torch.is_tensor(grad_norm)
+                else grad_norm
+            )
+            if not math.isfinite(grad_norm_value):
+                _raise_stage2_diagnostic(
+                    model,
+                    cfg,
+                    epoch,
+                    iteration,
+                    "non_finite_grad_norm",
+                    "Stage 2 produced non-finite gradient norm {}".format(
+                        grad_norm_value
+                    ),
+                    logger,
+                )
             scaler.step(optimizer)
             scaler.update()
+            _assert_finite_model_parameters(model, "Stage 2", epoch, iteration)
 
             loss_meter.update(loss.item(), img.shape[0])
+            grad_norm_meter.update(grad_norm_value, img.shape[0])
+            logit_abs_meter.update(max_logit_abs, img.shape[0])
+            positive_rate_meter.update(train_positive_rate, img.shape[0])
             samples_seen += img.shape[0]
             imgs_per_sec = _samples_per_second(samples_seen, start_time)
             best_text = (
@@ -535,6 +749,9 @@ def do_train_stage2(cfg,
                 loss="{:.3f}".format(loss_meter.avg),
                 cls="{:.3f}".format(loss_cls_value),
                 itc=itc_text,
+                grad="{:.2f}".format(grad_norm_value),
+                logit="{:.1f}".format(max_logit_abs),
+                pos="{:.3f}".format(train_positive_rate),
                 lr="{:.2e}".format(_current_lr(optimizer)),
                 best=best_text,
                 ips="{:.1f}".format(imgs_per_sec),
@@ -542,11 +759,12 @@ def do_train_stage2(cfg,
                 refresh=False,
             )
 
-            if iteration % log_period == 0:
+            if log_period > 0 and iteration % log_period == 0:
                 logger.info(
                     "Epoch[{}] Iteration[{}/{}] Loss: {:.3f}, BCE: {:.3f}, "
-                    "ITC: {}, Lr: {:.2e}, Best DISFA-8 F1: {}, Img/s: {:.1f}, "
-                    "GPU peak GB: {}"
+                    "ITC: {}, GradNorm: {:.3f}, MaxLogitAbs: {:.3f}, "
+                    "TrainPosRate: {:.4f}, Lr: {:.2e}, Best DISFA-8 F1: {}, "
+                    "Img/s: {:.1f}, GPU peak GB: {}"
                     .format(
                         epoch,
                         iteration,
@@ -554,6 +772,9 @@ def do_train_stage2(cfg,
                         loss_meter.avg,
                         loss_cls_value,
                         itc_text,
+                        grad_norm_value,
+                        max_logit_abs,
+                        train_positive_rate,
                         _current_lr(optimizer),
                         best_text,
                         imgs_per_sec,
@@ -562,11 +783,16 @@ def do_train_stage2(cfg,
                 )
 
         scheduler.step()
+        _assert_finite_model_parameters(model, "Stage 2", epoch)
         logger.info(
-            "Epoch {} done. Time: {:.1f}s, Img/s: {:.1f}, GPU peak GB: {}".format(
+            "Epoch {} done. Time: {:.1f}s, Img/s: {:.1f}, GradNorm: {:.3f}, "
+            "MaxLogitAbs: {:.3f}, TrainPosRate: {:.4f}, GPU peak GB: {}".format(
                 epoch,
                 time.time() - start_time,
                 _samples_per_second(samples_seen, start_time),
+                grad_norm_meter.avg,
+                logit_abs_meter.avg,
+                positive_rate_meter.avg,
                 _cuda_memory_summary(),
             )
         )
@@ -579,6 +805,7 @@ def do_train_stage2(cfg,
             logger.info("Saved Stage 2 checkpoint: {}".format(checkpoint_path))
 
         if epoch % eval_period == 0 or epoch == epochs:
+            _assert_finite_model_parameters(model, "Stage 2", epoch)
             final_results, best_disfa8_f1 = _run_stage2_eval(
                 cfg=cfg,
                 model=model,
@@ -591,9 +818,55 @@ def do_train_stage2(cfg,
                 history_records=history_records,
                 itc_enabled=not disable_itc,
                 logger=logger,
+                grad_norm=grad_norm_meter.avg,
+                max_logit_abs=logit_abs_meter.avg,
+                train_positive_rate=positive_rate_meter.avg,
             )
+            current_metric = float(
+                final_results.get(PRIMARY_STAGE2_METRIC, float("nan"))
+            )
+            (
+                best_metric_for_early_stop,
+                epochs_without_improvement,
+                improved_for_early_stop,
+            ) = _update_stage2_early_stop(
+                current_metric,
+                best_metric_for_early_stop,
+                epochs_without_improvement,
+                early_stop_min_delta,
+            )
+            if improved_for_early_stop:
+                logger.info(
+                    "Stage 2 early-stop monitor improved to {:.4f}".format(
+                        best_metric_for_early_stop
+                    )
+                )
+            elif early_stop_patience > 0:
+                logger.info(
+                    "Stage 2 early-stop monitor: no improvement for {}/{} evals".format(
+                        epochs_without_improvement, early_stop_patience
+                    )
+                )
+            if (
+                early_stop_patience > 0
+                and epochs_without_improvement >= early_stop_patience
+            ):
+                stop_reason = (
+                    "{} did not improve by {:.4f} for {} evals".format(
+                        PRIMARY_STAGE2_METRIC,
+                        early_stop_min_delta,
+                        early_stop_patience,
+                    )
+                )
+                if history_records:
+                    history_records[-1]["stopped_early"] = True
+                    history_records[-1]["stop_reason"] = stop_reason
+                    write_stage2_history(cfg.OUTPUT_DIR, history_records)
+                logger.info("Early stopping Stage 2: {}".format(stop_reason))
+                break
 
     if final_results is None:
+        _assert_finite_model_parameters(model, "Stage 2", epochs)
         final_results, best_disfa8_f1 = _run_stage2_eval(
             cfg=cfg,
             model=model,
@@ -606,6 +879,9 @@ def do_train_stage2(cfg,
             history_records=history_records,
             itc_enabled=not disable_itc,
             logger=logger,
+            grad_norm=grad_norm_meter.avg,
+            max_logit_abs=logit_abs_meter.avg,
+            train_positive_rate=positive_rate_meter.avg,
         )
 
     logger.info("Total training time: {:.1f}s".format(time.time() - all_start_time))

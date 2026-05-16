@@ -15,6 +15,10 @@ HISTORY_METRIC_KEYS = [
     "accuracy",
     "f1_macro",
     "f1_micro",
+    "grad_norm",
+    "max_logit_abs",
+    "train_positive_rate",
+    "eval_positive_rate",
 ]
 
 
@@ -27,17 +31,35 @@ def _clean_float(value):
         return float("nan")
 
 
-def history_row(epoch, train_loss, lr, metrics, best_metric, is_best, itc_enabled):
+def history_row(
+    epoch,
+    train_loss,
+    lr,
+    metrics,
+    best_metric,
+    is_best,
+    itc_enabled,
+    grad_norm=None,
+    max_logit_abs=None,
+    train_positive_rate=None,
+    stopped_early=False,
+    stop_reason="",
+):
     row = {
         "epoch": int(epoch),
         "train_loss": _clean_float(train_loss),
         "lr": _clean_float(lr),
+        "grad_norm": _clean_float(grad_norm),
+        "max_logit_abs": _clean_float(max_logit_abs),
+        "train_positive_rate": _clean_float(train_positive_rate),
         "best_metric": _clean_float(best_metric),
         "is_best": bool(is_best),
         "itc_enabled": bool(itc_enabled),
+        "stopped_early": bool(stopped_early),
+        "stop_reason": str(stop_reason or ""),
     }
     for key in HISTORY_METRIC_KEYS:
-        if key in {"train_loss", "lr"}:
+        if key in row:
             continue
         row[key] = _clean_float(metrics.get(key))
     for key, value in metrics.items():

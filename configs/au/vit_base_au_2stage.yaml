@@ -25,40 +25,46 @@ DATALOADER:
   NUM_WORKERS: 8
 
 SOLVER:
-  # Global train batch. With DEVICE_ID [0, 1], 192 means about 96 samples/GPU.
-  IMS_PER_BATCH: 192
+  # Global train batch. With DEVICE_ID [0, 1], 128 means about 64 samples/GPU.
+  IMS_PER_BATCH: 128
 
   STAGE1:
     MAX_EPOCHS: 20
     BASE_LR: 0.00001
     OPTIMIZER_NAME: 'AdamW'
     WEIGHT_DECAY: 0.0001
-    IMS_PER_BATCH: 192
+    IMS_PER_BATCH: 128
     CHECKPOINT_PERIOD: 2
-    LOG_PERIOD: 50
+    LOG_PERIOD: 0
     WARMUP_EPOCHS: 1
     WARMUP_LR_INIT: 0.000001
     LR_MIN: 0.000001
   
   STAGE2:
-    MAX_EPOCHS: 100
-    BASE_LR: 0.00035
+    MAX_EPOCHS: 50
+    BASE_LR: 0.00005
+    BACKBONE_LR_FACTOR: 0.1
     OPTIMIZER_NAME: 'Adam'
-    WEIGHT_DECAY: 0.0005
-    STEPS: [15, 25]
+    WEIGHT_DECAY: 0.0001
+    STEPS: [25, 40]
     GAMMA: 0.1
     WARMUP_FACTOR: 0.01
     # Stage 2 scheduler is stepped once per epoch in this trainer.
-    WARMUP_ITERS: 2
+    WARMUP_ITERS: 5
     WARMUP_METHOD: 'linear'
-    IMS_PER_BATCH: 192
+    IMS_PER_BATCH: 128
     CHECKPOINT_PERIOD: 5
-    LOG_PERIOD: 50
+    LOG_PERIOD: 0
     EVAL_PERIOD: 1
     CENTER_LR: 0.5
-    BIAS_LR_FACTOR: 2
+    BIAS_LR_FACTOR: 1
     WEIGHT_DECAY_BIAS: 0.0005
     LARGE_FC_LR: false
+    AMP: true
+    EARLY_STOP_PATIENCE: 8
+    EARLY_STOP_MIN_DELTA: 0.001
+    MAX_LOGIT_ABS: 80.0
+    MAX_GRAD_NORM: 5.0
 
   SEED: 42
 
