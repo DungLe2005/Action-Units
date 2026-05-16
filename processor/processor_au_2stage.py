@@ -396,16 +396,68 @@ def _run_stage2_eval(
     return results, best_metric
 
 
+def _evaluate_stage1_itc_loss(
+    model,
+    text_model,
+    val_loader,
+    device,
+    loss_fn_itc,
+    temperature,
+    desc="Eval Stage1",
+):
+    model_was_training = model.training
+    text_model_was_training = text_model.training
+    model.eval()
+    text_model.eval()
+    loss_meter = AverageMeter()
+    progress = tqdm(
+        val_loader,
+        desc=desc,
+        total=len(val_loader),
+        dynamic_ncols=True,
+        leave=False,
+    )
+    with torch.no_grad():
+        text_features = text_model(get_text=True)
+        _assert_finite_tensor(text_features, "validation text features", "Stage 1")
+        text_features = F.normalize(text_features.float(), dim=-1, eps=1e-6)
+        _assert_finite_tensor(
+            text_features, "normalized validation text features", "Stage 1"
+        )
+
+        for img, target, _, _, _ in progress:
+            img = img.to(device)
+            target = target.to(device).float()
+            image_features = model(x=img, get_image=True)
+            _assert_finite_tensor(
+                image_features, "validation image features", "Stage 1"
+            )
+            image_features = F.normalize(image_features.float(), dim=-1, eps=1e-6)
+            logits = (image_features @ text_features.t()) / temperature
+            _assert_finite_tensor(logits, "validation ITC logits", "Stage 1")
+            loss = loss_fn_itc(logits, target)
+            _assert_finite_loss(loss, "Stage 1 validation", "n/a", "n/a")
+            loss_meter.update(loss.item(), img.shape[0])
+
+    if model_was_training:
+        model.train()
+    if text_model_was_training:
+        text_model.train()
+    return loss_meter.avg
+
+
 def do_train_stage1(cfg,
                     model,
                     train_loader,
                     optimizer,
                     scheduler,
-                    local_rank):
+                    local_rank,
+                    val_loader=None):
     checkpoint_period = cfg.SOLVER.STAGE1.CHECKPOINT_PERIOD
     device = "cuda"
     epochs = cfg.SOLVER.STAGE1.MAX_EPOCHS
     log_period = cfg.SOLVER.STAGE1.LOG_PERIOD
+    eval_period = int(_cfg_value(cfg.SOLVER.STAGE1, "EVAL_PERIOD", 1))
 
     logger = logging.getLogger("transreid.train")
     logger.info('Start AU Training Stage 1 (Image-Text Alignment)')
@@ -420,6 +472,7 @@ def do_train_stage1(cfg,
     # Multi-label Contrastive Loss using BCE
     loss_fn_itc = nn.BCEWithLogitsLoss()
     temperature = 0.07 # Standard CLIP temperature
+    best_stage1_val_loss = float("inf")
 
     all_start_time = time.time()
 
@@ -534,6 +587,39 @@ def do_train_stage1(cfg,
             )
             _save_model_state(model, checkpoint_path)
             logger.info("Saved Stage 1 checkpoint: {}".format(checkpoint_path))
+
+        if val_loader is not None and eval_period > 0 and epoch % eval_period == 0:
+            val_itc_loss = _evaluate_stage1_itc_loss(
+                model=model,
+                text_model=text_model,
+                val_loader=val_loader,
+                device=device,
+                loss_fn_itc=loss_fn_itc,
+                temperature=temperature,
+                desc="Eval Stage1 E{}".format(epoch),
+            )
+            logger.info(
+                "Stage 1 validation ITC loss - Epoch: {}, Loss: {:.4f}, Best: {}".format(
+                    epoch,
+                    val_itc_loss,
+                    (
+                        "{:.4f}".format(best_stage1_val_loss)
+                        if math.isfinite(best_stage1_val_loss)
+                        else "n/a"
+                    ),
+                )
+            )
+            if math.isfinite(val_itc_loss) and val_itc_loss < best_stage1_val_loss:
+                best_stage1_val_loss = val_itc_loss
+                best_checkpoint = os.path.join(
+                    cfg.OUTPUT_DIR, cfg.MODEL.NAME + "_au_stage1_best.pth"
+                )
+                _save_model_state(model, best_checkpoint)
+                logger.info(
+                    "Saved best Stage 1 checkpoint: {} (val_itc_loss={:.4f})".format(
+                        best_checkpoint, best_stage1_val_loss
+                    )
+                )
 
     logger.info("Stage 1 training time: {:.1f}s".format(time.time() - all_start_time))
 

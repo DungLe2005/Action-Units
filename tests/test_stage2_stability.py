@@ -5,7 +5,10 @@ import torch
 import torch.nn as nn
 
 from loss.au_loss import WeightedBCELoss
-from processor.processor_au_2stage import _update_stage2_early_stop
+from processor.processor_au_2stage import (
+    _evaluate_stage1_itc_loss,
+    _update_stage2_early_stop,
+)
 from solver.lr_scheduler import WarmupMultiStepLR
 from solver.make_optimizer_prompt import make_optimizer_2stage
 
@@ -18,6 +21,19 @@ class _DummyStage2Model(nn.Module):
         self.classifier = nn.Linear(4, 12)
         self.prompt_learner = nn.Linear(4, 4)
         self.text_encoder = nn.Linear(4, 4)
+
+
+class _DummyStage1Model(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.text_features = nn.Parameter(torch.eye(12))
+
+    def forward(self, x=None, get_image=False, get_text=False, **kwargs):
+        if get_text:
+            return self.text_features
+        if get_image:
+            return x
+        raise AssertionError("Unexpected Stage 1 dummy call")
 
 
 def _stage2_cfg():
@@ -99,6 +115,26 @@ class TestStage2Stability(unittest.TestCase):
         self.assertTrue(improved)
         self.assertAlmostEqual(best, 0.3020)
         self.assertEqual(wait, 0)
+
+    def test_stage1_itc_eval_returns_finite_loss_and_restores_train_mode(self):
+        model = _DummyStage1Model()
+        model.train()
+        images = torch.eye(12)[:2]
+        targets = torch.eye(12)[:2]
+        val_loader = [(images, targets, None, None, None)]
+
+        loss = _evaluate_stage1_itc_loss(
+            model=model,
+            text_model=model,
+            val_loader=val_loader,
+            device="cpu",
+            loss_fn_itc=nn.BCEWithLogitsLoss(),
+            temperature=0.07,
+            desc="Test Stage1 Eval",
+        )
+
+        self.assertTrue(torch.isfinite(torch.tensor(loss)))
+        self.assertTrue(model.training)
 
 
 if __name__ == "__main__":

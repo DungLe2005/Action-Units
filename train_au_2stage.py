@@ -139,6 +139,7 @@ def run_fold(cfg, args, fold_idx):
             optimizer_1stage,
             scheduler_1stage,
             args.local_rank,
+            val_loader=val_loader,
         )
     else:
         logger.info("Skipping Stage 1 as requested.")
