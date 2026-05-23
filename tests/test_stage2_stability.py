@@ -7,6 +7,7 @@ import torch.nn as nn
 from loss.au_loss import WeightedBCELoss
 from processor.processor_au_2stage import (
     _evaluate_stage1_itc_loss,
+    _stage2_logit_problem,
     _update_stage2_early_stop,
 )
 from solver.lr_scheduler import WarmupMultiStepLR
@@ -115,6 +116,26 @@ class TestStage2Stability(unittest.TestCase):
         self.assertTrue(improved)
         self.assertAlmostEqual(best, 0.3020)
         self.assertEqual(wait, 0)
+
+    def test_stage2_logit_problem_flags_non_finite_logits(self):
+        reason, message, max_logit_abs = _stage2_logit_problem(
+            [torch.tensor([[0.0, float("nan")]])],
+            max_logit_abs_limit=80.0,
+        )
+
+        self.assertEqual(reason, "non_finite_logits")
+        self.assertIn("classifier logits[0]", message)
+        self.assertIsNone(max_logit_abs)
+
+    def test_stage2_logit_problem_flags_guardrail(self):
+        reason, message, max_logit_abs = _stage2_logit_problem(
+            [torch.tensor([[81.0, -1.0]])],
+            max_logit_abs_limit=80.0,
+        )
+
+        self.assertEqual(reason, "logit_guardrail")
+        self.assertIn("exceeded limit", message)
+        self.assertEqual(max_logit_abs, 81.0)
 
     def test_stage1_itc_eval_returns_finite_loss_and_restores_train_mode(self):
         model = _DummyStage1Model()

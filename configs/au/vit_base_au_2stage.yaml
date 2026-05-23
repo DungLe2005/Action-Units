@@ -29,17 +29,19 @@ SOLVER:
   IMS_PER_BATCH: 128
 
   STAGE1:
-    MAX_EPOCHS: 20
-    BASE_LR: 0.00001
+    MAX_EPOCHS: 30
+    # Prompt tuning only updates a small set of context vectors; 1e-5 underfits.
+    BASE_LR: 0.0003
     OPTIMIZER_NAME: 'AdamW'
-    WEIGHT_DECAY: 0.0001
+    WEIGHT_DECAY: 0.0
+    CLASS_SPECIFIC_PROMPTS: true
     IMS_PER_BATCH: 128
     CHECKPOINT_PERIOD: 2
     LOG_PERIOD: 0
     EVAL_PERIOD: 1
-    WARMUP_EPOCHS: 1
-    WARMUP_LR_INIT: 0.000001
-    LR_MIN: 0.000001
+    WARMUP_EPOCHS: 2
+    WARMUP_LR_INIT: 0.00003
+    LR_MIN: 0.00001
   
   STAGE2:
     MAX_EPOCHS: 50
@@ -61,7 +63,8 @@ SOLVER:
     BIAS_LR_FACTOR: 1
     WEIGHT_DECAY_BIAS: 0.0005
     LARGE_FC_LR: false
-    AMP: true
+    # ViT/CLIP AU logits can overflow fp16 on T4; keep Stage 2 in fp32 by default.
+    AMP: false
     EARLY_STOP_PATIENCE: 8
     EARLY_STOP_MIN_DELTA: 0.001
     MAX_LOGIT_ABS: 80.0

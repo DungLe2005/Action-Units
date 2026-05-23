@@ -49,6 +49,52 @@ def _load_weights(path, map_location=None):
         return torch.load(path, map_location=map_location)
 
 
+def _nested_cfg_value(cfg, path, default):
+    current = cfg
+    for name in path:
+        if current is None or not hasattr(current, name):
+            return default
+        current = getattr(current, name)
+    return current
+
+
+def _adapt_checkpoint_tensor(key, value, target, checkpoint_path):
+    if (
+        key == "prompt_learner.ctx"
+        and torch.is_tensor(value)
+        and torch.is_tensor(target)
+        and value.ndim == 2
+        and target.ndim == 3
+        and tuple(value.shape) == tuple(target.shape[1:])
+    ):
+        return value.unsqueeze(0).expand_as(target)
+
+    if torch.is_tensor(value) and torch.is_tensor(target):
+        if tuple(value.shape) != tuple(target.shape):
+            raise ValueError(
+                "Checkpoint {} has shape {} for {}, but the model expects {}".format(
+                    checkpoint_path, tuple(value.shape), key, tuple(target.shape)
+                )
+            )
+    return value
+
+
+def _copy_checkpoint_state(module, param_dict, checkpoint_path, strip_module_prefix=False):
+    state_dict = module.state_dict()
+    for key, value in param_dict.items():
+        clean_key = key.replace("module.", "") if strip_module_prefix else key
+        if clean_key not in state_dict:
+            raise KeyError(
+                "Checkpoint {} contains unexpected key {}".format(
+                    checkpoint_path, key
+                )
+            )
+        adapted_value = _adapt_checkpoint_tensor(
+            clean_key, value, state_dict[clean_key], checkpoint_path
+        )
+        state_dict[clean_key].copy_(adapted_value)
+
+
 class TextEncoder(nn.Module):
     def __init__(self, clip_model):
         super().__init__()
@@ -131,7 +177,13 @@ class build_transformer(nn.Module):
             print('camera number is : {}'.format(view_num))
 
         # Add PromptLearner and TextEncoder for AU
-        self.prompt_learner = PromptLearner(num_classes, cfg.DATASETS.NAMES, clip_model.dtype, clip_model.token_embedding)
+        self.prompt_learner = PromptLearner(
+            num_classes,
+            cfg.DATASETS.NAMES,
+            clip_model.dtype,
+            clip_model.token_embedding,
+            cfg=cfg,
+        )
         self.text_encoder = TextEncoder(clip_model)
 
     def forward(self, x=None, label=None, get_image=False, get_text=False, cam_label=None, view_label=None, return_au_logits=False):
@@ -198,15 +250,17 @@ class build_transformer(nn.Module):
     def load_param(self, trained_path):
         param_dict = _load_weights(trained_path)
         _assert_finite_state_dict(param_dict, trained_path)
-        for i in param_dict:
-            self.state_dict()[i.replace('module.', '')].copy_(param_dict[i])
+        _copy_checkpoint_state(
+            self, param_dict, trained_path, strip_module_prefix=True
+        )
         print('Loading pretrained model from {}'.format(trained_path))
 
     def load_param_finetune(self, model_path):
         param_dict = _load_weights(model_path)
         _assert_finite_state_dict(param_dict, model_path)
-        for i in param_dict:
-            self.state_dict()[i].copy_(param_dict[i])
+        _copy_checkpoint_state(
+            self, param_dict, model_path, strip_module_prefix=False
+        )
         print('Loading pretrained model for finetuning from {}'.format(model_path))
 
 
@@ -233,7 +287,7 @@ def load_clip_to_cpu(backbone_name, h_resolution, w_resolution, vision_stride_si
     return model
 
 class PromptLearner(nn.Module):
-    def __init__(self, num_class, dataset_name, dtype, token_embedding):
+    def __init__(self, num_class, dataset_name, dtype, token_embedding, cfg=None):
         super().__init__()
         if dataset_name == 'disfa':
             self.is_au_prompt = True
@@ -272,6 +326,13 @@ class PromptLearner(nn.Module):
                 ctx_embedding = token_embedding(ctx_tokenized).float()
 
             ctx_vectors = ctx_embedding[0, 1: 1 + self.n_ctx, :].clone()
+            self.class_specific_context = bool(
+                _nested_cfg_value(
+                    cfg, ("SOLVER", "STAGE1", "CLASS_SPECIFIC_PROMPTS"), False
+                )
+            )
+            if self.class_specific_context:
+                ctx_vectors = ctx_vectors.unsqueeze(0).repeat(num_class, 1, 1)
             self.ctx = nn.Parameter(ctx_vectors)
             self.register_buffer("token_prefix", embedding[:, :1, :])
             self.register_buffer("token_suffix", embedding[:, 1 + self.n_ctx:, :])
@@ -314,13 +375,17 @@ class PromptLearner(nn.Module):
             if label is None:
                 prefix = self.token_prefix
                 suffix = self.token_suffix
-                ctx = ctx.unsqueeze(0).expand(self.num_class, -1, -1)
+                if ctx.ndim == 2:
+                    ctx = ctx.unsqueeze(0).expand(self.num_class, -1, -1)
             else:
                 if label.ndim == 0:
                     label = label.unsqueeze(0)
                 prefix = self.token_prefix[label]
                 suffix = self.token_suffix[label]
-                ctx = ctx.unsqueeze(0).expand(prefix.shape[0], -1, -1)
+                if ctx.ndim == 2:
+                    ctx = ctx.unsqueeze(0).expand(prefix.shape[0], -1, -1)
+                else:
+                    ctx = ctx[label]
 
             ctx = ctx.to(dtype=prefix.dtype)
             return torch.cat([prefix, ctx, suffix], dim=1)

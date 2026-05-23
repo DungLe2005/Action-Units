@@ -199,6 +199,38 @@ def _positive_rate_from_logits(tensors):
     return float((torch.sigmoid(logits) > 0.5).float().mean().item())
 
 
+def _forward_stage2_model(model, img, amp_enabled):
+    with torch.amp.autocast('cuda', enabled=amp_enabled):
+        # model returns [logits_list], [feat_list], img_feat_proj
+        score, _, img_feat_proj = model(img)
+    score = _as_float_tensor_list(score)
+    return score, _score_tensors(score), img_feat_proj
+
+
+def _stage2_logit_problem(score_tensors, max_logit_abs_limit):
+    for index, score_tensor in enumerate(score_tensors):
+        if not _is_finite_tensor(score_tensor):
+            return (
+                "non_finite_logits",
+                "Stage 2 produced non-finite classifier logits[{}]. {}".format(
+                    index, _tensor_debug_summary(score_tensor)
+                ),
+                None,
+            )
+
+    max_logit_abs = _max_abs_tensor_value(score_tensors)
+    if max_logit_abs_limit > 0.0 and max_logit_abs > max_logit_abs_limit:
+        return (
+            "logit_guardrail",
+            "Stage 2 max logit abs {:.3f} exceeded limit {:.3f}".format(
+                max_logit_abs, max_logit_abs_limit
+            ),
+            max_logit_abs,
+        )
+
+    return None, None, max_logit_abs
+
+
 def _assert_finite_model_parameters(model, stage_name, epoch=None, iteration=None):
     base_model = _unwrap_data_parallel(model)
     for name, param in base_model.named_parameters():
@@ -699,38 +731,39 @@ def do_train_stage2(cfg,
             optimizer.zero_grad(set_to_none=True)
             img = img.to(device)
             target = target.to(device).float()
+            _assert_finite_tensor(img, "images", "Stage 2", epoch, iteration)
             _assert_binary_targets(target, "Stage 2", epoch, iteration)
 
-            with torch.amp.autocast('cuda', enabled=amp_enabled):
-                # model returns [logits_list], [feat_list], img_feat_proj
-                score, _, img_feat_proj = model(img)
+            score, score_tensors, img_feat_proj = _forward_stage2_model(
+                model, img, amp_enabled
+            )
+            logit_reason, logit_message, max_logit_abs = _stage2_logit_problem(
+                score_tensors, max_logit_abs_limit
+            )
+            if logit_reason is not None and amp_enabled:
+                logger.warning(
+                    "Stage 2 AMP forward became unstable at epoch {}, iteration {}: "
+                    "{} Recomputing this batch in fp32 and disabling Stage 2 AMP."
+                    .format(epoch, iteration, logit_message)
+                )
+                del score, score_tensors, img_feat_proj
+                amp_enabled = False
+                scaler = torch.amp.GradScaler('cuda', enabled=False)
+                score, score_tensors, img_feat_proj = _forward_stage2_model(
+                    model, img, amp_enabled
+                )
+                logit_reason, logit_message, max_logit_abs = _stage2_logit_problem(
+                    score_tensors, max_logit_abs_limit
+                )
 
-            score = _as_float_tensor_list(score)
-            score_tensors = _score_tensors(score)
-            for index, score_tensor in enumerate(score_tensors):
-                if not _is_finite_tensor(score_tensor):
-                    _raise_stage2_diagnostic(
-                        model,
-                        cfg,
-                        epoch,
-                        iteration,
-                        "non_finite_logits",
-                        "Stage 2 produced non-finite classifier logits[{}]. {}".format(
-                            index, _tensor_debug_summary(score_tensor)
-                        ),
-                        logger,
-                    )
-            max_logit_abs = _max_abs_tensor_value(score_tensors)
-            if max_logit_abs_limit > 0.0 and max_logit_abs > max_logit_abs_limit:
+            if logit_reason is not None:
                 _raise_stage2_diagnostic(
                     model,
                     cfg,
                     epoch,
                     iteration,
-                    "logit_guardrail",
-                    "Stage 2 max logit abs {:.3f} exceeded limit {:.3f}".format(
-                        max_logit_abs, max_logit_abs_limit
-                    ),
+                    logit_reason,
+                    logit_message,
                     logger,
                 )
             train_positive_rate = _positive_rate_from_logits(score_tensors)
