@@ -187,6 +187,28 @@ class TestDISFAProtocol(unittest.TestCase):
 
         self.assertEqual(loss_func.bce.pos_weight.tolist(), pos_weight.tolist())
 
+    def test_make_loss_can_soften_stage2_pos_weight(self):
+        cfg = SimpleNamespace(
+            DATASETS=SimpleNamespace(NAMES="disfa"),
+            DATALOADER=SimpleNamespace(SAMPLER="softmax"),
+            MODEL=SimpleNamespace(
+                METRIC_LOSS_TYPE="triplet",
+                NO_MARGIN=False,
+                IF_LABELSMOOTH="off",
+            ),
+            SOLVER=SimpleNamespace(
+                MARGIN=0.3,
+                STAGE2=SimpleNamespace(POS_WEIGHT_POWER=0.5, POS_WEIGHT_MAX=4.0),
+            ),
+        )
+        pos_weight = torch.tensor([4.0, 25.0] + [1.0] * 10)
+        loss_func, _ = make_loss(
+            cfg, num_classes=12, pos_weight=pos_weight, device="cpu"
+        )
+
+        expected = torch.tensor([2.0, 4.0] + [1.0] * 10)
+        self.assertEqual(loss_func.bce.pos_weight.tolist(), expected.tolist())
+
     def test_fold_report_summary_keeps_disfa8_keys(self):
         metrics_1 = {
             "disfa8_f1_macro": 0.5,

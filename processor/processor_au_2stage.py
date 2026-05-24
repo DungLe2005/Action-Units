@@ -727,7 +727,7 @@ def do_train_stage2(cfg,
     epochs_without_improvement = 0
     history_records = []
     disable_itc = False
-    itc_loss_weight = 0.1
+    itc_loss_weight = float(_cfg_value(cfg.SOLVER.STAGE2, "ITC_LOSS_WEIGHT", 0.0))
     max_grad_norm = float(_cfg_value(cfg.SOLVER.STAGE2, "MAX_GRAD_NORM", 5.0))
     max_logit_abs_limit = float(_cfg_value(cfg.SOLVER.STAGE2, "MAX_LOGIT_ABS", 0.0))
     fatal_logit_abs_limit = float(
@@ -744,6 +744,7 @@ def do_train_stage2(cfg,
     )
 
     logger.info("Stage 2 AMP: {}".format("enabled" if amp_enabled else "disabled"))
+    logger.info("Stage 2 ITC loss weight: {:.3f}".format(itc_loss_weight))
     logger.info("Stage 2 LR groups: {}".format(_lr_group_summary(optimizer)))
 
     all_start_time = time.time()

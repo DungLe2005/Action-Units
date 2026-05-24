@@ -48,15 +48,20 @@ SOLVER:
   
   STAGE2:
     MAX_EPOCHS: 50
-    BASE_LR: 0.00005
-    BACKBONE_LR_FACTOR: 0.1
-    OPTIMIZER_NAME: 'Adam'
+    BASE_LR: 0.00001
+    BACKBONE_LR_FACTOR: 0.05
+    OPTIMIZER_NAME: 'AdamW'
     WEIGHT_DECAY: 0.0001
+    # Raw neg/pos weights are too aggressive for CLIP fine-tuning on rare AUs.
+    POS_WEIGHT_POWER: 0.5
+    POS_WEIGHT_MAX: 8.0
+    # Stage 1 already performs image-text alignment; Stage 2 is classification-only by default.
+    ITC_LOSS_WEIGHT: 0.0
     STEPS: [25, 40]
     GAMMA: 0.1
     WARMUP_FACTOR: 0.01
     # Stage 2 scheduler is stepped once per epoch in this trainer.
-    WARMUP_ITERS: 5
+    WARMUP_ITERS: 20
     WARMUP_METHOD: 'linear'
     IMS_PER_BATCH: 128
     CHECKPOINT_PERIOD: 5
@@ -75,7 +80,7 @@ SOLVER:
     # Hard-fail only if finite logits are clearly divergent in fp32.
     FATAL_LOGIT_ABS: 1000.0
     MAX_LOGIT_WARNINGS: 5
-    MAX_GRAD_NORM: 5.0
+    MAX_GRAD_NORM: 1.0
 
   SEED: 42
 

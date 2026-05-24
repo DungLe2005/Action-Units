@@ -72,6 +72,9 @@ Stage 2 đã được bổ sung các cơ chế bảo vệ nhằm hạn chế l�
 
 - Tắt AMP mặc định ở Stage 2 (`AMP: false`) vì logits AU trên GPU T4 có thể tiến sát miền tràn fp16.
 - Kiểm tra tính hữu hạn của ảnh đầu vào, logits, loss, gradient norm và tham số mô hình.
+- Làm mềm `pos_weight` bằng `POS_WEIGHT_POWER` và `POS_WEIGHT_MAX` để tránh khuếch đại quá mức gradient của các AU rất hiếm trong giai đoạn fine-tuning.
+- Tắt ITC regularization mặc định trong Stage 2 (`ITC_LOSS_WEIGHT: 0.0`), vì Stage 1 đã đảm nhiệm căn chỉnh ảnh-văn bản; Stage 2 được ưu tiên ổn định cho mục tiêu phân loại AU.
+- Sử dụng `AdamW`, learning rate nhỏ hơn, warmup dài hơn và gradient clipping chặt hơn để giảm nguy cơ phân kỳ khi AU head còn mới khởi tạo.
 - Thêm guardrail `MAX_LOGIT_ABS` để cảnh báo sớm logits có biên độ bất thường nhưng vẫn hữu hạn trong fp32.
 - Sử dụng `FATAL_LOGIT_ABS` làm ngưỡng dừng cứng cho trường hợp logits hữu hạn nhưng đã thể hiện xu hướng phân kỳ rõ rệt.
 - Khi người dùng chủ động bật AMP, trainer sẽ thử tính lại batch lỗi bằng fp32 và vô hiệu hóa AMP cho phần còn lại nếu phát hiện logits không ổn định.

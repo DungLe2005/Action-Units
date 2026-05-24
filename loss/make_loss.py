@@ -12,6 +12,26 @@ from .au_loss import WeightedBCELoss
 import torch
 
 
+def _cfg_value(section, name, default):
+    return getattr(section, name, default)
+
+
+def _adjust_disfa_pos_weight(cfg, pos_weight):
+    if pos_weight is None:
+        return None
+
+    stage2_cfg = getattr(cfg.SOLVER, "STAGE2", None)
+    power = float(_cfg_value(stage2_cfg, "POS_WEIGHT_POWER", 1.0))
+    max_value = float(_cfg_value(stage2_cfg, "POS_WEIGHT_MAX", 0.0))
+
+    adjusted = pos_weight.float()
+    if power != 1.0:
+        adjusted = adjusted.pow(power)
+    if max_value > 0.0:
+        adjusted = torch.clamp(adjusted, max=max_value)
+    return adjusted
+
+
 def make_loss(cfg, num_classes, pos_weight=None, device=None):  # modified by gu
     sampler = cfg.DATALOADER.SAMPLER
     feat_dim = 2048
@@ -40,7 +60,14 @@ def make_loss(cfg, num_classes, pos_weight=None, device=None):  # modified by gu
         if pos_weight is not None:
             if device is not None:
                 pos_weight = pos_weight.to(device)
-            print(f"Using train-split pos_weight for DISFA: {pos_weight.tolist()}")
+            raw_pos_weight = pos_weight
+            pos_weight = _adjust_disfa_pos_weight(cfg, pos_weight)
+            print(f"Using train-split pos_weight for DISFA: {raw_pos_weight.tolist()}")
+            if not torch.equal(pos_weight, raw_pos_weight):
+                print(
+                    "Using adjusted Stage 2 pos_weight for DISFA: "
+                    f"{pos_weight.tolist()}"
+                )
         else:
             print("Using unweighted BCE for DISFA; no train-split pos_weight was provided")
         loss_func = WeightedBCELoss(pos_weight=pos_weight)
