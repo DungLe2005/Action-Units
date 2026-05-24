@@ -64,7 +64,7 @@ Stage 1 sử dụng CLIP image encoder như một bộ trích xuất đặc trư
 
 Ngoài ra, image encoder và text encoder được đặt ở chế độ eval trong Stage 1, trong khi gradient vẫn được truyền qua text encoder để tối ưu prompt vectors. Thiết kế này giữ đúng mục tiêu prompt tuning: chỉ cập nhật prompt learner, đồng thời giảm nguy cơ sinh đặc trưng ảnh không hữu hạn do khác biệt trạng thái giữa các replica hoặc do mixed precision.
 
-Trainer cũng kiểm tra tính hữu hạn của ảnh đầu vào trước khi trích xuất đặc trưng. Nếu lỗi không hữu hạn vẫn xuất hiện, thông báo lỗi có thể phân biệt rõ giữa dữ liệu ảnh bất thường và lỗi sinh ra trong image encoder.
+Stage 1 mặc định không dùng DataParallel (`USE_DATA_PARALLEL: false`). Lý do là giai đoạn này chỉ cần trích xuất đặc trưng ảnh từ image encoder đóng băng và tối ưu một số lượng nhỏ prompt vectors; lợi ích tốc độ của DataParallel không đủ lớn so với rủi ro bất ổn autocast theo từng shard GPU trên T4. Trainer cũng kiểm tra tính hữu hạn của ảnh đầu vào trước khi trích xuất đặc trưng. Nếu lỗi không hữu hạn vẫn xuất hiện, thông báo lỗi có thể phân biệt rõ giữa dữ liệu ảnh bất thường và lỗi sinh ra trong image encoder.
 
 ### 4. Ổn định số học cho Stage 2
 

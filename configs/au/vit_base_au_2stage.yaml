@@ -35,6 +35,9 @@ SOLVER:
     OPTIMIZER_NAME: 'AdamW'
     WEIGHT_DECAY: 0.0
     CLASS_SPECIFIC_PROMPTS: true
+    # Stage 1 uses frozen CLIP image features; single-GPU fp32 avoids
+    # DataParallel/autocast shard instabilities on T4.
+    USE_DATA_PARALLEL: false
     IMS_PER_BATCH: 128
     CHECKPOINT_PERIOD: 2
     LOG_PERIOD: 0

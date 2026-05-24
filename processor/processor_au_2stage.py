@@ -85,10 +85,10 @@ def _samples_per_second(samples_seen, start_time):
     return float(samples_seen) / elapsed
 
 
-def _prepare_cuda_model(model, logger, stage_name, batch_size):
+def _prepare_cuda_model(model, logger, stage_name, batch_size, use_data_parallel=True):
     model.to("cuda")
     gpu_count = torch.cuda.device_count()
-    if gpu_count > 1:
+    if use_data_parallel and gpu_count > 1:
         per_gpu_batch = int(math.ceil(float(batch_size) / float(gpu_count)))
         logger.info(
             "{} using DataParallel on {} GPUs. Global train batch={}, "
@@ -97,6 +97,13 @@ def _prepare_cuda_model(model, logger, stage_name, batch_size):
             )
         )
         return nn.DataParallel(model)
+    if gpu_count > 1 and not use_data_parallel:
+        logger.info(
+            "{} using single CUDA device with {} visible GPUs. Train batch={}".format(
+                stage_name, gpu_count, batch_size
+            )
+        )
+        return model
     logger.info("{} using single CUDA device. Train batch={}".format(stage_name, batch_size))
     return model
 
@@ -514,7 +521,16 @@ def do_train_stage1(cfg,
     logger = logging.getLogger("transreid.train")
     logger.info('Start AU Training Stage 1 (Image-Text Alignment)')
     
-    model = _prepare_cuda_model(model, logger, "Stage 1", train_loader.batch_size)
+    use_stage1_data_parallel = bool(
+        _cfg_value(cfg.SOLVER.STAGE1, "USE_DATA_PARALLEL", False)
+    )
+    model = _prepare_cuda_model(
+        model,
+        logger,
+        "Stage 1",
+        train_loader.batch_size,
+        use_data_parallel=use_stage1_data_parallel,
+    )
     text_model = _unwrap_data_parallel(model)
     _freeze_text_encoder(model)
 
