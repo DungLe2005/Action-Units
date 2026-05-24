@@ -67,7 +67,11 @@ SOLVER:
     AMP: false
     EARLY_STOP_PATIENCE: 8
     EARLY_STOP_MIN_DELTA: 0.001
+    # Soft warning threshold for unusually confident finite logits.
     MAX_LOGIT_ABS: 80.0
+    # Hard-fail only if finite logits are clearly divergent in fp32.
+    FATAL_LOGIT_ABS: 1000.0
+    MAX_LOGIT_WARNINGS: 5
     MAX_GRAD_NORM: 5.0
 
   SEED: 42

@@ -1,3 +1,5 @@
+import contextlib
+
 import torch
 import torch.nn as nn
 import numpy as np
@@ -186,6 +188,19 @@ class build_transformer(nn.Module):
         )
         self.text_encoder = TextEncoder(clip_model)
 
+    def _encode_image_fp32(self, x, cv_embed=None):
+        autocast_context = (
+            torch.amp.autocast('cuda', enabled=False)
+            if torch.is_tensor(x) and x.is_cuda
+            else contextlib.nullcontext()
+        )
+        with autocast_context:
+            x = x.float()
+            if cv_embed is not None:
+                cv_embed = cv_embed.float()
+                return self.image_encoder(x, cv_embed)
+            return self.image_encoder(x)
+
     def forward(self, x=None, label=None, get_image=False, get_text=False, cam_label=None, view_label=None, return_au_logits=False):
         if get_text:
             prompts = self.prompt_learner(label) 
@@ -193,14 +208,14 @@ class build_transformer(nn.Module):
             return text_features
 
         if get_image:
-            image_features_last, image_features, image_features_proj = self.image_encoder(x) 
+            image_features_last, image_features, image_features_proj = self._encode_image_fp32(x)
             if self.model_name == 'RN50':
                 return image_features_proj[0]
             elif self.model_name == 'ViT-B-16':
                 return image_features_proj[:,0]
 
         if self.model_name == 'RN50':
-            image_features_last, image_features, image_features_proj = self.image_encoder(x) #B,512  B,128,512
+            image_features_last, image_features, image_features_proj = self._encode_image_fp32(x) #B,512  B,128,512
             img_feature_last = nn.functional.avg_pool2d(image_features_last, image_features_last.shape[2:4]).view(x.shape[0], -1) 
             img_feature = nn.functional.avg_pool2d(image_features, image_features.shape[2:4]).view(x.shape[0], -1) 
             img_feature_proj = image_features_proj[0]
@@ -214,7 +229,7 @@ class build_transformer(nn.Module):
                 cv_embed = self.sie_coe * self.cv_embed[view_label]
             else:
                 cv_embed = None
-            image_features_last, image_features, image_features_proj = self.image_encoder(x, cv_embed) #B,512  B,128,512
+            image_features_last, image_features, image_features_proj = self._encode_image_fp32(x, cv_embed) #B,512  B,128,512
             img_feature_last = image_features_last[:,0]
             img_feature = image_features[:,0]
             img_feature_proj = image_features_proj[:,0]

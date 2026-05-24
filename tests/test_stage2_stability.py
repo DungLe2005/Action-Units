@@ -137,6 +137,17 @@ class TestStage2Stability(unittest.TestCase):
         self.assertIn("exceeded limit", message)
         self.assertEqual(max_logit_abs, 81.0)
 
+    def test_stage2_logit_problem_flags_fatal_guardrail(self):
+        reason, message, max_logit_abs = _stage2_logit_problem(
+            [torch.tensor([[1001.0, -1.0]])],
+            max_logit_abs_limit=80.0,
+            fatal_logit_abs_limit=1000.0,
+        )
+
+        self.assertEqual(reason, "fatal_logit_guardrail")
+        self.assertIn("fatal limit", message)
+        self.assertEqual(max_logit_abs, 1001.0)
+
     def test_stage1_itc_eval_returns_finite_loss_and_restores_train_mode(self):
         model = _DummyStage1Model()
         model.train()

@@ -207,7 +207,9 @@ def _forward_stage2_model(model, img, amp_enabled):
     return score, _score_tensors(score), img_feat_proj
 
 
-def _stage2_logit_problem(score_tensors, max_logit_abs_limit):
+def _stage2_logit_problem(
+    score_tensors, max_logit_abs_limit, fatal_logit_abs_limit=0.0
+):
     for index, score_tensor in enumerate(score_tensors):
         if not _is_finite_tensor(score_tensor):
             return (
@@ -219,6 +221,15 @@ def _stage2_logit_problem(score_tensors, max_logit_abs_limit):
             )
 
     max_logit_abs = _max_abs_tensor_value(score_tensors)
+    if fatal_logit_abs_limit > 0.0 and max_logit_abs > fatal_logit_abs_limit:
+        return (
+            "fatal_logit_guardrail",
+            "Stage 2 max logit abs {:.3f} exceeded fatal limit {:.3f}".format(
+                max_logit_abs, fatal_logit_abs_limit
+            ),
+            max_logit_abs,
+        )
+
     if max_logit_abs_limit > 0.0 and max_logit_abs > max_logit_abs_limit:
         return (
             "logit_guardrail",
@@ -307,6 +318,14 @@ def _freeze_text_encoder(model):
         return
     for param in module.parameters():
         param.requires_grad_(False)
+
+
+def _set_stage1_frozen_modules_eval(model):
+    base_model = _unwrap_data_parallel(model)
+    for module_name in ("image_encoder", "text_encoder"):
+        module = getattr(base_model, module_name, None)
+        if module is not None:
+            module.eval()
 
 
 def _evaluate_au_model(model, val_loader, device, desc="Eval AU"):
@@ -460,6 +479,7 @@ def _evaluate_stage1_itc_loss(
         for img, target, _, _, _ in progress:
             img = img.to(device)
             target = target.to(device).float()
+            _assert_finite_tensor(img, "validation images", "Stage 1")
             image_features = model(x=img, get_image=True)
             _assert_finite_tensor(
                 image_features, "validation image features", "Stage 1"
@@ -514,6 +534,7 @@ def do_train_stage1(cfg,
         samples_seen = 0
         loss_meter.reset()
         model.train()
+        _set_stage1_frozen_modules_eval(model)
         
         # In Stage 1, we only want to optimize the prompt learner
         # The optimizer passed here should already be configured for that
@@ -530,6 +551,7 @@ def do_train_stage1(cfg,
             optimizer.zero_grad()
             img = img.to(device)
             target = target.to(device).float() # Binary labels [B, 12]
+            _assert_finite_tensor(img, "images", "Stage 1", epoch, iteration)
             _assert_binary_targets(target, "Stage 1", epoch, iteration)
             
             with torch.amp.autocast('cuda', enabled=False):
@@ -692,6 +714,12 @@ def do_train_stage2(cfg,
     itc_loss_weight = 0.1
     max_grad_norm = float(_cfg_value(cfg.SOLVER.STAGE2, "MAX_GRAD_NORM", 5.0))
     max_logit_abs_limit = float(_cfg_value(cfg.SOLVER.STAGE2, "MAX_LOGIT_ABS", 0.0))
+    fatal_logit_abs_limit = float(
+        _cfg_value(cfg.SOLVER.STAGE2, "FATAL_LOGIT_ABS", 0.0)
+    )
+    max_logit_warnings = int(
+        _cfg_value(cfg.SOLVER.STAGE2, "MAX_LOGIT_WARNINGS", 5)
+    )
     early_stop_patience = int(
         _cfg_value(cfg.SOLVER.STAGE2, "EARLY_STOP_PATIENCE", 0)
     )
@@ -703,6 +731,7 @@ def do_train_stage2(cfg,
     logger.info("Stage 2 LR groups: {}".format(_lr_group_summary(optimizer)))
 
     all_start_time = time.time()
+    logit_guardrail_warning_count = 0
 
     for epoch in range(1, epochs + 1):
         start_time = time.time()
@@ -738,7 +767,7 @@ def do_train_stage2(cfg,
                 model, img, amp_enabled
             )
             logit_reason, logit_message, max_logit_abs = _stage2_logit_problem(
-                score_tensors, max_logit_abs_limit
+                score_tensors, max_logit_abs_limit, fatal_logit_abs_limit
             )
             if logit_reason is not None and amp_enabled:
                 logger.warning(
@@ -753,8 +782,25 @@ def do_train_stage2(cfg,
                     model, img, amp_enabled
                 )
                 logit_reason, logit_message, max_logit_abs = _stage2_logit_problem(
-                    score_tensors, max_logit_abs_limit
+                    score_tensors, max_logit_abs_limit, fatal_logit_abs_limit
                 )
+
+            if logit_reason == "logit_guardrail":
+                if logit_guardrail_warning_count < max_logit_warnings:
+                    logger.warning(
+                        "{} Continuing because logits are finite and Stage 2 "
+                        "classification/loss math is running in fp32. "
+                        "FATAL_LOGIT_ABS={} controls hard failure.".format(
+                            logit_message,
+                            (
+                                "disabled"
+                                if fatal_logit_abs_limit <= 0.0
+                                else "{:.3f}".format(fatal_logit_abs_limit)
+                            ),
+                        )
+                    )
+                logit_guardrail_warning_count += 1
+                logit_reason = None
 
             if logit_reason is not None:
                 _raise_stage2_diagnostic(
