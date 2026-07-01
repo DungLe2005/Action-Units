@@ -16,3 +16,5 @@ __pycache__
 /logs
 /outputs
 .codebase-memory
+trainning_logs/
+training_logs/
