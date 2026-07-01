@@ -1,0 +1,36 @@
+# .understandignore - patterns excluded from Understand-Anything analysis
+# Syntax follows .gitignore-style globs. Keep the graph focused on source,
+# configs, and research notes rather than generated/runtime artifacts.
+
+# VCS and local caches
+.git/
+__pycache__/
+*.pyc
+.pytest_cache/
+.codebase-memory/
+.grapuco/
+
+# Data, checkpoints, logs, and generated research exports
+face_DATA/
+datasets/
+logs/
+trainning_logs/
+outputs/
+
+# Large/binary assets
+*.pth
+*.pt
+*.ckpt
+*.pkl
+*.npy
+*.npz
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.pdf
+*.docx
+*.xlsx
+*.zip
+*.tar
+*.gz

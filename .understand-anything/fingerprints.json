@@ -1,0 +1,4142 @@
+{
+  "version": "1.0.0",
+  "gitCommitHash": "b0317cf6e06492ebaef55908c2355c5230e4b0d9",
+  "generatedAt": "2026-05-26T07:34:00.097Z",
+  "files": {
+    ".understand-anything/.understandignore": {
+      "filePath": ".understand-anything/.understandignore",
+      "contentHash": "ca0ff722679589fc2bbe5ab23bb8a4f302562bab90beea1d8687bd5d4346f178",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 37,
+      "hasStructuralAnalysis": false
+    },
+    "au_explainer.py": {
+      "filePath": "au_explainer.py",
+      "contentHash": "50dcdfeaf5508fe00072665a1eaf6757c0f1fdf924968e7ed0e087a93a91b7f6",
+      "functions": [],
+      "classes": [
+        {
+          "name": "AUExplainer",
+          "methods": [
+            "__init__",
+            "infer_emotion",
+            "explain"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 64
+        }
+      ],
+      "imports": [],
+      "exports": [
+        "AUExplainer"
+      ],
+      "totalLines": 76,
+      "hasStructuralAnalysis": true
+    },
+    "config/__init__.py": {
+      "filePath": "config/__init__.py",
+      "contentHash": "58c66095d8ace89968230304426f22f536694c6f3a3952e8299de41d0f5367ee",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": ".defaults",
+          "specifiers": [
+            "cfg"
+          ]
+        },
+        {
+          "source": ".defaults",
+          "specifiers": [
+            "cfg_test"
+          ]
+        },
+        {
+          "source": ".defaults_base",
+          "specifiers": [
+            "cfg_base"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 11,
+      "hasStructuralAnalysis": true
+    },
+    "config/defaults_base.py": {
+      "filePath": "config/defaults_base.py",
+      "contentHash": "b014eaf31903f888551336c2e5538ffa2fe4042172a33ec1c14c9d080408c745",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "yacs.config",
+          "specifiers": [
+            "CN"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 239,
+      "hasStructuralAnalysis": true
+    },
+    "config/defaults.py": {
+      "filePath": "config/defaults.py",
+      "contentHash": "5ca4606ed332dc73739d60fb78c00f4b2285bbf5ac317fa70fdac2dbbdd77694",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "yacs.config",
+          "specifiers": [
+            "CN"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 252,
+      "hasStructuralAnalysis": true
+    },
+    "docs/original_scientific_model_diagram.drawio": {
+      "filePath": "docs/original_scientific_model_diagram.drawio",
+      "contentHash": "0aa7ebf3009d6723e5a27404ab14b9b585a07852b649b4a191c28cc6f9110567",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 143,
+      "hasStructuralAnalysis": false
+    },
+    "docs/original_system_architecture.drawio": {
+      "filePath": "docs/original_system_architecture.drawio",
+      "contentHash": "dcc77a9278f6c8b9186e0ca259e4755b60fbc0423870d96460a98ebb20bfe170",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 101,
+      "hasStructuralAnalysis": false
+    },
+    "docs/report/action_units_model_proposal_slides.pptx": {
+      "filePath": "docs/report/action_units_model_proposal_slides.pptx",
+      "contentHash": "69a019e157e21f90f16530d6d5ea332c09af00b2b07b3ae22887f3f9bf949238",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 567,
+      "hasStructuralAnalysis": false
+    },
+    "docs/scientific_future_research_roadmap.drawio": {
+      "filePath": "docs/scientific_future_research_roadmap.drawio",
+      "contentHash": "c4d379f827978e850d2c93b5a4273c3755e899fb170ea70b4964408fb64943ef",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 211,
+      "hasStructuralAnalysis": false
+    },
+    "docs/scientific_model_diagram_simplified.drawio": {
+      "filePath": "docs/scientific_model_diagram_simplified.drawio",
+      "contentHash": "64a0352e9ccfc4a9ebfa7f9a1a30e3d4494e221517edc48bdb1be109e542490f",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 88,
+      "hasStructuralAnalysis": false
+    },
+    "docs/scientific_model_diagram.drawio": {
+      "filePath": "docs/scientific_model_diagram.drawio",
+      "contentHash": "c5ec60d5fe077efe9aef215f7b900139331ed4d09a195fa1d7d09afd7afd7bae",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 265,
+      "hasStructuralAnalysis": false
+    },
+    "docs/system_architecture.drawio": {
+      "filePath": "docs/system_architecture.drawio",
+      "contentHash": "429cf3ff8c5531714151010df192c2264e6b3f56e7337f768efe9e422d652278",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 249,
+      "hasStructuralAnalysis": false
+    },
+    "inference_au.py": {
+      "filePath": "inference_au.py",
+      "contentHash": "50918ee296565f4a43b40339d5628432517110b5eca5b3a4af5d6592f900e757",
+      "functions": [
+        {
+          "name": "main",
+          "params": [],
+          "exported": true,
+          "lineCount": 69
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "PIL",
+          "specifiers": [
+            "Image"
+          ]
+        },
+        {
+          "source": "config",
+          "specifiers": [
+            "cfg"
+          ]
+        },
+        {
+          "source": "model.make_model",
+          "specifiers": [
+            "make_model"
+          ]
+        },
+        {
+          "source": "datasets.preprocessing",
+          "specifiers": [
+            "build_au_val_transforms"
+          ]
+        },
+        {
+          "source": "au_explainer",
+          "specifiers": [
+            "AUExplainer"
+          ]
+        }
+      ],
+      "exports": [
+        "main"
+      ],
+      "totalLines": 82,
+      "hasStructuralAnalysis": true
+    },
+    "loss/__init__.py": {
+      "filePath": "loss/__init__.py",
+      "contentHash": "87f95c5b73a693cb3ff7db8eec50c506e679f952971e87d068a4d37c41f20431",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": ".arcface",
+          "specifiers": [
+            "ArcFace"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": true
+    },
+    "loss/arcface.py": {
+      "filePath": "loss/arcface.py",
+      "contentHash": "1791a4167d5d9afa972f6fb07737bb68755a3b495825890a67b2bee68090bd8c",
+      "functions": [],
+      "classes": [
+        {
+          "name": "ArcFace",
+          "methods": [
+            "__init__",
+            "reset_parameters",
+            "forward"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 43
+        },
+        {
+          "name": "CircleLoss",
+          "methods": [
+            "__init__",
+            "reset_parameters",
+            "__call__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 29
+        }
+      ],
+      "imports": [
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": "torch.nn",
+          "specifiers": [
+            "nn"
+          ]
+        },
+        {
+          "source": "torch.nn.functional",
+          "specifiers": [
+            "F"
+          ]
+        },
+        {
+          "source": "torch.nn",
+          "specifiers": [
+            "Parameter"
+          ]
+        },
+        {
+          "source": "math",
+          "specifiers": [
+            "math"
+          ]
+        }
+      ],
+      "exports": [
+        "ArcFace",
+        "CircleLoss"
+      ],
+      "totalLines": 80,
+      "hasStructuralAnalysis": true
+    },
+    "loss/au_loss.py": {
+      "filePath": "loss/au_loss.py",
+      "contentHash": "bb1527f7095ec69ea5b6f6bc652520d2a8298d9aeed286894e40bde1476f720a",
+      "functions": [],
+      "classes": [
+        {
+          "name": "WeightedBCELoss",
+          "methods": [
+            "__init__",
+            "forward"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 21
+        }
+      ],
+      "imports": [
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": "torch.nn",
+          "specifiers": [
+            "nn"
+          ]
+        }
+      ],
+      "exports": [
+        "WeightedBCELoss"
+      ],
+      "totalLines": 25,
+      "hasStructuralAnalysis": true
+    },
+    "loss/center_loss.py": {
+      "filePath": "loss/center_loss.py",
+      "contentHash": "8e21747b894bc7f40040941ec1c34b4c85ca5fbea3f362fed7e87d032f8eec67",
+      "functions": [],
+      "classes": [
+        {
+          "name": "CenterLoss",
+          "methods": [
+            "__init__",
+            "forward"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 48
+        }
+      ],
+      "imports": [
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": "torch",
+          "specifiers": [
+            "nn"
+          ]
+        }
+      ],
+      "exports": [
+        "CenterLoss"
+      ],
+      "totalLines": 68,
+      "hasStructuralAnalysis": true
+    },
+    "loss/make_loss.py": {
+      "filePath": "loss/make_loss.py",
+      "contentHash": "87af07d724cd3ae9825cc14e89105a11abb2e4c288b48b7efabd65bda40e87f8",
+      "functions": [
+        {
+          "name": "_cfg_value",
+          "params": [
+            "section",
+            "name",
+            "default"
+          ],
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "_adjust_disfa_pos_weight",
+          "params": [
+            "cfg",
+            "pos_weight"
+          ],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "make_loss",
+          "params": [
+            "cfg",
+            "num_classes",
+            "pos_weight",
+            "device"
+          ],
+          "exported": true,
+          "lineCount": 106
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "torch.nn.functional",
+          "specifiers": [
+            "F"
+          ]
+        },
+        {
+          "source": ".softmax_loss",
+          "specifiers": [
+            "CrossEntropyLabelSmooth",
+            "LabelSmoothingCrossEntropy"
+          ]
+        },
+        {
+          "source": ".triplet_loss",
+          "specifiers": [
+            "TripletLoss"
+          ]
+        },
+        {
+          "source": ".center_loss",
+          "specifiers": [
+            "CenterLoss"
+          ]
+        },
+        {
+          "source": ".au_loss",
+          "specifiers": [
+            "WeightedBCELoss"
+          ]
+        },
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        }
+      ],
+      "exports": [
+        "_cfg_value",
+        "_adjust_disfa_pos_weight",
+        "make_loss"
+      ],
+      "totalLines": 141,
+      "hasStructuralAnalysis": true
+    },
+    "loss/metric_learning.py": {
+      "filePath": "loss/metric_learning.py",
+      "contentHash": "2ec4bbc55564c309c90985083948cfd9d569c4a29c581a599b9c166975a4b58b",
+      "functions": [],
+      "classes": [
+        {
+          "name": "ContrastiveLoss",
+          "methods": [
+            "__init__",
+            "forward"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 34
+        },
+        {
+          "name": "CircleLoss",
+          "methods": [
+            "__init__",
+            "reset_parameters",
+            "__call__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 29
+        },
+        {
+          "name": "Arcface",
+          "methods": [
+            "__init__",
+            "forward"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 46
+        },
+        {
+          "name": "Cosface",
+          "methods": [
+            "__init__",
+            "forward",
+            "__repr__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 40
+        },
+        {
+          "name": "AMSoftmax",
+          "methods": [
+            "__init__",
+            "forward"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 24
+        }
+      ],
+      "imports": [
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": "torch.nn",
+          "specifiers": [
+            "nn"
+          ]
+        },
+        {
+          "source": "torch.nn.functional",
+          "specifiers": [
+            "F"
+          ]
+        },
+        {
+          "source": "torch.autograd",
+          "specifiers": [
+            "torch.autograd"
+          ]
+        },
+        {
+          "source": "torch.nn",
+          "specifiers": [
+            "Parameter"
+          ]
+        },
+        {
+          "source": "math",
+          "specifiers": [
+            "math"
+          ]
+        }
+      ],
+      "exports": [
+        "ContrastiveLoss",
+        "CircleLoss",
+        "Arcface",
+        "Cosface",
+        "AMSoftmax"
+      ],
+      "totalLines": 189,
+      "hasStructuralAnalysis": true
+    },
+    "loss/softmax_loss.py": {
+      "filePath": "loss/softmax_loss.py",
+      "contentHash": "1912166d60105f8ff55dbc5301456a8c39690ac9eb1aaeabd026895704a7644d",
+      "functions": [],
+      "classes": [
+        {
+          "name": "CrossEntropyLabelSmooth",
+          "methods": [
+            "__init__",
+            "forward"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 31
+        },
+        {
+          "name": "LabelSmoothingCrossEntropy",
+          "methods": [
+            "__init__",
+            "forward"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 21
+        }
+      ],
+      "imports": [
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": "torch.nn",
+          "specifiers": [
+            "nn"
+          ]
+        },
+        {
+          "source": "torch.nn",
+          "specifiers": [
+            "F"
+          ]
+        }
+      ],
+      "exports": [
+        "CrossEntropyLabelSmooth",
+        "LabelSmoothingCrossEntropy"
+      ],
+      "totalLines": 57,
+      "hasStructuralAnalysis": true
+    },
+    "loss/supcontrast.py": {
+      "filePath": "loss/supcontrast.py",
+      "contentHash": "a319112f12af564310a7d7c04bd3c88fbb049aef9230a5ba4dbf36182d3fdd30",
+      "functions": [],
+      "classes": [
+        {
+          "name": "SupConLoss",
+          "methods": [
+            "__init__",
+            "forward"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 21
+        }
+      ],
+      "imports": [
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": "torch.nn",
+          "specifiers": [
+            "nn"
+          ]
+        }
+      ],
+      "exports": [
+        "SupConLoss"
+      ],
+      "totalLines": 30,
+      "hasStructuralAnalysis": true
+    },
+    "loss/triplet_loss.py": {
+      "filePath": "loss/triplet_loss.py",
+      "contentHash": "be58dc87f11937acbe830beda4548b710a70e782f663477d9707de5f316f142e",
+      "functions": [
+        {
+          "name": "normalize",
+          "params": [
+            "x",
+            "axis"
+          ],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "euclidean_dist",
+          "params": [
+            "x",
+            "y"
+          ],
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "cosine_dist",
+          "params": [
+            "x",
+            "y"
+          ],
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "hard_example_mining",
+          "params": [
+            "dist_mat",
+            "labels",
+            "return_inds"
+          ],
+          "exported": true,
+          "lineCount": 53
+        }
+      ],
+      "classes": [
+        {
+          "name": "TripletLoss",
+          "methods": [
+            "__init__",
+            "__call__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 29
+        }
+      ],
+      "imports": [
+        {
+          "source": "turtle",
+          "specifiers": [
+            "pd"
+          ]
+        },
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": "torch",
+          "specifiers": [
+            "nn"
+          ]
+        }
+      ],
+      "exports": [
+        "normalize",
+        "euclidean_dist",
+        "cosine_dist",
+        "hard_example_mining",
+        "TripletLoss"
+      ],
+      "totalLines": 137,
+      "hasStructuralAnalysis": true
+    },
+    "model/au_head.py": {
+      "filePath": "model/au_head.py",
+      "contentHash": "45c8e417defea24d015b63f63c8442acd652f6fa6698b42c0051236eb524c2a9",
+      "functions": [
+        {
+          "name": "weights_init_classifier",
+          "params": [
+            "m"
+          ],
+          "exported": true,
+          "lineCount": 6
+        }
+      ],
+      "classes": [
+        {
+          "name": "AUHead",
+          "methods": [
+            "__init__",
+            "init_bias_from_pos_weight",
+            "forward"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 27
+        }
+      ],
+      "imports": [
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": "torch.nn",
+          "specifiers": [
+            "nn"
+          ]
+        },
+        {
+          "source": "torch.nn",
+          "specifiers": [
+            "init"
+          ]
+        }
+      ],
+      "exports": [
+        "weights_init_classifier",
+        "AUHead"
+      ],
+      "totalLines": 39,
+      "hasStructuralAnalysis": true
+    },
+    "model/clip/__init__.py": {
+      "filePath": "model/clip/__init__.py",
+      "contentHash": "f6ddc7cbe2e119c937398de04e4d064976cc0110c5618bc7312fa595967ae3b4",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": ".clip",
+          "specifiers": [
+            "*"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": true
+    },
+    "model/clip/clip.py": {
+      "filePath": "model/clip/clip.py",
+      "contentHash": "c0f152e81422d2dab279d2ab010e89640757f4903f0ddde69a547d4ddff6ba52",
+      "functions": [
+        {
+          "name": "_download",
+          "params": [
+            "url",
+            "root"
+          ],
+          "exported": true,
+          "lineCount": 30
+        },
+        {
+          "name": "_transform",
+          "params": [
+            "n_px"
+          ],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "available_models",
+          "params": [],
+          "returnType": "List[str]",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "load",
+          "params": [
+            "name",
+            "device",
+            "jit"
+          ],
+          "exported": true,
+          "lineCount": 97
+        },
+        {
+          "name": "tokenize",
+          "params": [
+            "texts",
+            "context_length",
+            "truncate"
+          ],
+          "returnType": "torch.LongTensor",
+          "exported": true,
+          "lineCount": 39
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "hashlib",
+          "specifiers": [
+            "hashlib"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "urllib",
+          "specifiers": [
+            "urllib"
+          ]
+        },
+        {
+          "source": "warnings",
+          "specifiers": [
+            "warnings"
+          ]
+        },
+        {
+          "source": "typing",
+          "specifiers": [
+            "Union",
+            "List"
+          ]
+        },
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": "PIL",
+          "specifiers": [
+            "Image"
+          ]
+        },
+        {
+          "source": "torchvision.transforms",
+          "specifiers": [
+            "Compose",
+            "Resize",
+            "CenterCrop",
+            "ToTensor",
+            "Normalize"
+          ]
+        },
+        {
+          "source": "tqdm",
+          "specifiers": [
+            "tqdm"
+          ]
+        },
+        {
+          "source": ".model",
+          "specifiers": [
+            "build_model"
+          ]
+        },
+        {
+          "source": ".simple_tokenizer",
+          "specifiers": [
+            "_Tokenizer"
+          ]
+        }
+      ],
+      "exports": [
+        "_download",
+        "_transform",
+        "available_models",
+        "load",
+        "tokenize"
+      ],
+      "totalLines": 224,
+      "hasStructuralAnalysis": true
+    },
+    "model/clip/model.py": {
+      "filePath": "model/clip/model.py",
+      "contentHash": "e062699ff09884ab827625f3b8b0158cd6684de51e4a6a9f9a22ceb482606aac",
+      "functions": [
+        {
+          "name": "convert_weights",
+          "params": [
+            "model"
+          ],
+          "exported": true,
+          "lineCount": 22
+        },
+        {
+          "name": "build_model",
+          "params": [
+            "state_dict",
+            "h_resolution",
+            "w_resolution",
+            "vision_stride_size"
+          ],
+          "exported": true,
+          "lineCount": 45
+        },
+        {
+          "name": "resize_pos_embed",
+          "params": [
+            "posemb",
+            "posemb_new",
+            "hight",
+            "width"
+          ],
+          "exported": true,
+          "lineCount": 17
+        }
+      ],
+      "classes": [
+        {
+          "name": "Bottleneck",
+          "methods": [
+            "__init__",
+            "forward"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 44
+        },
+        {
+          "name": "AttentionPool2d",
+          "methods": [
+            "__init__",
+            "forward"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 35
+        },
+        {
+          "name": "ModifiedResNet",
+          "methods": [
+            "__init__",
+            "_make_layer",
+            "forward"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 57
+        },
+        {
+          "name": "LayerNorm",
+          "methods": [
+            "forward"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "QuickGELU",
+          "methods": [
+            "forward"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "ResidualAttentionBlock",
+          "methods": [
+            "__init__",
+            "attention",
+            "forward"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 22
+        },
+        {
+          "name": "Transformer",
+          "methods": [
+            "__init__",
+            "forward"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "VisionTransformer",
+          "methods": [
+            "__init__",
+            "forward"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 41
+        },
+        {
+          "name": "CLIP",
+          "methods": [
+            "__init__",
+            "initialize_parameters",
+            "build_attention_mask",
+            "dtype",
+            "encode_image",
+            "encode_text",
+            "forward"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 133
+        }
+      ],
+      "imports": [
+        {
+          "source": "collections",
+          "specifiers": [
+            "OrderedDict"
+          ]
+        },
+        {
+          "source": "typing",
+          "specifiers": [
+            "Tuple",
+            "Union"
+          ]
+        },
+        {
+          "source": "numpy",
+          "specifiers": [
+            "np"
+          ]
+        },
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": "torch.nn.functional",
+          "specifiers": [
+            "F"
+          ]
+        },
+        {
+          "source": "torch",
+          "specifiers": [
+            "nn"
+          ]
+        },
+        {
+          "source": "math",
+          "specifiers": [
+            "math"
+          ]
+        }
+      ],
+      "exports": [
+        "Bottleneck",
+        "AttentionPool2d",
+        "ModifiedResNet",
+        "LayerNorm",
+        "QuickGELU",
+        "ResidualAttentionBlock",
+        "Transformer",
+        "VisionTransformer",
+        "CLIP",
+        "convert_weights",
+        "build_model",
+        "resize_pos_embed"
+      ],
+      "totalLines": 465,
+      "hasStructuralAnalysis": true
+    },
+    "model/clip/simple_tokenizer.py": {
+      "filePath": "model/clip/simple_tokenizer.py",
+      "contentHash": "acf0cda10cad73193af7a0d7184364cca3139b7de464f163fd4953bf2648c608",
+      "functions": [
+        {
+          "name": "default_bpe",
+          "params": [],
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "bytes_to_unicode",
+          "params": [],
+          "exported": true,
+          "lineCount": 20
+        },
+        {
+          "name": "get_pairs",
+          "params": [
+            "word"
+          ],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "basic_clean",
+          "params": [
+            "text"
+          ],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "whitespace_clean",
+          "params": [
+            "text"
+          ],
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "classes": [
+        {
+          "name": "SimpleTokenizer",
+          "methods": [
+            "__init__",
+            "bpe",
+            "encode",
+            "decode"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 71
+        }
+      ],
+      "imports": [
+        {
+          "source": "gzip",
+          "specifiers": [
+            "gzip"
+          ]
+        },
+        {
+          "source": "html",
+          "specifiers": [
+            "html"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "functools",
+          "specifiers": [
+            "lru_cache"
+          ]
+        },
+        {
+          "source": "ftfy",
+          "specifiers": [
+            "ftfy"
+          ]
+        },
+        {
+          "source": "regex",
+          "specifiers": [
+            "re"
+          ]
+        }
+      ],
+      "exports": [
+        "default_bpe",
+        "bytes_to_unicode",
+        "get_pairs",
+        "basic_clean",
+        "whitespace_clean",
+        "SimpleTokenizer"
+      ],
+      "totalLines": 133,
+      "hasStructuralAnalysis": true
+    },
+    "model/make_model_clipreid.py": {
+      "filePath": "model/make_model_clipreid.py",
+      "contentHash": "17d2d30cc898e23ff2131cf9dcd867beab57572930c734e8d7e6216c5227a5b4",
+      "functions": [
+        {
+          "name": "weights_init_kaiming",
+          "params": [
+            "m"
+          ],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "weights_init_classifier",
+          "params": [
+            "m"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "make_model",
+          "params": [
+            "cfg",
+            "num_class",
+            "camera_num",
+            "view_num"
+          ],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "load_clip_to_cpu",
+          "params": [
+            "backbone_name",
+            "h_resolution",
+            "w_resolution",
+            "vision_stride_size"
+          ],
+          "exported": true,
+          "lineCount": 15
+        }
+      ],
+      "classes": [
+        {
+          "name": "TextEncoder",
+          "methods": [
+            "__init__",
+            "forward"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 20
+        },
+        {
+          "name": "build_transformer",
+          "methods": [
+            "__init__",
+            "forward",
+            "load_param",
+            "load_param_finetune"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 115
+        },
+        {
+          "name": "PromptLearner",
+          "methods": [
+            "__init__",
+            "forward"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 48
+        }
+      ],
+      "imports": [
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": "torch.nn",
+          "specifiers": [
+            "nn"
+          ]
+        },
+        {
+          "source": "numpy",
+          "specifiers": [
+            "np"
+          ]
+        },
+        {
+          "source": ".clip.simple_tokenizer",
+          "specifiers": [
+            "_Tokenizer"
+          ]
+        },
+        {
+          "source": "timm.models.layers",
+          "specifiers": [
+            "DropPath",
+            "to_2tuple",
+            "trunc_normal_"
+          ]
+        },
+        {
+          "source": ".clip",
+          "specifiers": [
+            "clip"
+          ]
+        }
+      ],
+      "exports": [
+        "weights_init_kaiming",
+        "weights_init_classifier",
+        "TextEncoder",
+        "build_transformer",
+        "make_model",
+        "load_clip_to_cpu",
+        "PromptLearner"
+      ],
+      "totalLines": 240,
+      "hasStructuralAnalysis": true
+    },
+    "model/make_model.py": {
+      "filePath": "model/make_model.py",
+      "contentHash": "e64e020d41358922261f6543f4dcc8fd200c491e9a386cf5aac6066c154f6909",
+      "functions": [
+        {
+          "name": "weights_init_kaiming",
+          "params": [
+            "m"
+          ],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "weights_init_classifier",
+          "params": [
+            "m"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "_assert_finite_state_dict",
+          "params": [
+            "state_dict",
+            "checkpoint_path"
+          ],
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "_load_weights",
+          "params": [
+            "path",
+            "map_location"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "_nested_cfg_value",
+          "params": [
+            "cfg",
+            "path",
+            "default"
+          ],
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "_adapt_checkpoint_tensor",
+          "params": [
+            "key",
+            "value",
+            "target",
+            "checkpoint_path"
+          ],
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "_copy_checkpoint_state",
+          "params": [
+            "module",
+            "param_dict",
+            "checkpoint_path",
+            "strip_module_prefix"
+          ],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "make_model",
+          "params": [
+            "cfg",
+            "num_class",
+            "camera_num",
+            "view_num"
+          ],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "load_clip_to_cpu",
+          "params": [
+            "backbone_name",
+            "h_resolution",
+            "w_resolution",
+            "vision_stride_size"
+          ],
+          "exported": true,
+          "lineCount": 15
+        }
+      ],
+      "classes": [
+        {
+          "name": "TextEncoder",
+          "methods": [
+            "__init__",
+            "forward"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 22
+        },
+        {
+          "name": "build_transformer",
+          "methods": [
+            "__init__",
+            "init_au_head_bias_from_pos_weight",
+            "_encode_image_fp32",
+            "forward",
+            "load_param",
+            "load_param_finetune"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 168
+        },
+        {
+          "name": "PromptLearner",
+          "methods": [
+            "__init__",
+            "forward"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 126
+        }
+      ],
+      "imports": [
+        {
+          "source": "contextlib",
+          "specifiers": [
+            "contextlib"
+          ]
+        },
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": "torch.nn",
+          "specifiers": [
+            "nn"
+          ]
+        },
+        {
+          "source": "numpy",
+          "specifiers": [
+            "np"
+          ]
+        },
+        {
+          "source": ".clip.simple_tokenizer",
+          "specifiers": [
+            "_Tokenizer"
+          ]
+        },
+        {
+          "source": "timm.models.layers",
+          "specifiers": [
+            "DropPath",
+            "to_2tuple",
+            "trunc_normal_"
+          ]
+        },
+        {
+          "source": ".au_head",
+          "specifiers": [
+            "AUHead"
+          ]
+        },
+        {
+          "source": ".clip",
+          "specifiers": [
+            "clip"
+          ]
+        }
+      ],
+      "exports": [
+        "weights_init_kaiming",
+        "weights_init_classifier",
+        "_assert_finite_state_dict",
+        "_load_weights",
+        "_nested_cfg_value",
+        "_adapt_checkpoint_tensor",
+        "_copy_checkpoint_state",
+        "TextEncoder",
+        "build_transformer",
+        "make_model",
+        "load_clip_to_cpu",
+        "PromptLearner"
+      ],
+      "totalLines": 441,
+      "hasStructuralAnalysis": true
+    },
+    "prepare_data.py": {
+      "filePath": "prepare_data.py",
+      "contentHash": "17aaf6bf8106fecbf70b932db8be53f7052d7db4f1eb7ff578b4acaa2189417a",
+      "functions": [
+        {
+          "name": "parse_au_file",
+          "params": [
+            "file_path"
+          ],
+          "exported": true,
+          "lineCount": 28
+        },
+        {
+          "name": "main",
+          "params": [],
+          "exported": true,
+          "lineCount": 56
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "pandas",
+          "specifiers": [
+            "pd"
+          ]
+        },
+        {
+          "source": "tqdm",
+          "specifiers": [
+            "tqdm"
+          ]
+        }
+      ],
+      "exports": [
+        "parse_au_file",
+        "main"
+      ],
+      "totalLines": 93,
+      "hasStructuralAnalysis": true
+    },
+    "processor/__init__.py": {
+      "filePath": "processor/__init__.py",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": true
+    },
+    "processor/processor_au_2stage.py": {
+      "filePath": "processor/processor_au_2stage.py",
+      "contentHash": "b1635db76b087ab1949e8eca0c5c8d369b0d67aa7edc00dde232500ea6c6499d",
+      "functions": [
+        {
+          "name": "_unwrap_data_parallel",
+          "params": [
+            "model"
+          ],
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "_save_model_state",
+          "params": [
+            "model",
+            "checkpoint_path"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "_current_lr",
+          "params": [
+            "optimizer"
+          ],
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "_cfg_value",
+          "params": [
+            "section",
+            "name",
+            "default"
+          ],
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "_stage2_amp_enabled",
+          "params": [
+            "cfg"
+          ],
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "_lr_group_summary",
+          "params": [
+            "optimizer"
+          ],
+          "exported": true,
+          "lineCount": 21
+        },
+        {
+          "name": "_reset_cuda_peak_memory",
+          "params": [],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "_cuda_memory_summary",
+          "params": [],
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "_samples_per_second",
+          "params": [
+            "samples_seen",
+            "start_time"
+          ],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "_prepare_cuda_model",
+          "params": [
+            "model",
+            "logger",
+            "stage_name",
+            "batch_size",
+            "use_data_parallel"
+          ],
+          "exported": true,
+          "lineCount": 21
+        },
+        {
+          "name": "_assert_finite_loss",
+          "params": [
+            "loss",
+            "stage_name",
+            "epoch",
+            "iteration"
+          ],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "_tensor_debug_summary",
+          "params": [
+            "tensor"
+          ],
+          "exported": true,
+          "lineCount": 29
+        },
+        {
+          "name": "_assert_finite_tensor",
+          "params": [
+            "tensor",
+            "name",
+            "stage_name",
+            "epoch",
+            "iteration"
+          ],
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "_is_finite_tensor",
+          "params": [
+            "tensor"
+          ],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "_assert_binary_targets",
+          "params": [
+            "target",
+            "stage_name",
+            "epoch",
+            "iteration"
+          ],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "_as_float_tensor_list",
+          "params": [
+            "values"
+          ],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "_score_tensors",
+          "params": [
+            "values"
+          ],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "_max_abs_tensor_value",
+          "params": [
+            "tensors"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "_positive_rate_from_logits",
+          "params": [
+            "tensors"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "_forward_stage2_model",
+          "params": [
+            "model",
+            "img",
+            "amp_enabled"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "_stage2_logit_problem",
+          "params": [
+            "score_tensors",
+            "max_logit_abs_limit",
+            "fatal_logit_abs_limit"
+          ],
+          "exported": true,
+          "lineCount": 33
+        },
+        {
+          "name": "_assert_finite_model_parameters",
+          "params": [
+            "model",
+            "stage_name",
+            "epoch",
+            "iteration"
+          ],
+          "exported": true,
+          "lineCount": 17
+        },
+        {
+          "name": "_save_stage2_diagnostic",
+          "params": [
+            "model",
+            "cfg",
+            "epoch",
+            "iteration",
+            "reason",
+            "logger"
+          ],
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "_raise_stage2_diagnostic",
+          "params": [
+            "model",
+            "cfg",
+            "epoch",
+            "iteration",
+            "reason",
+            "message",
+            "logger"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "_update_stage2_early_stop",
+          "params": [
+            "current_metric",
+            "best_metric_for_stop",
+            "epochs_without_improvement",
+            "min_delta"
+          ],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "_au_probabilities_from_logits",
+          "params": [
+            "output"
+          ],
+          "exported": true,
+          "lineCount": 13
+        },
+        {
+          "name": "_freeze_text_encoder",
+          "params": [
+            "model"
+          ],
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "_set_stage1_frozen_modules_eval",
+          "params": [
+            "model"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "_evaluate_au_model",
+          "params": [
+            "model",
+            "val_loader",
+            "device",
+            "desc"
+          ],
+          "exported": true,
+          "lineCount": 29
+        },
+        {
+          "name": "_run_stage2_eval",
+          "params": [
+            "cfg",
+            "model",
+            "val_loader",
+            "device",
+            "epoch",
+            "train_loss",
+            "lr",
+            "best_metric",
+            "history_records",
+            "itc_enabled",
+            "logger",
+            "grad_norm",
+            "max_logit_abs",
+            "train_positive_rate",
+            "stopped_early",
+            "stop_reason"
+          ],
+          "exported": true,
+          "lineCount": 86
+        },
+        {
+          "name": "_evaluate_stage1_itc_loss",
+          "params": [
+            "model",
+            "text_model",
+            "val_loader",
+            "device",
+            "loss_fn_itc",
+            "temperature",
+            "desc"
+          ],
+          "exported": true,
+          "lineCount": 49
+        },
+        {
+          "name": "do_train_stage1",
+          "params": [
+            "cfg",
+            "model",
+            "train_loader",
+            "optimizer",
+            "scheduler",
+            "local_rank",
+            "val_loader"
+          ],
+          "exported": true,
+          "lineCount": 187
+        },
+        {
+          "name": "do_train_stage2",
+          "params": [
+            "cfg",
+            "model",
+            "train_loader",
+            "val_loader",
+            "optimizer",
+            "scheduler",
+            "loss_fn",
+            "local_rank"
+          ],
+          "exported": true,
+          "lineCount": 374
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "math",
+          "specifiers": [
+            "math"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "time",
+          "specifiers": [
+            "time"
+          ]
+        },
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": "torch.nn",
+          "specifiers": [
+            "nn"
+          ]
+        },
+        {
+          "source": "torch.nn.functional",
+          "specifiers": [
+            "F"
+          ]
+        },
+        {
+          "source": "utils.meter",
+          "specifiers": [
+            "AverageMeter"
+          ]
+        },
+        {
+          "source": "processor.processor_au",
+          "specifiers": [
+            "AUEvaluator"
+          ]
+        },
+        {
+          "source": "tqdm",
+          "specifiers": [
+            "tqdm"
+          ]
+        },
+        {
+          "source": "utils.au_training_history",
+          "specifiers": [
+            "history_row",
+            "write_stage2_history"
+          ]
+        }
+      ],
+      "exports": [
+        "_unwrap_data_parallel",
+        "_save_model_state",
+        "_current_lr",
+        "_cfg_value",
+        "_stage2_amp_enabled",
+        "_lr_group_summary",
+        "_reset_cuda_peak_memory",
+        "_cuda_memory_summary",
+        "_samples_per_second",
+        "_prepare_cuda_model",
+        "_assert_finite_loss",
+        "_tensor_debug_summary",
+        "_assert_finite_tensor",
+        "_is_finite_tensor",
+        "_assert_binary_targets",
+        "_as_float_tensor_list",
+        "_score_tensors",
+        "_max_abs_tensor_value",
+        "_positive_rate_from_logits",
+        "_forward_stage2_model",
+        "_stage2_logit_problem",
+        "_assert_finite_model_parameters",
+        "_save_stage2_diagnostic",
+        "_raise_stage2_diagnostic",
+        "_update_stage2_early_stop",
+        "_au_probabilities_from_logits",
+        "_freeze_text_encoder",
+        "_set_stage1_frozen_modules_eval",
+        "_evaluate_au_model",
+        "_run_stage2_eval",
+        "_evaluate_stage1_itc_loss",
+        "do_train_stage1",
+        "do_train_stage2"
+      ],
+      "totalLines": 1071,
+      "hasStructuralAnalysis": true
+    },
+    "processor/processor_au.py": {
+      "filePath": "processor/processor_au.py",
+      "contentHash": "cb5481652022d22a4796069706712e98734af700876bf1a20e3e5f5eb3aecb92",
+      "functions": [
+        {
+          "name": "_to_numpy",
+          "params": [
+            "values"
+          ],
+          "returnType": "np.ndarray",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "_validate_batch",
+          "params": [
+            "name",
+            "values",
+            "expected_width"
+          ],
+          "returnType": "np.ndarray",
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "_validate_probabilities",
+          "params": [
+            "probs"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "_validate_binary_targets",
+          "params": [
+            "targets"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "_safe_divide",
+          "params": [
+            "numerator",
+            "denominator"
+          ],
+          "returnType": "np.ndarray",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "_safe_scalar_divide",
+          "params": [
+            "numerator",
+            "denominator"
+          ],
+          "returnType": "float",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "_rankdata_average",
+          "params": [
+            "values"
+          ],
+          "returnType": "np.ndarray",
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "_binary_roc_auc",
+          "params": [
+            "targets",
+            "scores"
+          ],
+          "returnType": "float",
+          "exported": true,
+          "lineCount": 13
+        },
+        {
+          "name": "_nanmean",
+          "params": [
+            "values"
+          ],
+          "returnType": "float",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "_named_float_dict",
+          "params": [
+            "values",
+            "names",
+            "indices"
+          ],
+          "returnType": "Dict[str, float]",
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "_named_int_dict",
+          "params": [
+            "values",
+            "names",
+            "indices"
+          ],
+          "returnType": "Dict[str, int]",
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "_metadata_to_list",
+          "params": [
+            "values",
+            "batch_size",
+            "name"
+          ],
+          "returnType": "List[Any]",
+          "exported": true,
+          "lineCount": 13
+        }
+      ],
+      "classes": [
+        {
+          "name": "AUEvaluator",
+          "methods": [
+            "__init__",
+            "reset",
+            "update",
+            "compute"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 129
+        }
+      ],
+      "imports": [
+        {
+          "source": "typing",
+          "specifiers": [
+            "Any",
+            "Dict",
+            "Iterable",
+            "List",
+            "Optional"
+          ]
+        },
+        {
+          "source": "numpy",
+          "specifiers": [
+            "np"
+          ]
+        }
+      ],
+      "exports": [
+        "_to_numpy",
+        "_validate_batch",
+        "_validate_probabilities",
+        "_validate_binary_targets",
+        "_safe_divide",
+        "_safe_scalar_divide",
+        "_rankdata_average",
+        "_binary_roc_auc",
+        "_nanmean",
+        "_named_float_dict",
+        "_named_int_dict",
+        "_metadata_to_list",
+        "AUEvaluator"
+      ],
+      "totalLines": 283,
+      "hasStructuralAnalysis": true
+    },
+    "processor/processor_clipreid_stage1.py": {
+      "filePath": "processor/processor_clipreid_stage1.py",
+      "contentHash": "0b06cec0fce5251508e43deada9be0e400befe1816d7832268439ef84263abf7",
+      "functions": [
+        {
+          "name": "do_train_stage1",
+          "params": [
+            "cfg",
+            "model",
+            "train_loader_stage1",
+            "optimizer",
+            "scheduler",
+            "local_rank"
+          ],
+          "exported": true,
+          "lineCount": 95
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": "torch.nn",
+          "specifiers": [
+            "nn"
+          ]
+        },
+        {
+          "source": "utils.meter",
+          "specifiers": [
+            "AverageMeter"
+          ]
+        },
+        {
+          "source": "torch.cuda",
+          "specifiers": [
+            "amp"
+          ]
+        },
+        {
+          "source": "torch.distributed",
+          "specifiers": [
+            "dist"
+          ]
+        },
+        {
+          "source": "collections",
+          "specifiers": [
+            "collections"
+          ]
+        },
+        {
+          "source": "torch.nn",
+          "specifiers": [
+            "F"
+          ]
+        },
+        {
+          "source": "loss.supcontrast",
+          "specifiers": [
+            "SupConLoss"
+          ]
+        }
+      ],
+      "exports": [
+        "do_train_stage1"
+      ],
+      "totalLines": 107,
+      "hasStructuralAnalysis": true
+    },
+    "processor/processor_clipreid_stage2.py": {
+      "filePath": "processor/processor_clipreid_stage2.py",
+      "contentHash": "eb532a1d64563100a5948d5eb0a0aea6bdb802237c320b2850c24edc52270710",
+      "functions": [
+        {
+          "name": "do_train_stage2",
+          "params": [
+            "cfg",
+            "model",
+            "center_criterion",
+            "train_loader_stage2",
+            "val_loader",
+            "optimizer",
+            "optimizer_center",
+            "scheduler",
+            "loss_fn",
+            "num_query",
+            "local_rank"
+          ],
+          "exported": true,
+          "lineCount": 175
+        },
+        {
+          "name": "do_inference",
+          "params": [
+            "cfg",
+            "model",
+            "val_loader",
+            "num_query"
+          ],
+          "exported": true,
+          "lineCount": 43
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "time",
+          "specifiers": [
+            "time"
+          ]
+        },
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": "torch.nn",
+          "specifiers": [
+            "nn"
+          ]
+        },
+        {
+          "source": "utils.meter",
+          "specifiers": [
+            "AverageMeter"
+          ]
+        },
+        {
+          "source": "utils.metrics",
+          "specifiers": [
+            "R1_mAP_eval"
+          ]
+        },
+        {
+          "source": "torch.cuda",
+          "specifiers": [
+            "amp"
+          ]
+        },
+        {
+          "source": "torch.distributed",
+          "specifiers": [
+            "dist"
+          ]
+        },
+        {
+          "source": "torch.nn",
+          "specifiers": [
+            "F"
+          ]
+        },
+        {
+          "source": "loss.supcontrast",
+          "specifiers": [
+            "SupConLoss"
+          ]
+        }
+      ],
+      "exports": [
+        "do_train_stage2",
+        "do_inference"
+      ],
+      "totalLines": 231,
+      "hasStructuralAnalysis": true
+    },
+    "processor/processor.py": {
+      "filePath": "processor/processor.py",
+      "contentHash": "4178dae77fa42490de9bc51731fbc55e93d320d27a639c2891b81a5a0c878702",
+      "functions": [
+        {
+          "name": "do_train",
+          "params": [
+            "cfg",
+            "model",
+            "center_criterion",
+            "train_loader",
+            "val_loader",
+            "optimizer",
+            "optimizer_center",
+            "scheduler",
+            "loss_fn",
+            "num_query",
+            "local_rank"
+          ],
+          "exported": true,
+          "lineCount": 154
+        },
+        {
+          "name": "do_inference",
+          "params": [
+            "cfg",
+            "model",
+            "val_loader",
+            "num_query"
+          ],
+          "exported": true,
+          "lineCount": 43
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "time",
+          "specifiers": [
+            "time"
+          ]
+        },
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": "torch.nn",
+          "specifiers": [
+            "nn"
+          ]
+        },
+        {
+          "source": "utils.meter",
+          "specifiers": [
+            "AverageMeter"
+          ]
+        },
+        {
+          "source": "utils.metrics",
+          "specifiers": [
+            "R1_mAP_eval"
+          ]
+        },
+        {
+          "source": "torch.cuda",
+          "specifiers": [
+            "amp"
+          ]
+        },
+        {
+          "source": "torch.distributed",
+          "specifiers": [
+            "dist"
+          ]
+        }
+      ],
+      "exports": [
+        "do_train",
+        "do_inference"
+      ],
+      "totalLines": 208,
+      "hasStructuralAnalysis": true
+    },
+    "solver/__init__.py": {
+      "filePath": "solver/__init__.py",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": true
+    },
+    "solver/cosine_lr.py": {
+      "filePath": "solver/cosine_lr.py",
+      "contentHash": "8f557daad01b5a69a72d3d434ef25dd2116d0101b740e21fc2a6a944f747cb30",
+      "functions": [],
+      "classes": [
+        {
+          "name": "CosineLRScheduler",
+          "methods": [
+            "__init__",
+            "_get_lr",
+            "get_epoch_values",
+            "get_update_values",
+            "get_cycle_length"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 99
+        }
+      ],
+      "imports": [
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "math",
+          "specifiers": [
+            "math"
+          ]
+        },
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": ".scheduler",
+          "specifiers": [
+            "Scheduler"
+          ]
+        }
+      ],
+      "exports": [
+        "CosineLRScheduler"
+      ],
+      "totalLines": 116,
+      "hasStructuralAnalysis": true
+    },
+    "solver/lr_scheduler.py": {
+      "filePath": "solver/lr_scheduler.py",
+      "contentHash": "823f44a6eef365de5b98c85e7cb2cfb6b88e9ad4bb543776677e1f817310b211",
+      "functions": [],
+      "classes": [
+        {
+          "name": "WarmupMultiStepLR",
+          "methods": [
+            "__init__",
+            "get_lr"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 43
+        }
+      ],
+      "imports": [
+        {
+          "source": "bisect",
+          "specifiers": [
+            "bisect_right"
+          ]
+        },
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        }
+      ],
+      "exports": [
+        "WarmupMultiStepLR"
+      ],
+      "totalLines": 57,
+      "hasStructuralAnalysis": true
+    },
+    "solver/make_optimizer_prompt.py": {
+      "filePath": "solver/make_optimizer_prompt.py",
+      "contentHash": "c7b6878ddd06f7d6cd514ccd9140a43e90b8957296a6861d72f6ad408cb1d6d3",
+      "functions": [
+        {
+          "name": "make_optimizer_1stage",
+          "params": [
+            "cfg",
+            "model"
+          ],
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "make_optimizer_2stage",
+          "params": [
+            "cfg",
+            "model",
+            "center_criterion"
+          ],
+          "exported": true,
+          "lineCount": 48
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        }
+      ],
+      "exports": [
+        "make_optimizer_1stage",
+        "make_optimizer_2stage"
+      ],
+      "totalLines": 71,
+      "hasStructuralAnalysis": true
+    },
+    "solver/make_optimizer.py": {
+      "filePath": "solver/make_optimizer.py",
+      "contentHash": "51f89ed4c16794697b3d7401cd641390e4ff68ef5c7e5d9bd31c6e3f015b151d",
+      "functions": [
+        {
+          "name": "make_optimizer",
+          "params": [
+            "cfg",
+            "model",
+            "center_criterion"
+          ],
+          "exported": true,
+          "lineCount": 26
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        }
+      ],
+      "exports": [
+        "make_optimizer"
+      ],
+      "totalLines": 28,
+      "hasStructuralAnalysis": true
+    },
+    "solver/scheduler_factory.py": {
+      "filePath": "solver/scheduler_factory.py",
+      "contentHash": "1ad58f30f011ce4c526de44995e371645b30f4a2b0affe0bacc347555dc6b278",
+      "functions": [
+        {
+          "name": "create_scheduler",
+          "params": [
+            "optimizer",
+            "num_epochs",
+            "lr_min",
+            "warmup_lr_init",
+            "warmup_t",
+            "noise_range"
+          ],
+          "exported": true,
+          "lineCount": 19
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": ".cosine_lr",
+          "specifiers": [
+            "CosineLRScheduler"
+          ]
+        }
+      ],
+      "exports": [
+        "create_scheduler"
+      ],
+      "totalLines": 26,
+      "hasStructuralAnalysis": true
+    },
+    "solver/scheduler.py": {
+      "filePath": "solver/scheduler.py",
+      "contentHash": "6982d06076d71dfe5bc82922899eae5a76413f0a88a0689566dcb5dba41f10aa",
+      "functions": [],
+      "classes": [
+        {
+          "name": "Scheduler",
+          "methods": [
+            "__init__",
+            "state_dict",
+            "load_state_dict",
+            "get_epoch_values",
+            "get_update_values",
+            "step",
+            "step_update",
+            "update_groups",
+            "_add_noise"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 100
+        }
+      ],
+      "imports": [
+        {
+          "source": "typing",
+          "specifiers": [
+            "Dict",
+            "Any"
+          ]
+        },
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        }
+      ],
+      "exports": [
+        "Scheduler"
+      ],
+      "totalLines": 106,
+      "hasStructuralAnalysis": true
+    },
+    "test_clipreid.py": {
+      "filePath": "test_clipreid.py",
+      "contentHash": "7c0697e7f2d5373983486e1c8c65700dd2ad85da4b710e6592f0115f0e22e843",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "config",
+          "specifiers": [
+            "cfg"
+          ]
+        },
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "datasets.make_dataloader_clipreid",
+          "specifiers": [
+            "make_dataloader"
+          ]
+        },
+        {
+          "source": "model.make_model_clipreid",
+          "specifiers": [
+            "make_model"
+          ]
+        },
+        {
+          "source": "processor.processor_clipreid_stage2",
+          "specifiers": [
+            "do_inference"
+          ]
+        },
+        {
+          "source": "utils.logger",
+          "specifiers": [
+            "setup_logger"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 71,
+      "hasStructuralAnalysis": true
+    },
+    "test.py": {
+      "filePath": "test.py",
+      "contentHash": "e05781555aa14a9a0e516dfc7a2edc31c0a1ea8e55acd1f81b63e07f7f985157",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "config",
+          "specifiers": [
+            "cfg"
+          ]
+        },
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "datasets.make_dataloader",
+          "specifiers": [
+            "make_dataloader"
+          ]
+        },
+        {
+          "source": "model.make_model",
+          "specifiers": [
+            "make_model"
+          ]
+        },
+        {
+          "source": "processor.processor",
+          "specifiers": [
+            "do_inference"
+          ]
+        },
+        {
+          "source": "utils.logger",
+          "specifiers": [
+            "setup_logger"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 71,
+      "hasStructuralAnalysis": true
+    },
+    "tests/__init__.py": {
+      "filePath": "tests/__init__.py",
+      "contentHash": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": true
+    },
+    "tests/test_au_evaluator.py": {
+      "filePath": "tests/test_au_evaluator.py",
+      "contentHash": "14da7679f0b764524812b0f002871db833946bd8a32a6f341387c4d5c042eb3b",
+      "functions": [
+        {
+          "name": "_alternating_targets",
+          "params": [],
+          "exported": true,
+          "lineCount": 3
+        }
+      ],
+      "classes": [
+        {
+          "name": "TestAUEvaluator",
+          "methods": [
+            "test_stage2_eval_converts_dual_head_logits_to_probabilities",
+            "test_perfect_prediction_scores_one",
+            "test_all_zero_target_auc_is_nan_for_that_au",
+            "test_cpu_torch_input_matches_numpy_input",
+            "test_gpu_input_matches_cpu_input",
+            "test_threshold_is_strictly_greater_than_point_five",
+            "test_rejects_logits_and_intensity_targets",
+            "test_integration_keys_for_stage2_logging"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 127
+        }
+      ],
+      "imports": [
+        {
+          "source": "math",
+          "specifiers": [
+            "math"
+          ]
+        },
+        {
+          "source": "unittest",
+          "specifiers": [
+            "unittest"
+          ]
+        },
+        {
+          "source": "numpy",
+          "specifiers": [
+            "np"
+          ]
+        },
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": "processor.processor_au",
+          "specifiers": [
+            "AUEvaluator"
+          ]
+        },
+        {
+          "source": "processor.processor_au_2stage",
+          "specifiers": [
+            "_au_probabilities_from_logits"
+          ]
+        }
+      ],
+      "exports": [
+        "_alternating_targets",
+        "TestAUEvaluator"
+      ],
+      "totalLines": 147,
+      "hasStructuralAnalysis": true
+    },
+    "tests/test_disfa_protocol.py": {
+      "filePath": "tests/test_disfa_protocol.py",
+      "contentHash": "3fbe9f1f7caeaf7e065188c149edbf9afb141e35c3fe09c7aa07802a1aabebe4",
+      "functions": [
+        {
+          "name": "_write_labels_csv",
+          "params": [
+            "root"
+          ],
+          "exported": true,
+          "lineCount": 21
+        },
+        {
+          "name": "_cfg",
+          "params": [
+            "root"
+          ],
+          "exported": true,
+          "lineCount": 8
+        }
+      ],
+      "classes": [
+        {
+          "name": "_IdentityTransform",
+          "methods": [
+            "__init__",
+            "__call__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "_Compose",
+          "methods": [
+            "__init__",
+            "__call__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "TestDISFAProtocol",
+          "methods": [
+            "test_subject_folds_are_deterministic_and_exclusive",
+            "test_make_au_dataloader_uses_distinct_train_and_val_datasets",
+            "test_make_au_dataloader_prefers_stage2_batch_size",
+            "test_pos_weight_uses_train_split_labels",
+            "test_make_loss_uses_supplied_pos_weight",
+            "test_make_loss_can_soften_stage2_pos_weight",
+            "test_fold_report_summary_keeps_disfa8_keys",
+            "test_stage2_history_writes_metric_files"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 168
+        }
+      ],
+      "imports": [
+        {
+          "source": "csv",
+          "specifiers": [
+            "csv"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "sys",
+          "specifiers": [
+            "sys"
+          ]
+        },
+        {
+          "source": "tempfile",
+          "specifiers": [
+            "tempfile"
+          ]
+        },
+        {
+          "source": "types",
+          "specifiers": [
+            "types"
+          ]
+        },
+        {
+          "source": "unittest",
+          "specifiers": [
+            "unittest"
+          ]
+        },
+        {
+          "source": "types",
+          "specifiers": [
+            "SimpleNamespace"
+          ]
+        },
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": "datasets.disfa",
+          "specifiers": [
+            "DISFA"
+          ]
+        },
+        {
+          "source": "datasets.make_dataloader",
+          "specifiers": [
+            "build_disfa_subject_folds",
+            "compute_au_pos_weight",
+            "make_au_dataloader"
+          ]
+        },
+        {
+          "source": "loss.make_loss",
+          "specifiers": [
+            "make_loss"
+          ]
+        },
+        {
+          "source": "utils.au_fold_report",
+          "specifiers": [
+            "flatten_fold_metrics",
+            "summarize_fold_rows"
+          ]
+        },
+        {
+          "source": "utils.au_training_history",
+          "specifiers": [
+            "history_row",
+            "write_stage2_history"
+          ]
+        }
+      ],
+      "exports": [
+        "_IdentityTransform",
+        "_Compose",
+        "_write_labels_csv",
+        "_cfg",
+        "TestDISFAProtocol"
+      ],
+      "totalLines": 286,
+      "hasStructuralAnalysis": true
+    },
+    "tests/test_stage2_stability.py": {
+      "filePath": "tests/test_stage2_stability.py",
+      "contentHash": "2df573a28b02297a3b57ca389f8c33588b11ff4640d1dd755247ed2f7f2b3682",
+      "functions": [
+        {
+          "name": "_stage2_cfg",
+          "params": [],
+          "exported": true,
+          "lineCount": 15
+        }
+      ],
+      "classes": [
+        {
+          "name": "_DummyStage2Model",
+          "methods": [
+            "__init__"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "_DummyStage1Model",
+          "methods": [
+            "__init__",
+            "forward"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "TestStage2Stability",
+          "methods": [
+            "test_au_head_uses_trainable_bias",
+            "test_au_head_bias_can_start_from_class_priors",
+            "test_dual_head_bce_is_averaged",
+            "test_stage2_optimizer_uses_lower_backbone_lr",
+            "test_stage2_warmup_lr_sequence",
+            "test_stage2_early_stop_requires_min_delta",
+            "test_stage2_logit_problem_flags_non_finite_logits",
+            "test_stage2_logit_problem_flags_guardrail",
+            "test_stage2_logit_problem_flags_fatal_guardrail",
+            "test_stage1_itc_eval_returns_finite_loss_and_restores_train_mode"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 127
+        }
+      ],
+      "imports": [
+        {
+          "source": "math",
+          "specifiers": [
+            "math"
+          ]
+        },
+        {
+          "source": "types",
+          "specifiers": [
+            "SimpleNamespace"
+          ]
+        },
+        {
+          "source": "unittest",
+          "specifiers": [
+            "unittest"
+          ]
+        },
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": "torch.nn",
+          "specifiers": [
+            "nn"
+          ]
+        },
+        {
+          "source": "loss.au_loss",
+          "specifiers": [
+            "WeightedBCELoss"
+          ]
+        },
+        {
+          "source": "model.au_head",
+          "specifiers": [
+            "AUHead"
+          ]
+        },
+        {
+          "source": "processor.processor_au_2stage",
+          "specifiers": [
+            "_evaluate_stage1_itc_loss",
+            "_stage2_logit_problem",
+            "_update_stage2_early_stop"
+          ]
+        },
+        {
+          "source": "solver.lr_scheduler",
+          "specifiers": [
+            "WarmupMultiStepLR"
+          ]
+        },
+        {
+          "source": "solver.make_optimizer_prompt",
+          "specifiers": [
+            "make_optimizer_2stage"
+          ]
+        }
+      ],
+      "exports": [
+        "_DummyStage2Model",
+        "_DummyStage1Model",
+        "_stage2_cfg",
+        "TestStage2Stability"
+      ],
+      "totalLines": 190,
+      "hasStructuralAnalysis": true
+    },
+    "train_au_2stage.py": {
+      "filePath": "train_au_2stage.py",
+      "contentHash": "6b5febac4ef9add8149bf0f613268ec340229775422d43d23c945e2f13146734",
+      "functions": [
+        {
+          "name": "set_seed",
+          "params": [
+            "seed"
+          ],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "_reset_logger_handlers",
+          "params": [],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "_format_cuda_visible_devices",
+          "params": [
+            "device_id"
+          ],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "_log_cuda_setup",
+          "params": [
+            "logger"
+          ],
+          "exported": true,
+          "lineCount": 23
+        },
+        {
+          "name": "_make_fold_cfg",
+          "params": [
+            "base_cfg",
+            "fold_idx",
+            "output_dir"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "_make_stage1_scheduler",
+          "params": [
+            "cfg",
+            "optimizer"
+          ],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "_make_stage2_scheduler",
+          "params": [
+            "cfg",
+            "optimizer"
+          ],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "run_fold",
+          "params": [
+            "cfg",
+            "args",
+            "fold_idx"
+          ],
+          "exported": true,
+          "lineCount": 73
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "random",
+          "specifiers": [
+            "random"
+          ]
+        },
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": "numpy",
+          "specifiers": [
+            "np"
+          ]
+        },
+        {
+          "source": "config",
+          "specifiers": [
+            "cfg"
+          ]
+        },
+        {
+          "source": "utils.logger",
+          "specifiers": [
+            "setup_logger"
+          ]
+        },
+        {
+          "source": "datasets.make_dataloader",
+          "specifiers": [
+            "make_au_dataloader"
+          ]
+        },
+        {
+          "source": "model.make_model",
+          "specifiers": [
+            "make_model"
+          ]
+        },
+        {
+          "source": "solver.make_optimizer_prompt",
+          "specifiers": [
+            "make_optimizer_1stage",
+            "make_optimizer_2stage"
+          ]
+        },
+        {
+          "source": "solver.scheduler_factory",
+          "specifiers": [
+            "create_scheduler"
+          ]
+        },
+        {
+          "source": "solver.lr_scheduler",
+          "specifiers": [
+            "WarmupMultiStepLR"
+          ]
+        },
+        {
+          "source": "loss.make_loss",
+          "specifiers": [
+            "make_loss"
+          ]
+        },
+        {
+          "source": "processor.processor_au_2stage",
+          "specifiers": [
+            "do_train_stage1",
+            "do_train_stage2"
+          ]
+        },
+        {
+          "source": "utils.au_fold_report",
+          "specifiers": [
+            "flatten_fold_metrics",
+            "write_fold_reports"
+          ]
+        }
+      ],
+      "exports": [
+        "set_seed",
+        "_reset_logger_handlers",
+        "_format_cuda_visible_devices",
+        "_log_cuda_setup",
+        "_make_fold_cfg",
+        "_make_stage1_scheduler",
+        "_make_stage2_scheduler",
+        "run_fold"
+      ],
+      "totalLines": 227,
+      "hasStructuralAnalysis": true
+    },
+    "train_clipreid.py": {
+      "filePath": "train_clipreid.py",
+      "contentHash": "d8dcb44c60dc3fa2b3edfcd1f31b2519e7bfe259efa3168b8f087ea1cb7d285c",
+      "functions": [
+        {
+          "name": "set_seed",
+          "params": [
+            "seed"
+          ],
+          "exported": true,
+          "lineCount": 8
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "utils.logger",
+          "specifiers": [
+            "setup_logger"
+          ]
+        },
+        {
+          "source": "datasets.make_dataloader_clipreid",
+          "specifiers": [
+            "make_dataloader"
+          ]
+        },
+        {
+          "source": "model.make_model_clipreid",
+          "specifiers": [
+            "make_model"
+          ]
+        },
+        {
+          "source": "solver.make_optimizer_prompt",
+          "specifiers": [
+            "make_optimizer_1stage",
+            "make_optimizer_2stage"
+          ]
+        },
+        {
+          "source": "solver.scheduler_factory",
+          "specifiers": [
+            "create_scheduler"
+          ]
+        },
+        {
+          "source": "solver.lr_scheduler",
+          "specifiers": [
+            "WarmupMultiStepLR"
+          ]
+        },
+        {
+          "source": "loss.make_loss",
+          "specifiers": [
+            "make_loss"
+          ]
+        },
+        {
+          "source": "processor.processor_clipreid_stage1",
+          "specifiers": [
+            "do_train_stage1"
+          ]
+        },
+        {
+          "source": "processor.processor_clipreid_stage2",
+          "specifiers": [
+            "do_train_stage2"
+          ]
+        },
+        {
+          "source": "random",
+          "specifiers": [
+            "random"
+          ]
+        },
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": "numpy",
+          "specifiers": [
+            "np"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "config",
+          "specifiers": [
+            "cfg"
+          ]
+        }
+      ],
+      "exports": [
+        "set_seed"
+      ],
+      "totalLines": 100,
+      "hasStructuralAnalysis": true
+    },
+    "train.py": {
+      "filePath": "train.py",
+      "contentHash": "a4baa4d06e95af9b3693380f40a4fe4545fa62358831ddde7b3fd8a050d67f5d",
+      "functions": [
+        {
+          "name": "_format_cuda_visible_devices",
+          "params": [
+            "device_id"
+          ],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "set_seed",
+          "params": [
+            "seed"
+          ],
+          "exported": true,
+          "lineCount": 8
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "utils.logger",
+          "specifiers": [
+            "setup_logger"
+          ]
+        },
+        {
+          "source": "datasets.make_dataloader",
+          "specifiers": [
+            "make_dataloader"
+          ]
+        },
+        {
+          "source": "model.make_model",
+          "specifiers": [
+            "make_model"
+          ]
+        },
+        {
+          "source": "solver.make_optimizer",
+          "specifiers": [
+            "make_optimizer"
+          ]
+        },
+        {
+          "source": "solver.lr_scheduler",
+          "specifiers": [
+            "WarmupMultiStepLR"
+          ]
+        },
+        {
+          "source": "loss.make_loss",
+          "specifiers": [
+            "make_loss"
+          ]
+        },
+        {
+          "source": "processor.processor",
+          "specifiers": [
+            "do_train"
+          ]
+        },
+        {
+          "source": "random",
+          "specifiers": [
+            "random"
+          ]
+        },
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": "numpy",
+          "specifiers": [
+            "np"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "config",
+          "specifiers": [
+            "cfg"
+          ]
+        }
+      ],
+      "exports": [
+        "_format_cuda_visible_devices",
+        "set_seed"
+      ],
+      "totalLines": 95,
+      "hasStructuralAnalysis": true
+    },
+    "utils/__init__.py": {
+      "filePath": "utils/__init__.py",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": true
+    },
+    "utils/au_fold_report.py": {
+      "filePath": "utils/au_fold_report.py",
+      "contentHash": "4a1b94f4f1d59b96069f1135c06c7b4c4af392c36d858a926ab5317dae816730",
+      "functions": [
+        {
+          "name": "flatten_fold_metrics",
+          "params": [
+            "metrics",
+            "fold_info"
+          ],
+          "exported": true,
+          "lineCount": 17
+        },
+        {
+          "name": "_mean",
+          "params": [
+            "values"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "_std",
+          "params": [
+            "values"
+          ],
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "summarize_fold_rows",
+          "params": [
+            "rows"
+          ],
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "write_fold_reports",
+          "params": [
+            "output_dir",
+            "fold_records"
+          ],
+          "exported": true,
+          "lineCount": 23
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "csv",
+          "specifiers": [
+            "csv"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "math",
+          "specifiers": [
+            "math"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        }
+      ],
+      "exports": [
+        "flatten_fold_metrics",
+        "_mean",
+        "_std",
+        "summarize_fold_rows",
+        "write_fold_reports"
+      ],
+      "totalLines": 97,
+      "hasStructuralAnalysis": true
+    },
+    "utils/au_training_history.py": {
+      "filePath": "utils/au_training_history.py",
+      "contentHash": "e920e1fb9f3feccbb328cf471f4fea363bab93a56e9bc5d6162d3088fa7b0220",
+      "functions": [
+        {
+          "name": "_clean_float",
+          "params": [
+            "value"
+          ],
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "history_row",
+          "params": [
+            "epoch",
+            "train_loss",
+            "lr",
+            "metrics",
+            "best_metric",
+            "is_best",
+            "itc_enabled",
+            "grad_norm",
+            "max_logit_abs",
+            "train_positive_rate",
+            "stopped_early",
+            "stop_reason"
+          ],
+          "exported": true,
+          "lineCount": 43
+        },
+        {
+          "name": "write_stage2_history",
+          "params": [
+            "output_dir",
+            "records",
+            "prefix"
+          ],
+          "exported": true,
+          "lineCount": 30
+        },
+        {
+          "name": "_plot_stage2_history",
+          "params": [
+            "records",
+            "plot_path"
+          ],
+          "exported": true,
+          "lineCount": 38
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "csv",
+          "specifiers": [
+            "csv"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "math",
+          "specifiers": [
+            "math"
+          ]
+        },
+        {
+          "source": "numbers",
+          "specifiers": [
+            "numbers"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        }
+      ],
+      "exports": [
+        "_clean_float",
+        "history_row",
+        "write_stage2_history",
+        "_plot_stage2_history"
+      ],
+      "totalLines": 149,
+      "hasStructuralAnalysis": true
+    },
+    "utils/iotools.py": {
+      "filePath": "utils/iotools.py",
+      "contentHash": "0adb6a9089370438f1cf8a7b023a1086fcb285ebe12ba9efeb2e5e19b652d227",
+      "functions": [
+        {
+          "name": "mkdir_if_missing",
+          "params": [
+            "directory"
+          ],
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "check_isfile",
+          "params": [
+            "path"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "read_json",
+          "params": [
+            "fpath"
+          ],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "write_json",
+          "params": [
+            "obj",
+            "fpath"
+          ],
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "errno",
+          "specifiers": [
+            "errno"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "os.path",
+          "specifiers": [
+            "osp"
+          ]
+        }
+      ],
+      "exports": [
+        "mkdir_if_missing",
+        "check_isfile",
+        "read_json",
+        "write_json"
+      ],
+      "totalLines": 40,
+      "hasStructuralAnalysis": true
+    },
+    "utils/logger.py": {
+      "filePath": "utils/logger.py",
+      "contentHash": "3eeb1f72b34a45061a909df91662b598c53862f85793a6df458a570ab945e0b1",
+      "functions": [
+        {
+          "name": "setup_logger",
+          "params": [
+            "name",
+            "save_dir",
+            "if_train"
+          ],
+          "exported": true,
+          "lineCount": 22
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "sys",
+          "specifiers": [
+            "sys"
+          ]
+        },
+        {
+          "source": "os.path",
+          "specifiers": [
+            "osp"
+          ]
+        }
+      ],
+      "exports": [
+        "setup_logger"
+      ],
+      "totalLines": 26,
+      "hasStructuralAnalysis": true
+    },
+    "utils/meter.py": {
+      "filePath": "utils/meter.py",
+      "contentHash": "ed8a4219b5eee8f25a05ed695251a903c82b54468442a8788791bdacd8e9d036",
+      "functions": [],
+      "classes": [
+        {
+          "name": "AverageMeter",
+          "methods": [
+            "__init__",
+            "reset",
+            "update"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 20
+        }
+      ],
+      "imports": [],
+      "exports": [
+        "AverageMeter"
+      ],
+      "totalLines": 20,
+      "hasStructuralAnalysis": true
+    },
+    "utils/metrics.py": {
+      "filePath": "utils/metrics.py",
+      "contentHash": "fcc955a55b367aebf129481c0739afdf4738aacd0709a832be3cef571988729c",
+      "functions": [
+        {
+          "name": "euclidean_distance",
+          "params": [
+            "qf",
+            "gf"
+          ],
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "cosine_similarity",
+          "params": [
+            "qf",
+            "gf"
+          ],
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "eval_func",
+          "params": [
+            "distmat",
+            "q_pids",
+            "g_pids",
+            "q_camids",
+            "g_camids",
+            "max_rank"
+          ],
+          "exported": true,
+          "lineCount": 60
+        }
+      ],
+      "classes": [
+        {
+          "name": "R1_mAP_eval",
+          "methods": [
+            "__init__",
+            "reset",
+            "update",
+            "compute"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 44
+        }
+      ],
+      "imports": [
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        },
+        {
+          "source": "numpy",
+          "specifiers": [
+            "np"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "utils.reranking",
+          "specifiers": [
+            "re_ranking"
+          ]
+        }
+      ],
+      "exports": [
+        "euclidean_distance",
+        "cosine_similarity",
+        "eval_func",
+        "R1_mAP_eval"
+      ],
+      "totalLines": 137,
+      "hasStructuralAnalysis": true
+    },
+    "utils/reranking.py": {
+      "filePath": "utils/reranking.py",
+      "contentHash": "e7e9b9b34b44e71be8be04db75d277cbb9a9428612d194c409bc78edcbae723b",
+      "functions": [
+        {
+          "name": "re_ranking",
+          "params": [
+            "probFea",
+            "galFea",
+            "k1",
+            "k2",
+            "lambda_value",
+            "local_distmat",
+            "only_local"
+          ],
+          "exported": true,
+          "lineCount": 72
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "numpy",
+          "specifiers": [
+            "np"
+          ]
+        },
+        {
+          "source": "torch",
+          "specifiers": [
+            "torch"
+          ]
+        }
+      ],
+      "exports": [
+        "re_ranking"
+      ],
+      "totalLines": 102,
+      "hasStructuralAnalysis": true
+    }
+  }
+}

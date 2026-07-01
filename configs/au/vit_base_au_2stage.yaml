@@ -57,6 +57,9 @@ SOLVER:
     POS_WEIGHT_MAX: 8.0
     # Stage 1 already performs image-text alignment; Stage 2 is classification-only by default.
     ITC_LOSS_WEIGHT: 0.0
+    # Initialize AU classifier biases from train-split priors to avoid an
+    # over-positive start on highly imbalanced labels.
+    INIT_HEAD_BIAS_FROM_PRIOR: true
     STEPS: [25, 40]
     GAMMA: 0.1
     WARMUP_FACTOR: 0.01

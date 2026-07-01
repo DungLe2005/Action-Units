@@ -1,0 +1,6063 @@
+{
+  "version": "1.0.0",
+  "project": {
+    "name": "Action-Units",
+    "languages": [
+      "unknown",
+      "python",
+      "markdown",
+      "yaml",
+      "drawio",
+      "pptx"
+    ],
+    "frameworks": [
+      "PyTorch",
+      "CLIP/ViT",
+      "YACS configuration"
+    ],
+    "description": "Pipeline nghi?n c?u Facial Action Unit detection d?a tr?n CLIP/ViT, g?m hu?n luy?n hai giai ?o?n cho AU image-text alignment v? AU multi-label classification tr?n DISFA.",
+    "analyzedAt": "2026-05-26T07:33:48.869017+00:00",
+    "gitCommitHash": "b0317cf6e06492ebaef55908c2355c5230e4b0d9"
+  },
+  "nodes": [
+    {
+      "id": "file:.understand-anything/.understandignore",
+      "type": "file",
+      "name": ".understandignore",
+      "filePath": ".understand-anything/.understandignore",
+      "language": "unknown",
+      "summary": "T?p m? ngu?n `.understand-anything/.understandignore` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 36 d?ng.",
+      "tags": [
+        "code",
+        "unknown"
+      ],
+      "complexity": "simple",
+      "sizeLines": 36
+    },
+    {
+      "id": "file:au_explainer.py",
+      "type": "file",
+      "name": "au_explainer.py",
+      "filePath": "au_explainer.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `au_explainer.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 75 d?ng.",
+      "tags": [
+        "action-unit",
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 75
+    },
+    {
+      "id": "document:AU_TO_NATURAL_LANGUAGE_GENERATION.md",
+      "type": "document",
+      "name": "AU_TO_NATURAL_LANGUAGE_GENERATION.md",
+      "filePath": "AU_TO_NATURAL_LANGUAGE_GENERATION.md",
+      "language": "markdown",
+      "summary": "T?i li?u `AU_TO_NATURAL_LANGUAGE_GENERATION.md` trong pipeline Action-Units; thu?c nh?m docs v? c? kho?ng 611 d?ng.",
+      "tags": [
+        "action-unit",
+        "docs",
+        "markdown"
+      ],
+      "complexity": "complex",
+      "sizeLines": 611
+    },
+    {
+      "id": "file:config/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "config/__init__.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `config/__init__.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 10 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 10
+    },
+    {
+      "id": "file:config/defaults_base.py",
+      "type": "file",
+      "name": "defaults_base.py",
+      "filePath": "config/defaults_base.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `config/defaults_base.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 238 d?ng.",
+      "tags": [
+        "action-unit",
+        "code",
+        "python"
+      ],
+      "complexity": "moderate",
+      "sizeLines": 238
+    },
+    {
+      "id": "file:config/defaults.py",
+      "type": "file",
+      "name": "defaults.py",
+      "filePath": "config/defaults.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `config/defaults.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 251 d?ng.",
+      "tags": [
+        "action-unit",
+        "code",
+        "python"
+      ],
+      "complexity": "moderate",
+      "sizeLines": 251
+    },
+    {
+      "id": "config:configs/au/vit_base_au_2stage.yaml",
+      "type": "config",
+      "name": "vit_base_au_2stage.yaml",
+      "filePath": "configs/au/vit_base_au_2stage.yaml",
+      "language": "yaml",
+      "summary": "T?p c?u h?nh `configs/au/vit_base_au_2stage.yaml` trong pipeline Action-Units; thu?c nh?m config v? c? kho?ng 97 d?ng.",
+      "tags": [
+        "action-unit",
+        "au-config",
+        "config",
+        "vlm-clip",
+        "yaml"
+      ],
+      "complexity": "simple",
+      "sizeLines": 97
+    },
+    {
+      "id": "config:configs/au/vit_base_au.yaml",
+      "type": "config",
+      "name": "vit_base_au.yaml",
+      "filePath": "configs/au/vit_base_au.yaml",
+      "language": "yaml",
+      "summary": "T?p c?u h?nh `configs/au/vit_base_au.yaml` trong pipeline Action-Units; thu?c nh?m config v? c? kho?ng 51 d?ng.",
+      "tags": [
+        "action-unit",
+        "au-config",
+        "config",
+        "vlm-clip",
+        "yaml"
+      ],
+      "complexity": "simple",
+      "sizeLines": 51
+    },
+    {
+      "id": "config:configs/person/cnn_base.yml",
+      "type": "config",
+      "name": "cnn_base.yml",
+      "filePath": "configs/person/cnn_base.yml",
+      "language": "yaml",
+      "summary": "T?p c?u h?nh `configs/person/cnn_base.yml` trong pipeline Action-Units; thu?c nh?m config v? c? kho?ng 68 d?ng.",
+      "tags": [
+        "config",
+        "yaml"
+      ],
+      "complexity": "simple",
+      "sizeLines": 68
+    },
+    {
+      "id": "config:configs/person/cnn_clipreid.yml",
+      "type": "config",
+      "name": "cnn_clipreid.yml",
+      "filePath": "configs/person/cnn_clipreid.yml",
+      "language": "yaml",
+      "summary": "T?p c?u h?nh `configs/person/cnn_clipreid.yml` trong pipeline Action-Units; thu?c nh?m config v? c? kho?ng 84 d?ng.",
+      "tags": [
+        "config",
+        "vlm-clip",
+        "yaml"
+      ],
+      "complexity": "simple",
+      "sizeLines": 84
+    },
+    {
+      "id": "config:configs/person/vit_base.yml",
+      "type": "config",
+      "name": "vit_base.yml",
+      "filePath": "configs/person/vit_base.yml",
+      "language": "yaml",
+      "summary": "T?p c?u h?nh `configs/person/vit_base.yml` trong pipeline Action-Units; thu?c nh?m config v? c? kho?ng 71 d?ng.",
+      "tags": [
+        "config",
+        "vlm-clip",
+        "yaml"
+      ],
+      "complexity": "simple",
+      "sizeLines": 71
+    },
+    {
+      "id": "config:configs/person/vit_clipreid.yml",
+      "type": "config",
+      "name": "vit_clipreid.yml",
+      "filePath": "configs/person/vit_clipreid.yml",
+      "language": "yaml",
+      "summary": "T?p c?u h?nh `configs/person/vit_clipreid.yml` trong pipeline Action-Units; thu?c nh?m config v? c? kho?ng 87 d?ng.",
+      "tags": [
+        "config",
+        "vlm-clip",
+        "yaml"
+      ],
+      "complexity": "simple",
+      "sizeLines": 87
+    },
+    {
+      "id": "config:configs/VehicleID/cnn_base.yml",
+      "type": "config",
+      "name": "cnn_base.yml",
+      "filePath": "configs/VehicleID/cnn_base.yml",
+      "language": "yaml",
+      "summary": "T?p c?u h?nh `configs/VehicleID/cnn_base.yml` trong pipeline Action-Units; thu?c nh?m config v? c? kho?ng 56 d?ng.",
+      "tags": [
+        "config",
+        "yaml"
+      ],
+      "complexity": "simple",
+      "sizeLines": 56
+    },
+    {
+      "id": "config:configs/VehicleID/cnn_clipreid.yml",
+      "type": "config",
+      "name": "cnn_clipreid.yml",
+      "filePath": "configs/VehicleID/cnn_clipreid.yml",
+      "language": "yaml",
+      "summary": "T?p c?u h?nh `configs/VehicleID/cnn_clipreid.yml` trong pipeline Action-Units; thu?c nh?m config v? c? kho?ng 71 d?ng.",
+      "tags": [
+        "config",
+        "vlm-clip",
+        "yaml"
+      ],
+      "complexity": "simple",
+      "sizeLines": 71
+    },
+    {
+      "id": "config:configs/VehicleID/vit_base.yml",
+      "type": "config",
+      "name": "vit_base.yml",
+      "filePath": "configs/VehicleID/vit_base.yml",
+      "language": "yaml",
+      "summary": "T?p c?u h?nh `configs/VehicleID/vit_base.yml` trong pipeline Action-Units; thu?c nh?m config v? c? kho?ng 58 d?ng.",
+      "tags": [
+        "config",
+        "vlm-clip",
+        "yaml"
+      ],
+      "complexity": "simple",
+      "sizeLines": 58
+    },
+    {
+      "id": "config:configs/VehicleID/vit_clipreid.yml",
+      "type": "config",
+      "name": "vit_clipreid.yml",
+      "filePath": "configs/VehicleID/vit_clipreid.yml",
+      "language": "yaml",
+      "summary": "T?p c?u h?nh `configs/VehicleID/vit_clipreid.yml` trong pipeline Action-Units; thu?c nh?m config v? c? kho?ng 73 d?ng.",
+      "tags": [
+        "config",
+        "vlm-clip",
+        "yaml"
+      ],
+      "complexity": "simple",
+      "sizeLines": 73
+    },
+    {
+      "id": "config:configs/veri/cnn_base.yml",
+      "type": "config",
+      "name": "cnn_base.yml",
+      "filePath": "configs/veri/cnn_base.yml",
+      "language": "yaml",
+      "summary": "T?p c?u h?nh `configs/veri/cnn_base.yml` trong pipeline Action-Units; thu?c nh?m config v? c? kho?ng 56 d?ng.",
+      "tags": [
+        "config",
+        "yaml"
+      ],
+      "complexity": "simple",
+      "sizeLines": 56
+    },
+    {
+      "id": "config:configs/veri/cnn_prom.yml",
+      "type": "config",
+      "name": "cnn_prom.yml",
+      "filePath": "configs/veri/cnn_prom.yml",
+      "language": "yaml",
+      "summary": "T?p c?u h?nh `configs/veri/cnn_prom.yml` trong pipeline Action-Units; thu?c nh?m config v? c? kho?ng 71 d?ng.",
+      "tags": [
+        "config",
+        "yaml"
+      ],
+      "complexity": "simple",
+      "sizeLines": 71
+    },
+    {
+      "id": "config:configs/veri/vit_base.yml",
+      "type": "config",
+      "name": "vit_base.yml",
+      "filePath": "configs/veri/vit_base.yml",
+      "language": "yaml",
+      "summary": "T?p c?u h?nh `configs/veri/vit_base.yml` trong pipeline Action-Units; thu?c nh?m config v? c? kho?ng 61 d?ng.",
+      "tags": [
+        "config",
+        "vlm-clip",
+        "yaml"
+      ],
+      "complexity": "simple",
+      "sizeLines": 61
+    },
+    {
+      "id": "config:configs/veri/vit_prom.yml",
+      "type": "config",
+      "name": "vit_prom.yml",
+      "filePath": "configs/veri/vit_prom.yml",
+      "language": "yaml",
+      "summary": "T?p c?u h?nh `configs/veri/vit_prom.yml` trong pipeline Action-Units; thu?c nh?m config v? c? kho?ng 76 d?ng.",
+      "tags": [
+        "config",
+        "vlm-clip",
+        "yaml"
+      ],
+      "complexity": "simple",
+      "sizeLines": 76
+    },
+    {
+      "id": "file:docs/original_scientific_model_diagram.drawio",
+      "type": "file",
+      "name": "original_scientific_model_diagram.drawio",
+      "filePath": "docs/original_scientific_model_diagram.drawio",
+      "language": "drawio",
+      "summary": "T?p m? ngu?n `docs/original_scientific_model_diagram.drawio` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 142 d?ng.",
+      "tags": [
+        "code",
+        "drawio"
+      ],
+      "complexity": "moderate",
+      "sizeLines": 142
+    },
+    {
+      "id": "file:docs/original_system_architecture.drawio",
+      "type": "file",
+      "name": "original_system_architecture.drawio",
+      "filePath": "docs/original_system_architecture.drawio",
+      "language": "drawio",
+      "summary": "T?p m? ngu?n `docs/original_system_architecture.drawio` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 100 d?ng.",
+      "tags": [
+        "code",
+        "drawio"
+      ],
+      "complexity": "simple",
+      "sizeLines": 100
+    },
+    {
+      "id": "file:docs/report/action_units_model_proposal_slides.pptx",
+      "type": "file",
+      "name": "action_units_model_proposal_slides.pptx",
+      "filePath": "docs/report/action_units_model_proposal_slides.pptx",
+      "language": "pptx",
+      "summary": "T?p m? ngu?n `docs/report/action_units_model_proposal_slides.pptx` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 567 d?ng.",
+      "tags": [
+        "code",
+        "pptx"
+      ],
+      "complexity": "complex",
+      "sizeLines": 567
+    },
+    {
+      "id": "document:docs/report/action_units_scientific_system_report.md",
+      "type": "document",
+      "name": "action_units_scientific_system_report.md",
+      "filePath": "docs/report/action_units_scientific_system_report.md",
+      "language": "markdown",
+      "summary": "T?i li?u `docs/report/action_units_scientific_system_report.md` trong pipeline Action-Units; thu?c nh?m docs v? c? kho?ng 768 d?ng.",
+      "tags": [
+        "docs",
+        "markdown"
+      ],
+      "complexity": "complex",
+      "sizeLines": 768
+    },
+    {
+      "id": "file:docs/scientific_future_research_roadmap.drawio",
+      "type": "file",
+      "name": "scientific_future_research_roadmap.drawio",
+      "filePath": "docs/scientific_future_research_roadmap.drawio",
+      "language": "drawio",
+      "summary": "T?p m? ngu?n `docs/scientific_future_research_roadmap.drawio` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 210 d?ng.",
+      "tags": [
+        "code",
+        "drawio"
+      ],
+      "complexity": "moderate",
+      "sizeLines": 210
+    },
+    {
+      "id": "file:docs/scientific_model_diagram_simplified.drawio",
+      "type": "file",
+      "name": "scientific_model_diagram_simplified.drawio",
+      "filePath": "docs/scientific_model_diagram_simplified.drawio",
+      "language": "drawio",
+      "summary": "T?p m? ngu?n `docs/scientific_model_diagram_simplified.drawio` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 88 d?ng.",
+      "tags": [
+        "code",
+        "drawio"
+      ],
+      "complexity": "simple",
+      "sizeLines": 88
+    },
+    {
+      "id": "file:docs/scientific_model_diagram.drawio",
+      "type": "file",
+      "name": "scientific_model_diagram.drawio",
+      "filePath": "docs/scientific_model_diagram.drawio",
+      "language": "drawio",
+      "summary": "T?p m? ngu?n `docs/scientific_model_diagram.drawio` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 265 d?ng.",
+      "tags": [
+        "code",
+        "drawio"
+      ],
+      "complexity": "moderate",
+      "sizeLines": 265
+    },
+    {
+      "id": "document:docs/SOTA/disfa_sota_benchmark.md",
+      "type": "document",
+      "name": "disfa_sota_benchmark.md",
+      "filePath": "docs/SOTA/disfa_sota_benchmark.md",
+      "language": "markdown",
+      "summary": "T?i li?u `docs/SOTA/disfa_sota_benchmark.md` trong pipeline Action-Units; thu?c nh?m docs v? c? kho?ng 100 d?ng.",
+      "tags": [
+        "docs",
+        "markdown"
+      ],
+      "complexity": "simple",
+      "sizeLines": 100
+    },
+    {
+      "id": "file:docs/system_architecture.drawio",
+      "type": "file",
+      "name": "system_architecture.drawio",
+      "filePath": "docs/system_architecture.drawio",
+      "language": "drawio",
+      "summary": "T?p m? ngu?n `docs/system_architecture.drawio` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 248 d?ng.",
+      "tags": [
+        "code",
+        "drawio"
+      ],
+      "complexity": "moderate",
+      "sizeLines": 248
+    },
+    {
+      "id": "document:implementation_plan.md",
+      "type": "document",
+      "name": "implementation_plan.md",
+      "filePath": "implementation_plan.md",
+      "language": "markdown",
+      "summary": "T?i li?u `implementation_plan.md` trong pipeline Action-Units; thu?c nh?m docs v? c? kho?ng 445 d?ng.",
+      "tags": [
+        "docs",
+        "markdown"
+      ],
+      "complexity": "complex",
+      "sizeLines": 445
+    },
+    {
+      "id": "file:inference_au.py",
+      "type": "file",
+      "name": "inference_au.py",
+      "filePath": "inference_au.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `inference_au.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 81 d?ng.",
+      "tags": [
+        "action-unit",
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 81
+    },
+    {
+      "id": "file:loss/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "loss/__init__.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `loss/__init__.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 1 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 1
+    },
+    {
+      "id": "file:loss/arcface.py",
+      "type": "file",
+      "name": "arcface.py",
+      "filePath": "loss/arcface.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `loss/arcface.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 80 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 80
+    },
+    {
+      "id": "file:loss/au_loss.py",
+      "type": "file",
+      "name": "au_loss.py",
+      "filePath": "loss/au_loss.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `loss/au_loss.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 24 d?ng.",
+      "tags": [
+        "action-unit",
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 24
+    },
+    {
+      "id": "file:loss/center_loss.py",
+      "type": "file",
+      "name": "center_loss.py",
+      "filePath": "loss/center_loss.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `loss/center_loss.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 67 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 67
+    },
+    {
+      "id": "file:loss/make_loss.py",
+      "type": "file",
+      "name": "make_loss.py",
+      "filePath": "loss/make_loss.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `loss/make_loss.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 140 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate",
+      "sizeLines": 140
+    },
+    {
+      "id": "file:loss/metric_learning.py",
+      "type": "file",
+      "name": "metric_learning.py",
+      "filePath": "loss/metric_learning.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `loss/metric_learning.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 189 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate",
+      "sizeLines": 189
+    },
+    {
+      "id": "file:loss/softmax_loss.py",
+      "type": "file",
+      "name": "softmax_loss.py",
+      "filePath": "loss/softmax_loss.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `loss/softmax_loss.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 57 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 57
+    },
+    {
+      "id": "file:loss/supcontrast.py",
+      "type": "file",
+      "name": "supcontrast.py",
+      "filePath": "loss/supcontrast.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `loss/supcontrast.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 30 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 30
+    },
+    {
+      "id": "file:loss/triplet_loss.py",
+      "type": "file",
+      "name": "triplet_loss.py",
+      "filePath": "loss/triplet_loss.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `loss/triplet_loss.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 136 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate",
+      "sizeLines": 136
+    },
+    {
+      "id": "file:model/au_head.py",
+      "type": "file",
+      "name": "au_head.py",
+      "filePath": "model/au_head.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `model/au_head.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 38 d?ng.",
+      "tags": [
+        "action-unit",
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 38
+    },
+    {
+      "id": "file:model/clip/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "model/clip/__init__.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `model/clip/__init__.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 1 d?ng.",
+      "tags": [
+        "code",
+        "python",
+        "vlm-clip"
+      ],
+      "complexity": "simple",
+      "sizeLines": 1
+    },
+    {
+      "id": "file:model/clip/clip.py",
+      "type": "file",
+      "name": "clip.py",
+      "filePath": "model/clip/clip.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `model/clip/clip.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 223 d?ng.",
+      "tags": [
+        "code",
+        "python",
+        "vlm-clip"
+      ],
+      "complexity": "moderate",
+      "sizeLines": 223
+    },
+    {
+      "id": "file:model/clip/model.py",
+      "type": "file",
+      "name": "model.py",
+      "filePath": "model/clip/model.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `model/clip/model.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 465 d?ng.",
+      "tags": [
+        "code",
+        "python",
+        "vlm-clip"
+      ],
+      "complexity": "complex",
+      "sizeLines": 465
+    },
+    {
+      "id": "file:model/clip/simple_tokenizer.py",
+      "type": "file",
+      "name": "simple_tokenizer.py",
+      "filePath": "model/clip/simple_tokenizer.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `model/clip/simple_tokenizer.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 132 d?ng.",
+      "tags": [
+        "code",
+        "python",
+        "vlm-clip"
+      ],
+      "complexity": "moderate",
+      "sizeLines": 132
+    },
+    {
+      "id": "file:model/make_model_clipreid.py",
+      "type": "file",
+      "name": "make_model_clipreid.py",
+      "filePath": "model/make_model_clipreid.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `model/make_model_clipreid.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 239 d?ng.",
+      "tags": [
+        "code",
+        "python",
+        "vlm-clip"
+      ],
+      "complexity": "moderate",
+      "sizeLines": 239
+    },
+    {
+      "id": "file:model/make_model.py",
+      "type": "file",
+      "name": "make_model.py",
+      "filePath": "model/make_model.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `model/make_model.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 440 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex",
+      "sizeLines": 440
+    },
+    {
+      "id": "file:prepare_data.py",
+      "type": "file",
+      "name": "prepare_data.py",
+      "filePath": "prepare_data.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `prepare_data.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 92 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 92
+    },
+    {
+      "id": "file:processor/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "processor/__init__.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `processor/__init__.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 1 d?ng.",
+      "tags": [
+        "code",
+        "python",
+        "two-stage-training"
+      ],
+      "complexity": "simple",
+      "sizeLines": 1
+    },
+    {
+      "id": "file:processor/processor_au_2stage.py",
+      "type": "file",
+      "name": "processor_au_2stage.py",
+      "filePath": "processor/processor_au_2stage.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `processor/processor_au_2stage.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 1070 d?ng.",
+      "tags": [
+        "action-unit",
+        "code",
+        "python",
+        "two-stage-training"
+      ],
+      "complexity": "complex",
+      "sizeLines": 1070
+    },
+    {
+      "id": "file:processor/processor_au.py",
+      "type": "file",
+      "name": "processor_au.py",
+      "filePath": "processor/processor_au.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `processor/processor_au.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 282 d?ng.",
+      "tags": [
+        "action-unit",
+        "code",
+        "python",
+        "two-stage-training"
+      ],
+      "complexity": "moderate",
+      "sizeLines": 282
+    },
+    {
+      "id": "file:processor/processor_clipreid_stage1.py",
+      "type": "file",
+      "name": "processor_clipreid_stage1.py",
+      "filePath": "processor/processor_clipreid_stage1.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `processor/processor_clipreid_stage1.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 106 d?ng.",
+      "tags": [
+        "code",
+        "python",
+        "two-stage-training",
+        "vlm-clip"
+      ],
+      "complexity": "simple",
+      "sizeLines": 106
+    },
+    {
+      "id": "file:processor/processor_clipreid_stage2.py",
+      "type": "file",
+      "name": "processor_clipreid_stage2.py",
+      "filePath": "processor/processor_clipreid_stage2.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `processor/processor_clipreid_stage2.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 231 d?ng.",
+      "tags": [
+        "code",
+        "python",
+        "two-stage-training",
+        "vlm-clip"
+      ],
+      "complexity": "moderate",
+      "sizeLines": 231
+    },
+    {
+      "id": "file:processor/processor.py",
+      "type": "file",
+      "name": "processor.py",
+      "filePath": "processor/processor.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `processor/processor.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 208 d?ng.",
+      "tags": [
+        "code",
+        "python",
+        "two-stage-training"
+      ],
+      "complexity": "moderate",
+      "sizeLines": 208
+    },
+    {
+      "id": "document:README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "README.md",
+      "language": "markdown",
+      "summary": "T?i li?u `README.md` trong pipeline Action-Units; thu?c nh?m docs v? c? kho?ng 103 d?ng.",
+      "tags": [
+        "docs",
+        "markdown"
+      ],
+      "complexity": "simple",
+      "sizeLines": 103
+    },
+    {
+      "id": "file:solver/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "solver/__init__.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `solver/__init__.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 1 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 1
+    },
+    {
+      "id": "file:solver/cosine_lr.py",
+      "type": "file",
+      "name": "cosine_lr.py",
+      "filePath": "solver/cosine_lr.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `solver/cosine_lr.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 115 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 115
+    },
+    {
+      "id": "file:solver/lr_scheduler.py",
+      "type": "file",
+      "name": "lr_scheduler.py",
+      "filePath": "solver/lr_scheduler.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `solver/lr_scheduler.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 56 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 56
+    },
+    {
+      "id": "file:solver/make_optimizer_prompt.py",
+      "type": "file",
+      "name": "make_optimizer_prompt.py",
+      "filePath": "solver/make_optimizer_prompt.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `solver/make_optimizer_prompt.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 70 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 70
+    },
+    {
+      "id": "file:solver/make_optimizer.py",
+      "type": "file",
+      "name": "make_optimizer.py",
+      "filePath": "solver/make_optimizer.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `solver/make_optimizer.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 28 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 28
+    },
+    {
+      "id": "file:solver/scheduler_factory.py",
+      "type": "file",
+      "name": "scheduler_factory.py",
+      "filePath": "solver/scheduler_factory.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `solver/scheduler_factory.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 25 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 25
+    },
+    {
+      "id": "file:solver/scheduler.py",
+      "type": "file",
+      "name": "scheduler.py",
+      "filePath": "solver/scheduler.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `solver/scheduler.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 105 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 105
+    },
+    {
+      "id": "file:test_clipreid.py",
+      "type": "file",
+      "name": "test_clipreid.py",
+      "filePath": "test_clipreid.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `test_clipreid.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 70 d?ng.",
+      "tags": [
+        "code",
+        "python",
+        "vlm-clip"
+      ],
+      "complexity": "simple",
+      "sizeLines": 70
+    },
+    {
+      "id": "file:test.py",
+      "type": "file",
+      "name": "test.py",
+      "filePath": "test.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `test.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 70 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 70
+    },
+    {
+      "id": "file:tests/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "tests/__init__.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `tests/__init__.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 1 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 1
+    },
+    {
+      "id": "file:tests/test_au_evaluator.py",
+      "type": "file",
+      "name": "test_au_evaluator.py",
+      "filePath": "tests/test_au_evaluator.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `tests/test_au_evaluator.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 146 d?ng.",
+      "tags": [
+        "action-unit",
+        "code",
+        "python"
+      ],
+      "complexity": "moderate",
+      "sizeLines": 146
+    },
+    {
+      "id": "file:tests/test_disfa_protocol.py",
+      "type": "file",
+      "name": "test_disfa_protocol.py",
+      "filePath": "tests/test_disfa_protocol.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `tests/test_disfa_protocol.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 285 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate",
+      "sizeLines": 285
+    },
+    {
+      "id": "file:tests/test_stage2_stability.py",
+      "type": "file",
+      "name": "test_stage2_stability.py",
+      "filePath": "tests/test_stage2_stability.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `tests/test_stage2_stability.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 189 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate",
+      "sizeLines": 189
+    },
+    {
+      "id": "file:train_au_2stage.py",
+      "type": "file",
+      "name": "train_au_2stage.py",
+      "filePath": "train_au_2stage.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `train_au_2stage.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 226 d?ng.",
+      "tags": [
+        "action-unit",
+        "code",
+        "python",
+        "two-stage-training"
+      ],
+      "complexity": "moderate",
+      "sizeLines": 226
+    },
+    {
+      "id": "file:train_clipreid.py",
+      "type": "file",
+      "name": "train_clipreid.py",
+      "filePath": "train_clipreid.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `train_clipreid.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 100 d?ng.",
+      "tags": [
+        "code",
+        "python",
+        "vlm-clip"
+      ],
+      "complexity": "simple",
+      "sizeLines": 100
+    },
+    {
+      "id": "file:train.py",
+      "type": "file",
+      "name": "train.py",
+      "filePath": "train.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `train.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 94 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 94
+    },
+    {
+      "id": "file:utils/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "utils/__init__.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `utils/__init__.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 1 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 1
+    },
+    {
+      "id": "file:utils/au_fold_report.py",
+      "type": "file",
+      "name": "au_fold_report.py",
+      "filePath": "utils/au_fold_report.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `utils/au_fold_report.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 96 d?ng.",
+      "tags": [
+        "action-unit",
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 96
+    },
+    {
+      "id": "file:utils/au_training_history.py",
+      "type": "file",
+      "name": "au_training_history.py",
+      "filePath": "utils/au_training_history.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `utils/au_training_history.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 148 d?ng.",
+      "tags": [
+        "action-unit",
+        "code",
+        "python"
+      ],
+      "complexity": "moderate",
+      "sizeLines": 148
+    },
+    {
+      "id": "file:utils/iotools.py",
+      "type": "file",
+      "name": "iotools.py",
+      "filePath": "utils/iotools.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `utils/iotools.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 39 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 39
+    },
+    {
+      "id": "file:utils/logger.py",
+      "type": "file",
+      "name": "logger.py",
+      "filePath": "utils/logger.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `utils/logger.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 26 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 26
+    },
+    {
+      "id": "file:utils/meter.py",
+      "type": "file",
+      "name": "meter.py",
+      "filePath": "utils/meter.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `utils/meter.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 20 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 20
+    },
+    {
+      "id": "file:utils/metrics.py",
+      "type": "file",
+      "name": "metrics.py",
+      "filePath": "utils/metrics.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `utils/metrics.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 136 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate",
+      "sizeLines": 136
+    },
+    {
+      "id": "file:utils/reranking.py",
+      "type": "file",
+      "name": "reranking.py",
+      "filePath": "utils/reranking.py",
+      "language": "python",
+      "summary": "T?p m? ngu?n `utils/reranking.py` trong pipeline Action-Units; thu?c nh?m code v? c? kho?ng 101 d?ng.",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple",
+      "sizeLines": 101
+    },
+    {
+      "id": "document:walkthrough.md",
+      "type": "document",
+      "name": "walkthrough.md",
+      "filePath": "walkthrough.md",
+      "language": "markdown",
+      "summary": "T?i li?u `walkthrough.md` trong pipeline Action-Units; thu?c nh?m docs v? c? kho?ng 290 d?ng.",
+      "tags": [
+        "docs",
+        "markdown"
+      ],
+      "complexity": "moderate",
+      "sizeLines": 290
+    },
+    {
+      "id": "function:processor/processor.py:do_train",
+      "type": "function",
+      "name": "do_train",
+      "filePath": "processor/processor.py",
+      "startLine": 11,
+      "endLine": 164,
+      "summary": "H?m `do_train` ???c ??nh ngh?a trong `processor/processor.py`; tham s? ch?nh: cfg, model, center_criterion, train_loader, val_loader, optimizer, optimizer_center, scheduler.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:processor/processor.py:do_inference",
+      "type": "function",
+      "name": "do_inference",
+      "filePath": "processor/processor.py",
+      "startLine": 166,
+      "endLine": 208,
+      "summary": "H?m `do_inference` ???c ??nh ngh?a trong `processor/processor.py`; tham s? ch?nh: cfg, model, val_loader, num_query.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:solver/lr_scheduler.py:WarmupMultiStepLR",
+      "type": "class",
+      "name": "WarmupMultiStepLR",
+      "filePath": "solver/lr_scheduler.py",
+      "startLine": 14,
+      "endLine": 56,
+      "summary": "L?p `WarmupMultiStepLR` ???c ??nh ngh?a trong `solver/lr_scheduler.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:solver/make_optimizer.py:make_optimizer",
+      "type": "function",
+      "name": "make_optimizer",
+      "filePath": "solver/make_optimizer.py",
+      "startLine": 3,
+      "endLine": 28,
+      "summary": "H?m `make_optimizer` ???c ??nh ngh?a trong `solver/make_optimizer.py`; tham s? ch?nh: cfg, model, center_criterion.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:train.py:_format_cuda_visible_devices",
+      "type": "function",
+      "name": "_format_cuda_visible_devices",
+      "filePath": "train.py",
+      "startLine": 16,
+      "endLine": 19,
+      "summary": "H?m `_format_cuda_visible_devices` ???c ??nh ngh?a trong `train.py`; tham s? ch?nh: device_id.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:train.py:set_seed",
+      "type": "function",
+      "name": "set_seed",
+      "filePath": "train.py",
+      "startLine": 22,
+      "endLine": 29,
+      "summary": "H?m `set_seed` ???c ??nh ngh?a trong `train.py`; tham s? ch?nh: seed.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:utils/logger.py:setup_logger",
+      "type": "function",
+      "name": "setup_logger",
+      "filePath": "utils/logger.py",
+      "startLine": 5,
+      "endLine": 26,
+      "summary": "H?m `setup_logger` ???c ??nh ngh?a trong `utils/logger.py`; tham s? ch?nh: name, save_dir, if_train.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:utils/metrics.py:euclidean_distance",
+      "type": "function",
+      "name": "euclidean_distance",
+      "filePath": "utils/metrics.py",
+      "startLine": 7,
+      "endLine": 13,
+      "summary": "H?m `euclidean_distance` ???c ??nh ngh?a trong `utils/metrics.py`; tham s? ch?nh: qf, gf.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:utils/metrics.py:cosine_similarity",
+      "type": "function",
+      "name": "cosine_similarity",
+      "filePath": "utils/metrics.py",
+      "startLine": 15,
+      "endLine": 25,
+      "summary": "H?m `cosine_similarity` ???c ??nh ngh?a trong `utils/metrics.py`; tham s? ch?nh: qf, gf.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:utils/metrics.py:eval_func",
+      "type": "function",
+      "name": "eval_func",
+      "filePath": "utils/metrics.py",
+      "startLine": 28,
+      "endLine": 87,
+      "summary": "H?m `eval_func` ???c ??nh ngh?a trong `utils/metrics.py`; tham s? ch?nh: distmat, q_pids, g_pids, q_camids, g_camids, max_rank.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:utils/metrics.py:R1_mAP_eval",
+      "type": "class",
+      "name": "R1_mAP_eval",
+      "filePath": "utils/metrics.py",
+      "startLine": 90,
+      "endLine": 133,
+      "summary": "L?p `R1_mAP_eval` ???c ??nh ngh?a trong `utils/metrics.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:utils/reranking.py:re_ranking",
+      "type": "function",
+      "name": "re_ranking",
+      "filePath": "utils/reranking.py",
+      "startLine": 29,
+      "endLine": 100,
+      "summary": "H?m `re_ranking` ???c ??nh ngh?a trong `utils/reranking.py`; tham s? ch?nh: probFea, galFea, k1, k2, lambda_value, local_distmat, only_local.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:loss/arcface.py:ArcFace",
+      "type": "class",
+      "name": "ArcFace",
+      "filePath": "loss/arcface.py",
+      "startLine": 8,
+      "endLine": 50,
+      "summary": "L?p `ArcFace` ???c ??nh ngh?a trong `loss/arcface.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:loss/arcface.py:CircleLoss",
+      "type": "class",
+      "name": "CircleLoss",
+      "filePath": "loss/arcface.py",
+      "startLine": 52,
+      "endLine": 80,
+      "summary": "L?p `CircleLoss` ???c ??nh ngh?a trong `loss/arcface.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:loss/metric_learning.py:ContrastiveLoss",
+      "type": "class",
+      "name": "ContrastiveLoss",
+      "filePath": "loss/metric_learning.py",
+      "startLine": 9,
+      "endLine": 42,
+      "summary": "L?p `ContrastiveLoss` ???c ??nh ngh?a trong `loss/metric_learning.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:loss/metric_learning.py:CircleLoss",
+      "type": "class",
+      "name": "CircleLoss",
+      "filePath": "loss/metric_learning.py",
+      "startLine": 45,
+      "endLine": 73,
+      "summary": "L?p `CircleLoss` ???c ??nh ngh?a trong `loss/metric_learning.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:loss/metric_learning.py:Arcface",
+      "type": "class",
+      "name": "Arcface",
+      "filePath": "loss/metric_learning.py",
+      "startLine": 76,
+      "endLine": 121,
+      "summary": "L?p `Arcface` ???c ??nh ngh?a trong `loss/metric_learning.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:loss/metric_learning.py:Cosface",
+      "type": "class",
+      "name": "Cosface",
+      "filePath": "loss/metric_learning.py",
+      "startLine": 124,
+      "endLine": 163,
+      "summary": "L?p `Cosface` ???c ??nh ngh?a trong `loss/metric_learning.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:loss/metric_learning.py:AMSoftmax",
+      "type": "class",
+      "name": "AMSoftmax",
+      "filePath": "loss/metric_learning.py",
+      "startLine": 166,
+      "endLine": 189,
+      "summary": "L?p `AMSoftmax` ???c ??nh ngh?a trong `loss/metric_learning.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:prepare_data.py:parse_au_file",
+      "type": "function",
+      "name": "parse_au_file",
+      "filePath": "prepare_data.py",
+      "startLine": 5,
+      "endLine": 32,
+      "summary": "H?m `parse_au_file` ???c ??nh ngh?a trong `prepare_data.py`; tham s? ch?nh: file_path.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:prepare_data.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "prepare_data.py",
+      "startLine": 34,
+      "endLine": 89,
+      "summary": "H?m `main` ???c ??nh ngh?a trong `prepare_data.py`; tham s? ch?nh: .",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:utils/iotools.py:mkdir_if_missing",
+      "type": "function",
+      "name": "mkdir_if_missing",
+      "filePath": "utils/iotools.py",
+      "startLine": 14,
+      "endLine": 20,
+      "summary": "H?m `mkdir_if_missing` ???c ??nh ngh?a trong `utils/iotools.py`; tham s? ch?nh: directory.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:utils/iotools.py:check_isfile",
+      "type": "function",
+      "name": "check_isfile",
+      "filePath": "utils/iotools.py",
+      "startLine": 23,
+      "endLine": 27,
+      "summary": "H?m `check_isfile` ???c ??nh ngh?a trong `utils/iotools.py`; tham s? ch?nh: path.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:utils/iotools.py:read_json",
+      "type": "function",
+      "name": "read_json",
+      "filePath": "utils/iotools.py",
+      "startLine": 30,
+      "endLine": 33,
+      "summary": "H?m `read_json` ???c ??nh ngh?a trong `utils/iotools.py`; tham s? ch?nh: fpath.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:utils/iotools.py:write_json",
+      "type": "function",
+      "name": "write_json",
+      "filePath": "utils/iotools.py",
+      "startLine": 36,
+      "endLine": 39,
+      "summary": "H?m `write_json` ???c ??nh ngh?a trong `utils/iotools.py`; tham s? ch?nh: obj, fpath.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:loss/center_loss.py:CenterLoss",
+      "type": "class",
+      "name": "CenterLoss",
+      "filePath": "loss/center_loss.py",
+      "startLine": 7,
+      "endLine": 54,
+      "summary": "L?p `CenterLoss` ???c ??nh ngh?a trong `loss/center_loss.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:loss/make_loss.py:_cfg_value",
+      "type": "function",
+      "name": "_cfg_value",
+      "filePath": "loss/make_loss.py",
+      "startLine": 15,
+      "endLine": 16,
+      "summary": "H?m `_cfg_value` ???c ??nh ngh?a trong `loss/make_loss.py`; tham s? ch?nh: section, name, default.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:loss/make_loss.py:_adjust_disfa_pos_weight",
+      "type": "function",
+      "name": "_adjust_disfa_pos_weight",
+      "filePath": "loss/make_loss.py",
+      "startLine": 19,
+      "endLine": 32,
+      "summary": "H?m `_adjust_disfa_pos_weight` ???c ??nh ngh?a trong `loss/make_loss.py`; tham s? ch?nh: cfg, pos_weight.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:loss/make_loss.py:make_loss",
+      "type": "function",
+      "name": "make_loss",
+      "filePath": "loss/make_loss.py",
+      "startLine": 35,
+      "endLine": 140,
+      "summary": "H?m `make_loss` ???c ??nh ngh?a trong `loss/make_loss.py`; tham s? ch?nh: cfg, num_classes, pos_weight, device.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:loss/softmax_loss.py:CrossEntropyLabelSmooth",
+      "type": "class",
+      "name": "CrossEntropyLabelSmooth",
+      "filePath": "loss/softmax_loss.py",
+      "startLine": 5,
+      "endLine": 35,
+      "summary": "L?p `CrossEntropyLabelSmooth` ???c ??nh ngh?a trong `loss/softmax_loss.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:loss/softmax_loss.py:LabelSmoothingCrossEntropy",
+      "type": "class",
+      "name": "LabelSmoothingCrossEntropy",
+      "filePath": "loss/softmax_loss.py",
+      "startLine": 37,
+      "endLine": 57,
+      "summary": "L?p `LabelSmoothingCrossEntropy` ???c ??nh ngh?a trong `loss/softmax_loss.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:loss/triplet_loss.py:normalize",
+      "type": "function",
+      "name": "normalize",
+      "filePath": "loss/triplet_loss.py",
+      "startLine": 5,
+      "endLine": 13,
+      "summary": "H?m `normalize` ???c ??nh ngh?a trong `loss/triplet_loss.py`; tham s? ch?nh: x, axis.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:loss/triplet_loss.py:euclidean_dist",
+      "type": "function",
+      "name": "euclidean_dist",
+      "filePath": "loss/triplet_loss.py",
+      "startLine": 16,
+      "endLine": 31,
+      "summary": "H?m `euclidean_dist` ???c ??nh ngh?a trong `loss/triplet_loss.py`; tham s? ch?nh: x, y.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:loss/triplet_loss.py:cosine_dist",
+      "type": "function",
+      "name": "cosine_dist",
+      "filePath": "loss/triplet_loss.py",
+      "startLine": 34,
+      "endLine": 48,
+      "summary": "H?m `cosine_dist` ???c ??nh ngh?a trong `loss/triplet_loss.py`; tham s? ch?nh: x, y.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:loss/triplet_loss.py:hard_example_mining",
+      "type": "function",
+      "name": "hard_example_mining",
+      "filePath": "loss/triplet_loss.py",
+      "startLine": 51,
+      "endLine": 103,
+      "summary": "H?m `hard_example_mining` ???c ??nh ngh?a trong `loss/triplet_loss.py`; tham s? ch?nh: dist_mat, labels, return_inds.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:loss/triplet_loss.py:TripletLoss",
+      "type": "class",
+      "name": "TripletLoss",
+      "filePath": "loss/triplet_loss.py",
+      "startLine": 106,
+      "endLine": 134,
+      "summary": "L?p `TripletLoss` ???c ??nh ngh?a trong `loss/triplet_loss.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:solver/cosine_lr.py:CosineLRScheduler",
+      "type": "class",
+      "name": "CosineLRScheduler",
+      "filePath": "solver/cosine_lr.py",
+      "startLine": 17,
+      "endLine": 115,
+      "summary": "L?p `CosineLRScheduler` ???c ??nh ngh?a trong `solver/cosine_lr.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:solver/scheduler.py:Scheduler",
+      "type": "class",
+      "name": "Scheduler",
+      "filePath": "solver/scheduler.py",
+      "startLine": 6,
+      "endLine": 105,
+      "summary": "L?p `Scheduler` ???c ??nh ngh?a trong `solver/scheduler.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:solver/scheduler_factory.py:create_scheduler",
+      "type": "function",
+      "name": "create_scheduler",
+      "filePath": "solver/scheduler_factory.py",
+      "startLine": 7,
+      "endLine": 25,
+      "summary": "H?m `create_scheduler` ???c ??nh ngh?a trong `solver/scheduler_factory.py`; tham s? ch?nh: optimizer, num_epochs, lr_min, warmup_lr_init, warmup_t, noise_range.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_disfa_protocol.py:_write_labels_csv",
+      "type": "function",
+      "name": "_write_labels_csv",
+      "filePath": "tests/test_disfa_protocol.py",
+      "startLine": 81,
+      "endLine": 101,
+      "summary": "H?m `_write_labels_csv` ???c ??nh ngh?a trong `tests/test_disfa_protocol.py`; tham s? ch?nh: root.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_disfa_protocol.py:_cfg",
+      "type": "function",
+      "name": "_cfg",
+      "filePath": "tests/test_disfa_protocol.py",
+      "startLine": 104,
+      "endLine": 111,
+      "summary": "H?m `_cfg` ???c ??nh ngh?a trong `tests/test_disfa_protocol.py`; tham s? ch?nh: root.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_disfa_protocol.py:_IdentityTransform",
+      "type": "class",
+      "name": "_IdentityTransform",
+      "filePath": "tests/test_disfa_protocol.py",
+      "startLine": 14,
+      "endLine": 19,
+      "summary": "L?p `_IdentityTransform` ???c ??nh ngh?a trong `tests/test_disfa_protocol.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_disfa_protocol.py:_Compose",
+      "type": "class",
+      "name": "_Compose",
+      "filePath": "tests/test_disfa_protocol.py",
+      "startLine": 22,
+      "endLine": 29,
+      "summary": "L?p `_Compose` ???c ??nh ngh?a trong `tests/test_disfa_protocol.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_disfa_protocol.py:TestDISFAProtocol",
+      "type": "class",
+      "name": "TestDISFAProtocol",
+      "filePath": "tests/test_disfa_protocol.py",
+      "startLine": 114,
+      "endLine": 281,
+      "summary": "L?p `TestDISFAProtocol` ???c ??nh ngh?a trong `tests/test_disfa_protocol.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:train_au_2stage.py:set_seed",
+      "type": "function",
+      "name": "set_seed",
+      "filePath": "train_au_2stage.py",
+      "startLine": 19,
+      "endLine": 27,
+      "summary": "H?m `set_seed` ???c ??nh ngh?a trong `train_au_2stage.py`; tham s? ch?nh: seed.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:train_au_2stage.py:_reset_logger_handlers",
+      "type": "function",
+      "name": "_reset_logger_handlers",
+      "filePath": "train_au_2stage.py",
+      "startLine": 30,
+      "endLine": 34,
+      "summary": "H?m `_reset_logger_handlers` ???c ??nh ngh?a trong `train_au_2stage.py`; tham s? ch?nh: .",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:train_au_2stage.py:_format_cuda_visible_devices",
+      "type": "function",
+      "name": "_format_cuda_visible_devices",
+      "filePath": "train_au_2stage.py",
+      "startLine": 37,
+      "endLine": 40,
+      "summary": "H?m `_format_cuda_visible_devices` ???c ??nh ngh?a trong `train_au_2stage.py`; tham s? ch?nh: device_id.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:train_au_2stage.py:_log_cuda_setup",
+      "type": "function",
+      "name": "_log_cuda_setup",
+      "filePath": "train_au_2stage.py",
+      "startLine": 43,
+      "endLine": 65,
+      "summary": "H?m `_log_cuda_setup` ???c ??nh ngh?a trong `train_au_2stage.py`; tham s? ch?nh: logger.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:train_au_2stage.py:_make_fold_cfg",
+      "type": "function",
+      "name": "_make_fold_cfg",
+      "filePath": "train_au_2stage.py",
+      "startLine": 68,
+      "endLine": 73,
+      "summary": "H?m `_make_fold_cfg` ???c ??nh ngh?a trong `train_au_2stage.py`; tham s? ch?nh: base_cfg, fold_idx, output_dir.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:train_au_2stage.py:_make_stage1_scheduler",
+      "type": "function",
+      "name": "_make_stage1_scheduler",
+      "filePath": "train_au_2stage.py",
+      "startLine": 76,
+      "endLine": 84,
+      "summary": "H?m `_make_stage1_scheduler` ???c ??nh ngh?a trong `train_au_2stage.py`; tham s? ch?nh: cfg, optimizer.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:train_au_2stage.py:_make_stage2_scheduler",
+      "type": "function",
+      "name": "_make_stage2_scheduler",
+      "filePath": "train_au_2stage.py",
+      "startLine": 87,
+      "endLine": 95,
+      "summary": "H?m `_make_stage2_scheduler` ???c ??nh ngh?a trong `train_au_2stage.py`; tham s? ch?nh: cfg, optimizer.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:train_au_2stage.py:run_fold",
+      "type": "function",
+      "name": "run_fold",
+      "filePath": "train_au_2stage.py",
+      "startLine": 98,
+      "endLine": 170,
+      "summary": "H?m `run_fold` ???c ??nh ngh?a trong `train_au_2stage.py`; tham s? ch?nh: cfg, args, fold_idx.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:utils/au_fold_report.py:flatten_fold_metrics",
+      "type": "function",
+      "name": "flatten_fold_metrics",
+      "filePath": "utils/au_fold_report.py",
+      "startLine": 19,
+      "endLine": 35,
+      "summary": "H?m `flatten_fold_metrics` ???c ??nh ngh?a trong `utils/au_fold_report.py`; tham s? ch?nh: metrics, fold_info.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:utils/au_fold_report.py:_mean",
+      "type": "function",
+      "name": "_mean",
+      "filePath": "utils/au_fold_report.py",
+      "startLine": 38,
+      "endLine": 42,
+      "summary": "H?m `_mean` ???c ??nh ngh?a trong `utils/au_fold_report.py`; tham s? ch?nh: values.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:utils/au_fold_report.py:_std",
+      "type": "function",
+      "name": "_std",
+      "filePath": "utils/au_fold_report.py",
+      "startLine": 45,
+      "endLine": 51,
+      "summary": "H?m `_std` ???c ??nh ngh?a trong `utils/au_fold_report.py`; tham s? ch?nh: values.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:utils/au_fold_report.py:summarize_fold_rows",
+      "type": "function",
+      "name": "summarize_fold_rows",
+      "filePath": "utils/au_fold_report.py",
+      "startLine": 54,
+      "endLine": 71,
+      "summary": "H?m `summarize_fold_rows` ???c ??nh ngh?a trong `utils/au_fold_report.py`; tham s? ch?nh: rows.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:utils/au_fold_report.py:write_fold_reports",
+      "type": "function",
+      "name": "write_fold_reports",
+      "filePath": "utils/au_fold_report.py",
+      "startLine": 74,
+      "endLine": 96,
+      "summary": "H?m `write_fold_reports` ???c ??nh ngh?a trong `utils/au_fold_report.py`; tham s? ch?nh: output_dir, fold_records.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:utils/au_training_history.py:_clean_float",
+      "type": "function",
+      "name": "_clean_float",
+      "filePath": "utils/au_training_history.py",
+      "startLine": 25,
+      "endLine": 31,
+      "summary": "H?m `_clean_float` ???c ??nh ngh?a trong `utils/au_training_history.py`; tham s? ch?nh: value.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:utils/au_training_history.py:history_row",
+      "type": "function",
+      "name": "history_row",
+      "filePath": "utils/au_training_history.py",
+      "startLine": 34,
+      "endLine": 76,
+      "summary": "H?m `history_row` ???c ??nh ngh?a trong `utils/au_training_history.py`; tham s? ch?nh: epoch, train_loss, lr, metrics, best_metric, is_best, itc_enabled, grad_norm.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:utils/au_training_history.py:write_stage2_history",
+      "type": "function",
+      "name": "write_stage2_history",
+      "filePath": "utils/au_training_history.py",
+      "startLine": 79,
+      "endLine": 108,
+      "summary": "H?m `write_stage2_history` ???c ??nh ngh?a trong `utils/au_training_history.py`; tham s? ch?nh: output_dir, records, prefix.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:utils/au_training_history.py:_plot_stage2_history",
+      "type": "function",
+      "name": "_plot_stage2_history",
+      "filePath": "utils/au_training_history.py",
+      "startLine": 111,
+      "endLine": 148,
+      "summary": "H?m `_plot_stage2_history` ???c ??nh ngh?a trong `utils/au_training_history.py`; tham s? ch?nh: records, plot_path.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:au_explainer.py:AUExplainer",
+      "type": "class",
+      "name": "AUExplainer",
+      "filePath": "au_explainer.py",
+      "startLine": 1,
+      "endLine": 64,
+      "summary": "L?p `AUExplainer` ???c ??nh ngh?a trong `au_explainer.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:inference_au.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "inference_au.py",
+      "startLine": 10,
+      "endLine": 78,
+      "summary": "H?m `main` ???c ??nh ngh?a trong `inference_au.py`; tham s? ch?nh: .",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/clip/clip.py:_download",
+      "type": "function",
+      "name": "_download",
+      "filePath": "model/clip/clip.py",
+      "startLine": 39,
+      "endLine": 68,
+      "summary": "H?m `_download` ???c ??nh ngh?a trong `model/clip/clip.py`; tham s? ch?nh: url, root.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/clip/clip.py:_transform",
+      "type": "function",
+      "name": "_transform",
+      "filePath": "model/clip/clip.py",
+      "startLine": 71,
+      "endLine": 78,
+      "summary": "H?m `_transform` ???c ??nh ngh?a trong `model/clip/clip.py`; tham s? ch?nh: n_px.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/clip/clip.py:available_models",
+      "type": "function",
+      "name": "available_models",
+      "filePath": "model/clip/clip.py",
+      "startLine": 81,
+      "endLine": 83,
+      "summary": "H?m `available_models` ???c ??nh ngh?a trong `model/clip/clip.py`; tham s? ch?nh: .",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/clip/clip.py:load",
+      "type": "function",
+      "name": "load",
+      "filePath": "model/clip/clip.py",
+      "startLine": 86,
+      "endLine": 182,
+      "summary": "H?m `load` ???c ??nh ngh?a trong `model/clip/clip.py`; tham s? ch?nh: name, device, jit.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/clip/clip.py:tokenize",
+      "type": "function",
+      "name": "tokenize",
+      "filePath": "model/clip/clip.py",
+      "startLine": 185,
+      "endLine": 223,
+      "summary": "H?m `tokenize` ???c ??nh ngh?a trong `model/clip/clip.py`; tham s? ch?nh: texts, context_length, truncate.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/clip/model.py:convert_weights",
+      "type": "function",
+      "name": "convert_weights",
+      "filePath": "model/clip/model.py",
+      "startLine": 378,
+      "endLine": 399,
+      "summary": "H?m `convert_weights` ???c ??nh ngh?a trong `model/clip/model.py`; tham s? ch?nh: model.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/clip/model.py:build_model",
+      "type": "function",
+      "name": "build_model",
+      "filePath": "model/clip/model.py",
+      "startLine": 402,
+      "endLine": 446,
+      "summary": "H?m `build_model` ???c ??nh ngh?a trong `model/clip/model.py`; tham s? ch?nh: state_dict, h_resolution, w_resolution, vision_stride_size.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/clip/model.py:resize_pos_embed",
+      "type": "function",
+      "name": "resize_pos_embed",
+      "filePath": "model/clip/model.py",
+      "startLine": 449,
+      "endLine": 465,
+      "summary": "H?m `resize_pos_embed` ???c ??nh ngh?a trong `model/clip/model.py`; tham s? ch?nh: posemb, posemb_new, hight, width.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:model/clip/model.py:Bottleneck",
+      "type": "class",
+      "name": "Bottleneck",
+      "filePath": "model/clip/model.py",
+      "startLine": 10,
+      "endLine": 53,
+      "summary": "L?p `Bottleneck` ???c ??nh ngh?a trong `model/clip/model.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:model/clip/model.py:AttentionPool2d",
+      "type": "class",
+      "name": "AttentionPool2d",
+      "filePath": "model/clip/model.py",
+      "startLine": 56,
+      "endLine": 90,
+      "summary": "L?p `AttentionPool2d` ???c ??nh ngh?a trong `model/clip/model.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:model/clip/model.py:ModifiedResNet",
+      "type": "class",
+      "name": "ModifiedResNet",
+      "filePath": "model/clip/model.py",
+      "startLine": 92,
+      "endLine": 148,
+      "summary": "L?p `ModifiedResNet` ???c ??nh ngh?a trong `model/clip/model.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:model/clip/model.py:LayerNorm",
+      "type": "class",
+      "name": "LayerNorm",
+      "filePath": "model/clip/model.py",
+      "startLine": 151,
+      "endLine": 157,
+      "summary": "L?p `LayerNorm` ???c ??nh ngh?a trong `model/clip/model.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:model/clip/model.py:QuickGELU",
+      "type": "class",
+      "name": "QuickGELU",
+      "filePath": "model/clip/model.py",
+      "startLine": 160,
+      "endLine": 162,
+      "summary": "L?p `QuickGELU` ???c ??nh ngh?a trong `model/clip/model.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:model/clip/model.py:ResidualAttentionBlock",
+      "type": "class",
+      "name": "ResidualAttentionBlock",
+      "filePath": "model/clip/model.py",
+      "startLine": 165,
+      "endLine": 186,
+      "summary": "L?p `ResidualAttentionBlock` ???c ??nh ngh?a trong `model/clip/model.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:model/clip/model.py:Transformer",
+      "type": "class",
+      "name": "Transformer",
+      "filePath": "model/clip/model.py",
+      "startLine": 189,
+      "endLine": 197,
+      "summary": "L?p `Transformer` ???c ??nh ngh?a trong `model/clip/model.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:model/clip/model.py:VisionTransformer",
+      "type": "class",
+      "name": "VisionTransformer",
+      "filePath": "model/clip/model.py",
+      "startLine": 200,
+      "endLine": 240,
+      "summary": "L?p `VisionTransformer` ???c ??nh ngh?a trong `model/clip/model.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:model/clip/model.py:CLIP",
+      "type": "class",
+      "name": "CLIP",
+      "filePath": "model/clip/model.py",
+      "startLine": 243,
+      "endLine": 375,
+      "summary": "L?p `CLIP` ???c ??nh ngh?a trong `model/clip/model.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:model/clip/simple_tokenizer.py:default_bpe",
+      "type": "function",
+      "name": "default_bpe",
+      "filePath": "model/clip/simple_tokenizer.py",
+      "startLine": 11,
+      "endLine": 12,
+      "summary": "H?m `default_bpe` ???c ??nh ngh?a trong `model/clip/simple_tokenizer.py`; tham s? ch?nh: .",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/clip/simple_tokenizer.py:bytes_to_unicode",
+      "type": "function",
+      "name": "bytes_to_unicode",
+      "filePath": "model/clip/simple_tokenizer.py",
+      "startLine": 16,
+      "endLine": 35,
+      "summary": "H?m `bytes_to_unicode` ???c ??nh ngh?a trong `model/clip/simple_tokenizer.py`; tham s? ch?nh: .",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/clip/simple_tokenizer.py:get_pairs",
+      "type": "function",
+      "name": "get_pairs",
+      "filePath": "model/clip/simple_tokenizer.py",
+      "startLine": 38,
+      "endLine": 47,
+      "summary": "H?m `get_pairs` ???c ??nh ngh?a trong `model/clip/simple_tokenizer.py`; tham s? ch?nh: word.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/clip/simple_tokenizer.py:basic_clean",
+      "type": "function",
+      "name": "basic_clean",
+      "filePath": "model/clip/simple_tokenizer.py",
+      "startLine": 50,
+      "endLine": 53,
+      "summary": "H?m `basic_clean` ???c ??nh ngh?a trong `model/clip/simple_tokenizer.py`; tham s? ch?nh: text.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/clip/simple_tokenizer.py:whitespace_clean",
+      "type": "function",
+      "name": "whitespace_clean",
+      "filePath": "model/clip/simple_tokenizer.py",
+      "startLine": 56,
+      "endLine": 59,
+      "summary": "H?m `whitespace_clean` ???c ??nh ngh?a trong `model/clip/simple_tokenizer.py`; tham s? ch?nh: text.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:model/clip/simple_tokenizer.py:SimpleTokenizer",
+      "type": "class",
+      "name": "SimpleTokenizer",
+      "filePath": "model/clip/simple_tokenizer.py",
+      "startLine": 62,
+      "endLine": 132,
+      "summary": "L?p `SimpleTokenizer` ???c ??nh ngh?a trong `model/clip/simple_tokenizer.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/make_model.py:weights_init_kaiming",
+      "type": "function",
+      "name": "weights_init_kaiming",
+      "filePath": "model/make_model.py",
+      "startLine": 11,
+      "endLine": 24,
+      "summary": "H?m `weights_init_kaiming` ???c ??nh ngh?a trong `model/make_model.py`; tham s? ch?nh: m.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/make_model.py:weights_init_classifier",
+      "type": "function",
+      "name": "weights_init_classifier",
+      "filePath": "model/make_model.py",
+      "startLine": 26,
+      "endLine": 31,
+      "summary": "H?m `weights_init_classifier` ???c ??nh ngh?a trong `model/make_model.py`; tham s? ch?nh: m.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/make_model.py:_assert_finite_state_dict",
+      "type": "function",
+      "name": "_assert_finite_state_dict",
+      "filePath": "model/make_model.py",
+      "startLine": 34,
+      "endLine": 44,
+      "summary": "H?m `_assert_finite_state_dict` ???c ??nh ngh?a trong `model/make_model.py`; tham s? ch?nh: state_dict, checkpoint_path.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/make_model.py:_load_weights",
+      "type": "function",
+      "name": "_load_weights",
+      "filePath": "model/make_model.py",
+      "startLine": 47,
+      "endLine": 51,
+      "summary": "H?m `_load_weights` ???c ??nh ngh?a trong `model/make_model.py`; tham s? ch?nh: path, map_location.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/make_model.py:_nested_cfg_value",
+      "type": "function",
+      "name": "_nested_cfg_value",
+      "filePath": "model/make_model.py",
+      "startLine": 54,
+      "endLine": 60,
+      "summary": "H?m `_nested_cfg_value` ???c ??nh ngh?a trong `model/make_model.py`; tham s? ch?nh: cfg, path, default.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/make_model.py:_adapt_checkpoint_tensor",
+      "type": "function",
+      "name": "_adapt_checkpoint_tensor",
+      "filePath": "model/make_model.py",
+      "startLine": 63,
+      "endLine": 81,
+      "summary": "H?m `_adapt_checkpoint_tensor` ???c ??nh ngh?a trong `model/make_model.py`; tham s? ch?nh: key, value, target, checkpoint_path.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/make_model.py:_copy_checkpoint_state",
+      "type": "function",
+      "name": "_copy_checkpoint_state",
+      "filePath": "model/make_model.py",
+      "startLine": 84,
+      "endLine": 97,
+      "summary": "H?m `_copy_checkpoint_state` ???c ??nh ngh?a trong `model/make_model.py`; tham s? ch?nh: module, param_dict, checkpoint_path, strip_module_prefix.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/make_model.py:make_model",
+      "type": "function",
+      "name": "make_model",
+      "filePath": "model/make_model.py",
+      "startLine": 293,
+      "endLine": 295,
+      "summary": "H?m `make_model` ???c ??nh ngh?a trong `model/make_model.py`; tham s? ch?nh: cfg, num_class, camera_num, view_num.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/make_model.py:load_clip_to_cpu",
+      "type": "function",
+      "name": "load_clip_to_cpu",
+      "filePath": "model/make_model.py",
+      "startLine": 299,
+      "endLine": 313,
+      "summary": "H?m `load_clip_to_cpu` ???c ??nh ngh?a trong `model/make_model.py`; tham s? ch?nh: backbone_name, h_resolution, w_resolution, vision_stride_size.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:model/make_model.py:TextEncoder",
+      "type": "class",
+      "name": "TextEncoder",
+      "filePath": "model/make_model.py",
+      "startLine": 100,
+      "endLine": 121,
+      "summary": "L?p `TextEncoder` ???c ??nh ngh?a trong `model/make_model.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:model/make_model.py:build_transformer",
+      "type": "class",
+      "name": "build_transformer",
+      "filePath": "model/make_model.py",
+      "startLine": 123,
+      "endLine": 290,
+      "summary": "L?p `build_transformer` ???c ??nh ngh?a trong `model/make_model.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:model/make_model.py:PromptLearner",
+      "type": "class",
+      "name": "PromptLearner",
+      "filePath": "model/make_model.py",
+      "startLine": 315,
+      "endLine": 440,
+      "summary": "L?p `PromptLearner` ???c ??nh ngh?a trong `model/make_model.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:model/make_model_clipreid.py:weights_init_kaiming",
+      "type": "function",
+      "name": "weights_init_kaiming",
+      "filePath": "model/make_model_clipreid.py",
+      "startLine": 8,
+      "endLine": 21,
+      "summary": "H?m `weights_init_kaiming` ???c ??nh ngh?a trong `model/make_model_clipreid.py`; tham s? ch?nh: m.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/make_model_clipreid.py:weights_init_classifier",
+      "type": "function",
+      "name": "weights_init_classifier",
+      "filePath": "model/make_model_clipreid.py",
+      "startLine": 23,
+      "endLine": 28,
+      "summary": "H?m `weights_init_classifier` ???c ??nh ngh?a trong `model/make_model_clipreid.py`; tham s? ch?nh: m.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/make_model_clipreid.py:make_model",
+      "type": "function",
+      "name": "make_model",
+      "filePath": "model/make_model_clipreid.py",
+      "startLine": 169,
+      "endLine": 171,
+      "summary": "H?m `make_model` ???c ??nh ngh?a trong `model/make_model_clipreid.py`; tham s? ch?nh: cfg, num_class, camera_num, view_num.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/make_model_clipreid.py:load_clip_to_cpu",
+      "type": "function",
+      "name": "load_clip_to_cpu",
+      "filePath": "model/make_model_clipreid.py",
+      "startLine": 175,
+      "endLine": 189,
+      "summary": "H?m `load_clip_to_cpu` ???c ??nh ngh?a trong `model/make_model_clipreid.py`; tham s? ch?nh: backbone_name, h_resolution, w_resolution, vision_stride_size.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:model/make_model_clipreid.py:TextEncoder",
+      "type": "class",
+      "name": "TextEncoder",
+      "filePath": "model/make_model_clipreid.py",
+      "startLine": 31,
+      "endLine": 50,
+      "summary": "L?p `TextEncoder` ???c ??nh ngh?a trong `model/make_model_clipreid.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:model/make_model_clipreid.py:build_transformer",
+      "type": "class",
+      "name": "build_transformer",
+      "filePath": "model/make_model_clipreid.py",
+      "startLine": 52,
+      "endLine": 166,
+      "summary": "L?p `build_transformer` ???c ??nh ngh?a trong `model/make_model_clipreid.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:model/make_model_clipreid.py:PromptLearner",
+      "type": "class",
+      "name": "PromptLearner",
+      "filePath": "model/make_model_clipreid.py",
+      "startLine": 191,
+      "endLine": 238,
+      "summary": "L?p `PromptLearner` ???c ??nh ngh?a trong `model/make_model_clipreid.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:loss/au_loss.py:WeightedBCELoss",
+      "type": "class",
+      "name": "WeightedBCELoss",
+      "filePath": "loss/au_loss.py",
+      "startLine": 4,
+      "endLine": 24,
+      "summary": "L?p `WeightedBCELoss` ???c ??nh ngh?a trong `loss/au_loss.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:model/au_head.py:weights_init_classifier",
+      "type": "function",
+      "name": "weights_init_classifier",
+      "filePath": "model/au_head.py",
+      "startLine": 5,
+      "endLine": 10,
+      "summary": "H?m `weights_init_classifier` ???c ??nh ngh?a trong `model/au_head.py`; tham s? ch?nh: m.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:model/au_head.py:AUHead",
+      "type": "class",
+      "name": "AUHead",
+      "filePath": "model/au_head.py",
+      "startLine": 12,
+      "endLine": 38,
+      "summary": "L?p `AUHead` ???c ??nh ngh?a trong `model/au_head.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au.py:_to_numpy",
+      "type": "function",
+      "name": "_to_numpy",
+      "filePath": "processor/processor_au.py",
+      "startLine": 33,
+      "endLine": 36,
+      "summary": "H?m `_to_numpy` ???c ??nh ngh?a trong `processor/processor_au.py`; tham s? ch?nh: values.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au.py:_validate_batch",
+      "type": "function",
+      "name": "_validate_batch",
+      "filePath": "processor/processor_au.py",
+      "startLine": 39,
+      "endLine": 48,
+      "summary": "H?m `_validate_batch` ???c ??nh ngh?a trong `processor/processor_au.py`; tham s? ch?nh: name, values, expected_width.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au.py:_validate_probabilities",
+      "type": "function",
+      "name": "_validate_probabilities",
+      "filePath": "processor/processor_au.py",
+      "startLine": 51,
+      "endLine": 53,
+      "summary": "H?m `_validate_probabilities` ???c ??nh ngh?a trong `processor/processor_au.py`; tham s? ch?nh: probs.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au.py:_validate_binary_targets",
+      "type": "function",
+      "name": "_validate_binary_targets",
+      "filePath": "processor/processor_au.py",
+      "startLine": 56,
+      "endLine": 62,
+      "summary": "H?m `_validate_binary_targets` ???c ??nh ngh?a trong `processor/processor_au.py`; tham s? ch?nh: targets.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au.py:_safe_divide",
+      "type": "function",
+      "name": "_safe_divide",
+      "filePath": "processor/processor_au.py",
+      "startLine": 65,
+      "endLine": 71,
+      "summary": "H?m `_safe_divide` ???c ??nh ngh?a trong `processor/processor_au.py`; tham s? ch?nh: numerator, denominator.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au.py:_safe_scalar_divide",
+      "type": "function",
+      "name": "_safe_scalar_divide",
+      "filePath": "processor/processor_au.py",
+      "startLine": 74,
+      "endLine": 77,
+      "summary": "H?m `_safe_scalar_divide` ???c ??nh ngh?a trong `processor/processor_au.py`; tham s? ch?nh: numerator, denominator.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au.py:_rankdata_average",
+      "type": "function",
+      "name": "_rankdata_average",
+      "filePath": "processor/processor_au.py",
+      "startLine": 80,
+      "endLine": 94,
+      "summary": "H?m `_rankdata_average` ???c ??nh ngh?a trong `processor/processor_au.py`; tham s? ch?nh: values.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au.py:_binary_roc_auc",
+      "type": "function",
+      "name": "_binary_roc_auc",
+      "filePath": "processor/processor_au.py",
+      "startLine": 97,
+      "endLine": 109,
+      "summary": "H?m `_binary_roc_auc` ???c ??nh ngh?a trong `processor/processor_au.py`; tham s? ch?nh: targets, scores.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au.py:_nanmean",
+      "type": "function",
+      "name": "_nanmean",
+      "filePath": "processor/processor_au.py",
+      "startLine": 112,
+      "endLine": 116,
+      "summary": "H?m `_nanmean` ???c ??nh ngh?a trong `processor/processor_au.py`; tham s? ch?nh: values.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au.py:_named_float_dict",
+      "type": "function",
+      "name": "_named_float_dict",
+      "filePath": "processor/processor_au.py",
+      "startLine": 119,
+      "endLine": 126,
+      "summary": "H?m `_named_float_dict` ???c ??nh ngh?a trong `processor/processor_au.py`; tham s? ch?nh: values, names, indices.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au.py:_named_int_dict",
+      "type": "function",
+      "name": "_named_int_dict",
+      "filePath": "processor/processor_au.py",
+      "startLine": 129,
+      "endLine": 136,
+      "summary": "H?m `_named_int_dict` ???c ??nh ngh?a trong `processor/processor_au.py`; tham s? ch?nh: values, names, indices.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au.py:_metadata_to_list",
+      "type": "function",
+      "name": "_metadata_to_list",
+      "filePath": "processor/processor_au.py",
+      "startLine": 139,
+      "endLine": 151,
+      "summary": "H?m `_metadata_to_list` ???c ??nh ngh?a trong `processor/processor_au.py`; tham s? ch?nh: values, batch_size, name.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:processor/processor_au.py:AUEvaluator",
+      "type": "class",
+      "name": "AUEvaluator",
+      "filePath": "processor/processor_au.py",
+      "startLine": 154,
+      "endLine": 282,
+      "summary": "L?p `AUEvaluator` ???c ??nh ngh?a trong `processor/processor_au.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_unwrap_data_parallel",
+      "type": "function",
+      "name": "_unwrap_data_parallel",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 17,
+      "endLine": 18,
+      "summary": "H?m `_unwrap_data_parallel` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: model.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_save_model_state",
+      "type": "function",
+      "name": "_save_model_state",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 21,
+      "endLine": 25,
+      "summary": "H?m `_save_model_state` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: model, checkpoint_path.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_current_lr",
+      "type": "function",
+      "name": "_current_lr",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 28,
+      "endLine": 29,
+      "summary": "H?m `_current_lr` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: optimizer.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_cfg_value",
+      "type": "function",
+      "name": "_cfg_value",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 32,
+      "endLine": 33,
+      "summary": "H?m `_cfg_value` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: section, name, default.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_stage2_amp_enabled",
+      "type": "function",
+      "name": "_stage2_amp_enabled",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 36,
+      "endLine": 37,
+      "summary": "H?m `_stage2_amp_enabled` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: cfg.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_lr_group_summary",
+      "type": "function",
+      "name": "_lr_group_summary",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 40,
+      "endLine": 60,
+      "summary": "H?m `_lr_group_summary` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: optimizer.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_reset_cuda_peak_memory",
+      "type": "function",
+      "name": "_reset_cuda_peak_memory",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 63,
+      "endLine": 67,
+      "summary": "H?m `_reset_cuda_peak_memory` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: .",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_cuda_memory_summary",
+      "type": "function",
+      "name": "_cuda_memory_summary",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 70,
+      "endLine": 80,
+      "summary": "H?m `_cuda_memory_summary` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: .",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_samples_per_second",
+      "type": "function",
+      "name": "_samples_per_second",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 83,
+      "endLine": 85,
+      "summary": "H?m `_samples_per_second` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: samples_seen, start_time.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_prepare_cuda_model",
+      "type": "function",
+      "name": "_prepare_cuda_model",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 88,
+      "endLine": 108,
+      "summary": "H?m `_prepare_cuda_model` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: model, logger, stage_name, batch_size, use_data_parallel.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_assert_finite_loss",
+      "type": "function",
+      "name": "_assert_finite_loss",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 111,
+      "endLine": 118,
+      "summary": "H?m `_assert_finite_loss` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: loss, stage_name, epoch, iteration.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_tensor_debug_summary",
+      "type": "function",
+      "name": "_tensor_debug_summary",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 121,
+      "endLine": 149,
+      "summary": "H?m `_tensor_debug_summary` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: tensor.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_assert_finite_tensor",
+      "type": "function",
+      "name": "_assert_finite_tensor",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 152,
+      "endLine": 163,
+      "summary": "H?m `_assert_finite_tensor` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: tensor, name, stage_name, epoch, iteration.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_is_finite_tensor",
+      "type": "function",
+      "name": "_is_finite_tensor",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 166,
+      "endLine": 168,
+      "summary": "H?m `_is_finite_tensor` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: tensor.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_assert_binary_targets",
+      "type": "function",
+      "name": "_assert_binary_targets",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 171,
+      "endLine": 179,
+      "summary": "H?m `_assert_binary_targets` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: target, stage_name, epoch, iteration.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_as_float_tensor_list",
+      "type": "function",
+      "name": "_as_float_tensor_list",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 182,
+      "endLine": 185,
+      "summary": "H?m `_as_float_tensor_list` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: values.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_score_tensors",
+      "type": "function",
+      "name": "_score_tensors",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 188,
+      "endLine": 190,
+      "summary": "H?m `_score_tensors` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: values.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_max_abs_tensor_value",
+      "type": "function",
+      "name": "_max_abs_tensor_value",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 193,
+      "endLine": 198,
+      "summary": "H?m `_max_abs_tensor_value` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: tensors.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_positive_rate_from_logits",
+      "type": "function",
+      "name": "_positive_rate_from_logits",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 201,
+      "endLine": 206,
+      "summary": "H?m `_positive_rate_from_logits` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: tensors.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_forward_stage2_model",
+      "type": "function",
+      "name": "_forward_stage2_model",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 209,
+      "endLine": 214,
+      "summary": "H?m `_forward_stage2_model` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: model, img, amp_enabled.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_stage2_logit_problem",
+      "type": "function",
+      "name": "_stage2_logit_problem",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 217,
+      "endLine": 249,
+      "summary": "H?m `_stage2_logit_problem` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: score_tensors, max_logit_abs_limit, fatal_logit_abs_limit.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_assert_finite_model_parameters",
+      "type": "function",
+      "name": "_assert_finite_model_parameters",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 252,
+      "endLine": 268,
+      "summary": "H?m `_assert_finite_model_parameters` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: model, stage_name, epoch, iteration.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_save_stage2_diagnostic",
+      "type": "function",
+      "name": "_save_stage2_diagnostic",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 271,
+      "endLine": 285,
+      "summary": "H?m `_save_stage2_diagnostic` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: model, cfg, epoch, iteration, reason, logger.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_raise_stage2_diagnostic",
+      "type": "function",
+      "name": "_raise_stage2_diagnostic",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 288,
+      "endLine": 292,
+      "summary": "H?m `_raise_stage2_diagnostic` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: model, cfg, epoch, iteration, reason, message, logger.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_update_stage2_early_stop",
+      "type": "function",
+      "name": "_update_stage2_early_stop",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 295,
+      "endLine": 303,
+      "summary": "H?m `_update_stage2_early_stop` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: current_metric, best_metric_for_stop, epochs_without_improvement, min_delta.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_au_probabilities_from_logits",
+      "type": "function",
+      "name": "_au_probabilities_from_logits",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 306,
+      "endLine": 318,
+      "summary": "H?m `_au_probabilities_from_logits` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: output.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_freeze_text_encoder",
+      "type": "function",
+      "name": "_freeze_text_encoder",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 321,
+      "endLine": 327,
+      "summary": "H?m `_freeze_text_encoder` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: model.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_set_stage1_frozen_modules_eval",
+      "type": "function",
+      "name": "_set_stage1_frozen_modules_eval",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 330,
+      "endLine": 335,
+      "summary": "H?m `_set_stage1_frozen_modules_eval` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: model.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_evaluate_au_model",
+      "type": "function",
+      "name": "_evaluate_au_model",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 338,
+      "endLine": 366,
+      "summary": "H?m `_evaluate_au_model` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: model, val_loader, device, desc.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_run_stage2_eval",
+      "type": "function",
+      "name": "_run_stage2_eval",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 369,
+      "endLine": 454,
+      "summary": "H?m `_run_stage2_eval` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: cfg, model, val_loader, device, epoch, train_loss, lr, best_metric.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:_evaluate_stage1_itc_loss",
+      "type": "function",
+      "name": "_evaluate_stage1_itc_loss",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 457,
+      "endLine": 505,
+      "summary": "H?m `_evaluate_stage1_itc_loss` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: model, text_model, val_loader, device, loss_fn_itc, temperature, desc.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:do_train_stage1",
+      "type": "function",
+      "name": "do_train_stage1",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 508,
+      "endLine": 694,
+      "summary": "H?m `do_train_stage1` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: cfg, model, train_loader, optimizer, scheduler, local_rank, val_loader.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:processor/processor_au_2stage.py:do_train_stage2",
+      "type": "function",
+      "name": "do_train_stage2",
+      "filePath": "processor/processor_au_2stage.py",
+      "startLine": 697,
+      "endLine": 1070,
+      "summary": "H?m `do_train_stage2` ???c ??nh ngh?a trong `processor/processor_au_2stage.py`; tham s? ch?nh: cfg, model, train_loader, val_loader, optimizer, scheduler, loss_fn, local_rank.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_au_evaluator.py:_alternating_targets",
+      "type": "function",
+      "name": "_alternating_targets",
+      "filePath": "tests/test_au_evaluator.py",
+      "startLine": 11,
+      "endLine": 13,
+      "summary": "H?m `_alternating_targets` ???c ??nh ngh?a trong `tests/test_au_evaluator.py`; tham s? ch?nh: .",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_au_evaluator.py:TestAUEvaluator",
+      "type": "class",
+      "name": "TestAUEvaluator",
+      "filePath": "tests/test_au_evaluator.py",
+      "startLine": 16,
+      "endLine": 142,
+      "summary": "L?p `TestAUEvaluator` ???c ??nh ngh?a trong `tests/test_au_evaluator.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_stage2_stability.py:_stage2_cfg",
+      "type": "function",
+      "name": "_stage2_cfg",
+      "filePath": "tests/test_stage2_stability.py",
+      "startLine": 42,
+      "endLine": 56,
+      "summary": "H?m `_stage2_cfg` ???c ??nh ngh?a trong `tests/test_stage2_stability.py`; tham s? ch?nh: .",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_stage2_stability.py:_DummyStage2Model",
+      "type": "class",
+      "name": "_DummyStage2Model",
+      "filePath": "tests/test_stage2_stability.py",
+      "startLine": 19,
+      "endLine": 26,
+      "summary": "L?p `_DummyStage2Model` ???c ??nh ngh?a trong `tests/test_stage2_stability.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_stage2_stability.py:_DummyStage1Model",
+      "type": "class",
+      "name": "_DummyStage1Model",
+      "filePath": "tests/test_stage2_stability.py",
+      "startLine": 29,
+      "endLine": 39,
+      "summary": "L?p `_DummyStage1Model` ???c ??nh ngh?a trong `tests/test_stage2_stability.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_stage2_stability.py:TestStage2Stability",
+      "type": "class",
+      "name": "TestStage2Stability",
+      "filePath": "tests/test_stage2_stability.py",
+      "startLine": 59,
+      "endLine": 185,
+      "summary": "L?p `TestStage2Stability` ???c ??nh ngh?a trong `tests/test_stage2_stability.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:loss/supcontrast.py:SupConLoss",
+      "type": "class",
+      "name": "SupConLoss",
+      "filePath": "loss/supcontrast.py",
+      "startLine": 10,
+      "endLine": 30,
+      "summary": "L?p `SupConLoss` ???c ??nh ngh?a trong `loss/supcontrast.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_clipreid_stage1.py:do_train_stage1",
+      "type": "function",
+      "name": "do_train_stage1",
+      "filePath": "processor/processor_clipreid_stage1.py",
+      "startLine": 12,
+      "endLine": 106,
+      "summary": "H?m `do_train_stage1` ???c ??nh ngh?a trong `processor/processor_clipreid_stage1.py`; tham s? ch?nh: cfg, model, train_loader_stage1, optimizer, scheduler, local_rank.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:processor/processor_clipreid_stage2.py:do_train_stage2",
+      "type": "function",
+      "name": "do_train_stage2",
+      "filePath": "processor/processor_clipreid_stage2.py",
+      "startLine": 13,
+      "endLine": 187,
+      "summary": "H?m `do_train_stage2` ???c ??nh ngh?a trong `processor/processor_clipreid_stage2.py`; tham s? ch?nh: cfg, model, center_criterion, train_loader_stage2, val_loader, optimizer, optimizer_center, scheduler.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:processor/processor_clipreid_stage2.py:do_inference",
+      "type": "function",
+      "name": "do_inference",
+      "filePath": "processor/processor_clipreid_stage2.py",
+      "startLine": 189,
+      "endLine": 231,
+      "summary": "H?m `do_inference` ???c ??nh ngh?a trong `processor/processor_clipreid_stage2.py`; tham s? ch?nh: cfg, model, val_loader, num_query.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:solver/make_optimizer_prompt.py:make_optimizer_1stage",
+      "type": "function",
+      "name": "make_optimizer_1stage",
+      "filePath": "solver/make_optimizer_prompt.py",
+      "startLine": 4,
+      "endLine": 19,
+      "summary": "H?m `make_optimizer_1stage` ???c ??nh ngh?a trong `solver/make_optimizer_prompt.py`; tham s? ch?nh: cfg, model.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:solver/make_optimizer_prompt.py:make_optimizer_2stage",
+      "type": "function",
+      "name": "make_optimizer_2stage",
+      "filePath": "solver/make_optimizer_prompt.py",
+      "startLine": 23,
+      "endLine": 70,
+      "summary": "H?m `make_optimizer_2stage` ???c ??nh ngh?a trong `solver/make_optimizer_prompt.py`; tham s? ch?nh: cfg, model, center_criterion.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:train_clipreid.py:set_seed",
+      "type": "function",
+      "name": "set_seed",
+      "filePath": "train_clipreid.py",
+      "startLine": 17,
+      "endLine": 24,
+      "summary": "H?m `set_seed` ???c ??nh ngh?a trong `train_clipreid.py`; tham s? ch?nh: seed.",
+      "tags": [
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:utils/meter.py:AverageMeter",
+      "type": "class",
+      "name": "AverageMeter",
+      "filePath": "utils/meter.py",
+      "startLine": 1,
+      "endLine": 20,
+      "summary": "L?p `AverageMeter` ???c ??nh ngh?a trong `utils/meter.py`.",
+      "tags": [
+        "class",
+        "python"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:processor/processor.py",
+      "target": "function:processor/processor.py:do_train",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor.py",
+      "target": "function:processor/processor.py:do_inference",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:solver/lr_scheduler.py",
+      "target": "class:solver/lr_scheduler.py:WarmupMultiStepLR",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:solver/make_optimizer.py",
+      "target": "function:solver/make_optimizer.py:make_optimizer",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train.py",
+      "target": "function:train.py:_format_cuda_visible_devices",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train.py",
+      "target": "function:train.py:set_seed",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:utils/logger.py",
+      "target": "function:utils/logger.py:setup_logger",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:utils/metrics.py",
+      "target": "function:utils/metrics.py:euclidean_distance",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:utils/metrics.py",
+      "target": "function:utils/metrics.py:cosine_similarity",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:utils/metrics.py",
+      "target": "function:utils/metrics.py:eval_func",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:utils/metrics.py",
+      "target": "class:utils/metrics.py:R1_mAP_eval",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:utils/reranking.py",
+      "target": "function:utils/reranking.py:re_ranking",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/arcface.py",
+      "target": "class:loss/arcface.py:ArcFace",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/arcface.py",
+      "target": "class:loss/arcface.py:CircleLoss",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/metric_learning.py",
+      "target": "class:loss/metric_learning.py:ContrastiveLoss",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/metric_learning.py",
+      "target": "class:loss/metric_learning.py:CircleLoss",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/metric_learning.py",
+      "target": "class:loss/metric_learning.py:Arcface",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/metric_learning.py",
+      "target": "class:loss/metric_learning.py:Cosface",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/metric_learning.py",
+      "target": "class:loss/metric_learning.py:AMSoftmax",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:prepare_data.py",
+      "target": "function:prepare_data.py:parse_au_file",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:prepare_data.py",
+      "target": "function:prepare_data.py:main",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:utils/iotools.py",
+      "target": "function:utils/iotools.py:mkdir_if_missing",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:utils/iotools.py",
+      "target": "function:utils/iotools.py:check_isfile",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:utils/iotools.py",
+      "target": "function:utils/iotools.py:read_json",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:utils/iotools.py",
+      "target": "function:utils/iotools.py:write_json",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/center_loss.py",
+      "target": "class:loss/center_loss.py:CenterLoss",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/make_loss.py",
+      "target": "function:loss/make_loss.py:_cfg_value",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/make_loss.py",
+      "target": "function:loss/make_loss.py:_adjust_disfa_pos_weight",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/make_loss.py",
+      "target": "function:loss/make_loss.py:make_loss",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/softmax_loss.py",
+      "target": "class:loss/softmax_loss.py:CrossEntropyLabelSmooth",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/softmax_loss.py",
+      "target": "class:loss/softmax_loss.py:LabelSmoothingCrossEntropy",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/triplet_loss.py",
+      "target": "function:loss/triplet_loss.py:normalize",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/triplet_loss.py",
+      "target": "function:loss/triplet_loss.py:euclidean_dist",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/triplet_loss.py",
+      "target": "function:loss/triplet_loss.py:cosine_dist",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/triplet_loss.py",
+      "target": "function:loss/triplet_loss.py:hard_example_mining",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/triplet_loss.py",
+      "target": "class:loss/triplet_loss.py:TripletLoss",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:solver/cosine_lr.py",
+      "target": "class:solver/cosine_lr.py:CosineLRScheduler",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:solver/scheduler.py",
+      "target": "class:solver/scheduler.py:Scheduler",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:solver/scheduler_factory.py",
+      "target": "function:solver/scheduler_factory.py:create_scheduler",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:tests/test_disfa_protocol.py",
+      "target": "function:tests/test_disfa_protocol.py:_write_labels_csv",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:tests/test_disfa_protocol.py",
+      "target": "function:tests/test_disfa_protocol.py:_cfg",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:tests/test_disfa_protocol.py",
+      "target": "class:tests/test_disfa_protocol.py:_IdentityTransform",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:tests/test_disfa_protocol.py",
+      "target": "class:tests/test_disfa_protocol.py:_Compose",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:tests/test_disfa_protocol.py",
+      "target": "class:tests/test_disfa_protocol.py:TestDISFAProtocol",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_au_2stage.py",
+      "target": "function:train_au_2stage.py:set_seed",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_au_2stage.py",
+      "target": "function:train_au_2stage.py:_reset_logger_handlers",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_au_2stage.py",
+      "target": "function:train_au_2stage.py:_format_cuda_visible_devices",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_au_2stage.py",
+      "target": "function:train_au_2stage.py:_log_cuda_setup",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_au_2stage.py",
+      "target": "function:train_au_2stage.py:_make_fold_cfg",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_au_2stage.py",
+      "target": "function:train_au_2stage.py:_make_stage1_scheduler",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_au_2stage.py",
+      "target": "function:train_au_2stage.py:_make_stage2_scheduler",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_au_2stage.py",
+      "target": "function:train_au_2stage.py:run_fold",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:utils/au_fold_report.py",
+      "target": "function:utils/au_fold_report.py:flatten_fold_metrics",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:utils/au_fold_report.py",
+      "target": "function:utils/au_fold_report.py:_mean",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:utils/au_fold_report.py",
+      "target": "function:utils/au_fold_report.py:_std",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:utils/au_fold_report.py",
+      "target": "function:utils/au_fold_report.py:summarize_fold_rows",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:utils/au_fold_report.py",
+      "target": "function:utils/au_fold_report.py:write_fold_reports",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:utils/au_training_history.py",
+      "target": "function:utils/au_training_history.py:_clean_float",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:utils/au_training_history.py",
+      "target": "function:utils/au_training_history.py:history_row",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:utils/au_training_history.py",
+      "target": "function:utils/au_training_history.py:write_stage2_history",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:utils/au_training_history.py",
+      "target": "function:utils/au_training_history.py:_plot_stage2_history",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:au_explainer.py",
+      "target": "class:au_explainer.py:AUExplainer",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:inference_au.py",
+      "target": "function:inference_au.py:main",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/clip.py",
+      "target": "function:model/clip/clip.py:_download",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/clip.py",
+      "target": "function:model/clip/clip.py:_transform",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/clip.py",
+      "target": "function:model/clip/clip.py:available_models",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/clip.py",
+      "target": "function:model/clip/clip.py:load",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/clip.py",
+      "target": "function:model/clip/clip.py:tokenize",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/model.py",
+      "target": "function:model/clip/model.py:convert_weights",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/model.py",
+      "target": "function:model/clip/model.py:build_model",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/model.py",
+      "target": "function:model/clip/model.py:resize_pos_embed",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/model.py",
+      "target": "class:model/clip/model.py:Bottleneck",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/model.py",
+      "target": "class:model/clip/model.py:AttentionPool2d",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/model.py",
+      "target": "class:model/clip/model.py:ModifiedResNet",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/model.py",
+      "target": "class:model/clip/model.py:LayerNorm",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/model.py",
+      "target": "class:model/clip/model.py:QuickGELU",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/model.py",
+      "target": "class:model/clip/model.py:ResidualAttentionBlock",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/model.py",
+      "target": "class:model/clip/model.py:Transformer",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/model.py",
+      "target": "class:model/clip/model.py:VisionTransformer",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/model.py",
+      "target": "class:model/clip/model.py:CLIP",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/simple_tokenizer.py",
+      "target": "function:model/clip/simple_tokenizer.py:default_bpe",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/simple_tokenizer.py",
+      "target": "function:model/clip/simple_tokenizer.py:bytes_to_unicode",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/simple_tokenizer.py",
+      "target": "function:model/clip/simple_tokenizer.py:get_pairs",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/simple_tokenizer.py",
+      "target": "function:model/clip/simple_tokenizer.py:basic_clean",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/simple_tokenizer.py",
+      "target": "function:model/clip/simple_tokenizer.py:whitespace_clean",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/simple_tokenizer.py",
+      "target": "class:model/clip/simple_tokenizer.py:SimpleTokenizer",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model.py",
+      "target": "function:model/make_model.py:weights_init_kaiming",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model.py",
+      "target": "function:model/make_model.py:weights_init_classifier",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model.py",
+      "target": "function:model/make_model.py:_assert_finite_state_dict",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model.py",
+      "target": "function:model/make_model.py:_load_weights",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model.py",
+      "target": "function:model/make_model.py:_nested_cfg_value",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model.py",
+      "target": "function:model/make_model.py:_adapt_checkpoint_tensor",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model.py",
+      "target": "function:model/make_model.py:_copy_checkpoint_state",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model.py",
+      "target": "function:model/make_model.py:make_model",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model.py",
+      "target": "function:model/make_model.py:load_clip_to_cpu",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model.py",
+      "target": "class:model/make_model.py:TextEncoder",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model.py",
+      "target": "class:model/make_model.py:build_transformer",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model.py",
+      "target": "class:model/make_model.py:PromptLearner",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model_clipreid.py",
+      "target": "function:model/make_model_clipreid.py:weights_init_kaiming",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model_clipreid.py",
+      "target": "function:model/make_model_clipreid.py:weights_init_classifier",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model_clipreid.py",
+      "target": "function:model/make_model_clipreid.py:make_model",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model_clipreid.py",
+      "target": "function:model/make_model_clipreid.py:load_clip_to_cpu",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model_clipreid.py",
+      "target": "class:model/make_model_clipreid.py:TextEncoder",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model_clipreid.py",
+      "target": "class:model/make_model_clipreid.py:build_transformer",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model_clipreid.py",
+      "target": "class:model/make_model_clipreid.py:PromptLearner",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/au_loss.py",
+      "target": "class:loss/au_loss.py:WeightedBCELoss",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/au_head.py",
+      "target": "function:model/au_head.py:weights_init_classifier",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/au_head.py",
+      "target": "class:model/au_head.py:AUHead",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au.py",
+      "target": "function:processor/processor_au.py:_to_numpy",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au.py",
+      "target": "function:processor/processor_au.py:_validate_batch",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au.py",
+      "target": "function:processor/processor_au.py:_validate_probabilities",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au.py",
+      "target": "function:processor/processor_au.py:_validate_binary_targets",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au.py",
+      "target": "function:processor/processor_au.py:_safe_divide",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au.py",
+      "target": "function:processor/processor_au.py:_safe_scalar_divide",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au.py",
+      "target": "function:processor/processor_au.py:_rankdata_average",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au.py",
+      "target": "function:processor/processor_au.py:_binary_roc_auc",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au.py",
+      "target": "function:processor/processor_au.py:_nanmean",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au.py",
+      "target": "function:processor/processor_au.py:_named_float_dict",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au.py",
+      "target": "function:processor/processor_au.py:_named_int_dict",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au.py",
+      "target": "function:processor/processor_au.py:_metadata_to_list",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au.py",
+      "target": "class:processor/processor_au.py:AUEvaluator",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_unwrap_data_parallel",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_save_model_state",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_current_lr",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_cfg_value",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_stage2_amp_enabled",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_lr_group_summary",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_reset_cuda_peak_memory",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_cuda_memory_summary",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_samples_per_second",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_prepare_cuda_model",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_assert_finite_loss",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_tensor_debug_summary",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_assert_finite_tensor",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_is_finite_tensor",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_assert_binary_targets",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_as_float_tensor_list",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_score_tensors",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_max_abs_tensor_value",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_positive_rate_from_logits",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_forward_stage2_model",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_stage2_logit_problem",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_assert_finite_model_parameters",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_save_stage2_diagnostic",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_raise_stage2_diagnostic",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_update_stage2_early_stop",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_au_probabilities_from_logits",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_freeze_text_encoder",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_set_stage1_frozen_modules_eval",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_evaluate_au_model",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_run_stage2_eval",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:_evaluate_stage1_itc_loss",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:do_train_stage1",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "function:processor/processor_au_2stage.py:do_train_stage2",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:tests/test_au_evaluator.py",
+      "target": "function:tests/test_au_evaluator.py:_alternating_targets",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:tests/test_au_evaluator.py",
+      "target": "class:tests/test_au_evaluator.py:TestAUEvaluator",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:tests/test_stage2_stability.py",
+      "target": "function:tests/test_stage2_stability.py:_stage2_cfg",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:tests/test_stage2_stability.py",
+      "target": "class:tests/test_stage2_stability.py:_DummyStage2Model",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:tests/test_stage2_stability.py",
+      "target": "class:tests/test_stage2_stability.py:_DummyStage1Model",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:tests/test_stage2_stability.py",
+      "target": "class:tests/test_stage2_stability.py:TestStage2Stability",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/supcontrast.py",
+      "target": "class:loss/supcontrast.py:SupConLoss",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_clipreid_stage1.py",
+      "target": "function:processor/processor_clipreid_stage1.py:do_train_stage1",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_clipreid_stage2.py",
+      "target": "function:processor/processor_clipreid_stage2.py:do_train_stage2",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_clipreid_stage2.py",
+      "target": "function:processor/processor_clipreid_stage2.py:do_inference",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:solver/make_optimizer_prompt.py",
+      "target": "function:solver/make_optimizer_prompt.py:make_optimizer_1stage",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:solver/make_optimizer_prompt.py",
+      "target": "function:solver/make_optimizer_prompt.py:make_optimizer_2stage",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_clipreid.py",
+      "target": "function:train_clipreid.py:set_seed",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:utils/meter.py",
+      "target": "class:utils/meter.py:AverageMeter",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:config/__init__.py",
+      "target": "file:config/defaults_base.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:config/__init__.py",
+      "target": "file:config/defaults.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:inference_au.py",
+      "target": "file:au_explainer.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:inference_au.py",
+      "target": "file:config/__init__.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:inference_au.py",
+      "target": "file:model/make_model.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/__init__.py",
+      "target": "file:loss/arcface.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/make_loss.py",
+      "target": "file:loss/au_loss.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/make_loss.py",
+      "target": "file:loss/center_loss.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/make_loss.py",
+      "target": "file:loss/softmax_loss.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:loss/make_loss.py",
+      "target": "file:loss/triplet_loss.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/__init__.py",
+      "target": "file:model/clip/clip.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/clip.py",
+      "target": "file:model/clip/model.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/clip/clip.py",
+      "target": "file:model/clip/simple_tokenizer.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model_clipreid.py",
+      "target": "file:model/clip/__init__.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model_clipreid.py",
+      "target": "file:model/clip/clip.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model_clipreid.py",
+      "target": "file:model/clip/simple_tokenizer.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model.py",
+      "target": "file:model/au_head.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model.py",
+      "target": "file:model/clip/__init__.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model.py",
+      "target": "file:model/clip/clip.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:model/make_model.py",
+      "target": "file:model/clip/simple_tokenizer.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "file:processor/processor_au.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "file:utils/au_training_history.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "file:utils/meter.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_clipreid_stage1.py",
+      "target": "file:loss/supcontrast.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_clipreid_stage1.py",
+      "target": "file:utils/meter.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_clipreid_stage2.py",
+      "target": "file:loss/supcontrast.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_clipreid_stage2.py",
+      "target": "file:utils/meter.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_clipreid_stage2.py",
+      "target": "file:utils/metrics.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor.py",
+      "target": "file:utils/meter.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor.py",
+      "target": "file:utils/metrics.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:solver/cosine_lr.py",
+      "target": "file:solver/scheduler.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:solver/scheduler_factory.py",
+      "target": "file:solver/cosine_lr.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:test_clipreid.py",
+      "target": "file:config/__init__.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:test_clipreid.py",
+      "target": "file:model/make_model_clipreid.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:test_clipreid.py",
+      "target": "file:processor/processor_clipreid_stage2.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:test_clipreid.py",
+      "target": "file:utils/logger.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:test.py",
+      "target": "file:config/__init__.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:test.py",
+      "target": "file:model/make_model.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:test.py",
+      "target": "file:processor/processor.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:test.py",
+      "target": "file:utils/logger.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:tests/test_au_evaluator.py",
+      "target": "file:processor/processor_au_2stage.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:tests/test_au_evaluator.py",
+      "target": "file:processor/processor_au.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:tests/test_disfa_protocol.py",
+      "target": "file:loss/make_loss.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:tests/test_disfa_protocol.py",
+      "target": "file:utils/au_fold_report.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:tests/test_disfa_protocol.py",
+      "target": "file:utils/au_training_history.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:tests/test_stage2_stability.py",
+      "target": "file:loss/au_loss.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:tests/test_stage2_stability.py",
+      "target": "file:model/au_head.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:tests/test_stage2_stability.py",
+      "target": "file:processor/processor_au_2stage.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:tests/test_stage2_stability.py",
+      "target": "file:solver/lr_scheduler.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:tests/test_stage2_stability.py",
+      "target": "file:solver/make_optimizer_prompt.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_au_2stage.py",
+      "target": "file:config/__init__.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_au_2stage.py",
+      "target": "file:loss/make_loss.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_au_2stage.py",
+      "target": "file:model/make_model.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_au_2stage.py",
+      "target": "file:processor/processor_au_2stage.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_au_2stage.py",
+      "target": "file:solver/lr_scheduler.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_au_2stage.py",
+      "target": "file:solver/make_optimizer_prompt.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_au_2stage.py",
+      "target": "file:solver/scheduler_factory.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_au_2stage.py",
+      "target": "file:utils/au_fold_report.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_au_2stage.py",
+      "target": "file:utils/logger.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_clipreid.py",
+      "target": "file:config/__init__.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_clipreid.py",
+      "target": "file:loss/make_loss.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_clipreid.py",
+      "target": "file:model/make_model_clipreid.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_clipreid.py",
+      "target": "file:processor/processor_clipreid_stage1.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_clipreid.py",
+      "target": "file:processor/processor_clipreid_stage2.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_clipreid.py",
+      "target": "file:solver/lr_scheduler.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_clipreid.py",
+      "target": "file:solver/make_optimizer_prompt.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_clipreid.py",
+      "target": "file:solver/scheduler_factory.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_clipreid.py",
+      "target": "file:utils/logger.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train.py",
+      "target": "file:config/__init__.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train.py",
+      "target": "file:loss/make_loss.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train.py",
+      "target": "file:model/make_model.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train.py",
+      "target": "file:processor/processor.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train.py",
+      "target": "file:solver/lr_scheduler.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train.py",
+      "target": "file:solver/make_optimizer.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train.py",
+      "target": "file:utils/logger.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:utils/metrics.py",
+      "target": "file:utils/reranking.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "function:prepare_data.py:main",
+      "target": "function:prepare_data.py:parse_au_file",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:utils/iotools.py:write_json",
+      "target": "function:utils/iotools.py:mkdir_if_missing",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:loss/make_loss.py:_adjust_disfa_pos_weight",
+      "target": "function:loss/make_loss.py:_cfg_value",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:loss/make_loss.py:make_loss",
+      "target": "function:loss/make_loss.py:_adjust_disfa_pos_weight",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:train_au_2stage.py:run_fold",
+      "target": "function:train_au_2stage.py:set_seed",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:train_au_2stage.py:run_fold",
+      "target": "function:train_au_2stage.py:_reset_logger_handlers",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:train_au_2stage.py:run_fold",
+      "target": "function:train_au_2stage.py:_log_cuda_setup",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:train_au_2stage.py:run_fold",
+      "target": "function:train_au_2stage.py:_make_stage1_scheduler",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:train_au_2stage.py:run_fold",
+      "target": "function:train_au_2stage.py:_make_stage2_scheduler",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:utils/au_fold_report.py:_std",
+      "target": "function:utils/au_fold_report.py:_mean",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:utils/au_fold_report.py:summarize_fold_rows",
+      "target": "function:utils/au_fold_report.py:_mean",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:utils/au_fold_report.py:summarize_fold_rows",
+      "target": "function:utils/au_fold_report.py:_std",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:utils/au_fold_report.py:write_fold_reports",
+      "target": "function:utils/au_fold_report.py:summarize_fold_rows",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:utils/au_training_history.py:history_row",
+      "target": "function:utils/au_training_history.py:_clean_float",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:utils/au_training_history.py:write_stage2_history",
+      "target": "function:utils/au_training_history.py:_plot_stage2_history",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:utils/au_training_history.py:_plot_stage2_history",
+      "target": "function:utils/au_training_history.py:_clean_float",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:model/clip/clip.py:load",
+      "target": "function:model/clip/clip.py:_download",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:model/clip/clip.py:load",
+      "target": "function:model/clip/clip.py:available_models",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:model/clip/clip.py:load",
+      "target": "function:model/clip/clip.py:_transform",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:model/clip/model.py:build_model",
+      "target": "class:model/clip/model.py:CLIP",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:model/clip/model.py:build_model",
+      "target": "function:model/clip/model.py:resize_pos_embed",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:model/clip/model.py:build_model",
+      "target": "function:model/clip/model.py:convert_weights",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:model/make_model.py:_copy_checkpoint_state",
+      "target": "function:model/make_model.py:_adapt_checkpoint_tensor",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:model/make_model.py:make_model",
+      "target": "class:model/make_model.py:build_transformer",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:model/make_model.py:load_clip_to_cpu",
+      "target": "function:model/make_model.py:_load_weights",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:model/make_model_clipreid.py:make_model",
+      "target": "class:model/make_model_clipreid.py:build_transformer",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au.py:_validate_batch",
+      "target": "function:processor/processor_au.py:_to_numpy",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au.py:_binary_roc_auc",
+      "target": "function:processor/processor_au.py:_rankdata_average",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:_save_model_state",
+      "target": "function:processor/processor_au_2stage.py:_unwrap_data_parallel",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:_stage2_amp_enabled",
+      "target": "function:processor/processor_au_2stage.py:_cfg_value",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:_assert_finite_loss",
+      "target": "function:processor/processor_au_2stage.py:_tensor_debug_summary",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:_assert_finite_tensor",
+      "target": "function:processor/processor_au_2stage.py:_tensor_debug_summary",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:_assert_binary_targets",
+      "target": "function:processor/processor_au_2stage.py:_assert_finite_tensor",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:_assert_binary_targets",
+      "target": "function:processor/processor_au_2stage.py:_tensor_debug_summary",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:_score_tensors",
+      "target": "function:processor/processor_au_2stage.py:_as_float_tensor_list",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:_forward_stage2_model",
+      "target": "function:processor/processor_au_2stage.py:_as_float_tensor_list",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:_forward_stage2_model",
+      "target": "function:processor/processor_au_2stage.py:_score_tensors",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:_stage2_logit_problem",
+      "target": "function:processor/processor_au_2stage.py:_is_finite_tensor",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:_stage2_logit_problem",
+      "target": "function:processor/processor_au_2stage.py:_tensor_debug_summary",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:_stage2_logit_problem",
+      "target": "function:processor/processor_au_2stage.py:_max_abs_tensor_value",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:_assert_finite_model_parameters",
+      "target": "function:processor/processor_au_2stage.py:_unwrap_data_parallel",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:_assert_finite_model_parameters",
+      "target": "function:processor/processor_au_2stage.py:_tensor_debug_summary",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:_save_stage2_diagnostic",
+      "target": "function:processor/processor_au_2stage.py:_save_model_state",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:_raise_stage2_diagnostic",
+      "target": "function:processor/processor_au_2stage.py:_save_stage2_diagnostic",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:_freeze_text_encoder",
+      "target": "function:processor/processor_au_2stage.py:_unwrap_data_parallel",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:_set_stage1_frozen_modules_eval",
+      "target": "function:processor/processor_au_2stage.py:_unwrap_data_parallel",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:_evaluate_au_model",
+      "target": "function:processor/processor_au_2stage.py:_au_probabilities_from_logits",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:_evaluate_au_model",
+      "target": "function:processor/processor_au_2stage.py:_assert_finite_tensor",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:_run_stage2_eval",
+      "target": "function:processor/processor_au_2stage.py:_evaluate_au_model",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:_run_stage2_eval",
+      "target": "function:processor/processor_au_2stage.py:_save_model_state",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:_evaluate_stage1_itc_loss",
+      "target": "function:processor/processor_au_2stage.py:_assert_finite_tensor",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:_evaluate_stage1_itc_loss",
+      "target": "function:processor/processor_au_2stage.py:_assert_finite_loss",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage1",
+      "target": "function:processor/processor_au_2stage.py:_cfg_value",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage1",
+      "target": "function:processor/processor_au_2stage.py:_prepare_cuda_model",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage1",
+      "target": "function:processor/processor_au_2stage.py:_unwrap_data_parallel",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage1",
+      "target": "function:processor/processor_au_2stage.py:_freeze_text_encoder",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage1",
+      "target": "function:processor/processor_au_2stage.py:_reset_cuda_peak_memory",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage1",
+      "target": "function:processor/processor_au_2stage.py:_set_stage1_frozen_modules_eval",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage1",
+      "target": "function:processor/processor_au_2stage.py:_assert_finite_tensor",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage1",
+      "target": "function:processor/processor_au_2stage.py:_assert_binary_targets",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage1",
+      "target": "function:processor/processor_au_2stage.py:_assert_finite_loss",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage1",
+      "target": "function:processor/processor_au_2stage.py:_samples_per_second",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage1",
+      "target": "function:processor/processor_au_2stage.py:_current_lr",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage1",
+      "target": "function:processor/processor_au_2stage.py:_cuda_memory_summary",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage1",
+      "target": "function:processor/processor_au_2stage.py:_save_model_state",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage1",
+      "target": "function:processor/processor_au_2stage.py:_evaluate_stage1_itc_loss",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage2",
+      "target": "function:processor/processor_au_2stage.py:_prepare_cuda_model",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage2",
+      "target": "function:processor/processor_au_2stage.py:_unwrap_data_parallel",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage2",
+      "target": "function:processor/processor_au_2stage.py:_stage2_amp_enabled",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage2",
+      "target": "function:processor/processor_au_2stage.py:_cfg_value",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage2",
+      "target": "function:processor/processor_au_2stage.py:_lr_group_summary",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage2",
+      "target": "function:processor/processor_au_2stage.py:_reset_cuda_peak_memory",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage2",
+      "target": "function:processor/processor_au_2stage.py:_current_lr",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage2",
+      "target": "function:processor/processor_au_2stage.py:_assert_finite_tensor",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage2",
+      "target": "function:processor/processor_au_2stage.py:_assert_binary_targets",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage2",
+      "target": "function:processor/processor_au_2stage.py:_forward_stage2_model",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage2",
+      "target": "function:processor/processor_au_2stage.py:_stage2_logit_problem",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage2",
+      "target": "function:processor/processor_au_2stage.py:_raise_stage2_diagnostic",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage2",
+      "target": "function:processor/processor_au_2stage.py:_positive_rate_from_logits",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage2",
+      "target": "function:processor/processor_au_2stage.py:_is_finite_tensor",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage2",
+      "target": "function:processor/processor_au_2stage.py:_tensor_debug_summary",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage2",
+      "target": "function:processor/processor_au_2stage.py:_assert_finite_model_parameters",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage2",
+      "target": "function:processor/processor_au_2stage.py:_samples_per_second",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage2",
+      "target": "function:processor/processor_au_2stage.py:_cuda_memory_summary",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage2",
+      "target": "function:processor/processor_au_2stage.py:_save_model_state",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage2",
+      "target": "function:processor/processor_au_2stage.py:_run_stage2_eval",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "function:processor/processor_au_2stage.py:do_train_stage2",
+      "target": "function:processor/processor_au_2stage.py:_update_stage2_early_stop",
+      "type": "calls",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "file:train_au_2stage.py",
+      "target": "file:processor/processor_au_2stage.py",
+      "type": "related",
+      "weight": 0.5,
+      "direction": "forward"
+    },
+    {
+      "source": "file:processor/processor_au_2stage.py",
+      "target": "config:configs/au/vit_base_au_2stage.yaml",
+      "type": "related",
+      "weight": 0.5,
+      "direction": "forward"
+    },
+    {
+      "source": "config:configs/au/vit_base_au_2stage.yaml",
+      "target": "file:model/make_model.py",
+      "type": "related",
+      "weight": 0.5,
+      "direction": "forward"
+    }
+  ],
+  "layers": [
+    {
+      "id": "configuration-and-docs",
+      "name": "C?u h?nh v? t?i li?u",
+      "description": "C?c file c?u h?nh, README, walkthrough v? m? t? nghi?n c?u.",
+      "nodeIds": [
+        "config:configs/VehicleID/cnn_base.yml",
+        "config:configs/VehicleID/cnn_clipreid.yml",
+        "config:configs/VehicleID/vit_base.yml",
+        "config:configs/VehicleID/vit_clipreid.yml",
+        "config:configs/au/vit_base_au.yaml",
+        "config:configs/au/vit_base_au_2stage.yaml",
+        "config:configs/person/cnn_base.yml",
+        "config:configs/person/cnn_clipreid.yml",
+        "config:configs/person/vit_base.yml",
+        "config:configs/person/vit_clipreid.yml",
+        "config:configs/veri/cnn_base.yml",
+        "config:configs/veri/cnn_prom.yml",
+        "config:configs/veri/vit_base.yml",
+        "config:configs/veri/vit_prom.yml",
+        "document:AU_TO_NATURAL_LANGUAGE_GENERATION.md",
+        "document:README.md",
+        "document:docs/SOTA/disfa_sota_benchmark.md",
+        "document:docs/report/action_units_scientific_system_report.md",
+        "document:implementation_plan.md",
+        "document:walkthrough.md",
+        "file:config/__init__.py",
+        "file:config/defaults.py",
+        "file:config/defaults_base.py"
+      ]
+    },
+    {
+      "id": "data-and-dataloading",
+      "name": "D? li?u v? dataloader",
+      "description": "Chu?n b? d? li?u, dataset splits v? n?p m?u AU/ReID.",
+      "nodeIds": [
+        "file:prepare_data.py"
+      ]
+    },
+    {
+      "id": "model-and-vlm-backbone",
+      "name": "M? h?nh v? VLM backbone",
+      "description": "CLIP/ViT backbone, module t?o model v? tokenizer.",
+      "nodeIds": [
+        "file:model/au_head.py",
+        "file:model/clip/__init__.py",
+        "file:model/clip/clip.py",
+        "file:model/clip/model.py",
+        "file:model/clip/simple_tokenizer.py",
+        "file:model/make_model.py",
+        "file:model/make_model_clipreid.py",
+        "file:test_clipreid.py"
+      ]
+    },
+    {
+      "id": "optimization-losses",
+      "name": "Loss v? t?i ?u h?a",
+      "description": "Loss functions, scheduler, optimizer v? chi?n l??c h?c.",
+      "nodeIds": [
+        "file:loss/__init__.py",
+        "file:loss/arcface.py",
+        "file:loss/au_loss.py",
+        "file:loss/center_loss.py",
+        "file:loss/make_loss.py",
+        "file:loss/metric_learning.py",
+        "file:loss/softmax_loss.py",
+        "file:loss/supcontrast.py",
+        "file:loss/triplet_loss.py",
+        "file:solver/__init__.py",
+        "file:solver/cosine_lr.py",
+        "file:solver/lr_scheduler.py",
+        "file:solver/make_optimizer.py",
+        "file:solver/make_optimizer_prompt.py",
+        "file:solver/scheduler.py",
+        "file:solver/scheduler_factory.py"
+      ]
+    },
+    {
+      "id": "training-processing-utils",
+      "name": "Training processor v? ti?n ?ch",
+      "description": "V?ng l?p hu?n luy?n, evaluation, metrics v? helper utilities.",
+      "nodeIds": [
+        "file:processor/__init__.py",
+        "file:processor/processor.py",
+        "file:processor/processor_au.py",
+        "file:processor/processor_au_2stage.py",
+        "file:processor/processor_clipreid_stage1.py",
+        "file:processor/processor_clipreid_stage2.py",
+        "file:utils/__init__.py",
+        "file:utils/au_fold_report.py",
+        "file:utils/au_training_history.py",
+        "file:utils/iotools.py",
+        "file:utils/logger.py",
+        "file:utils/meter.py",
+        "file:utils/metrics.py",
+        "file:utils/reranking.py"
+      ]
+    },
+    {
+      "id": "entrypoints-and-scripts",
+      "name": "Entry points v? scripts",
+      "description": "C?c script train/inference/explainer ?i?u ph?i pipeline.",
+      "nodeIds": [
+        "file:.understand-anything/.understandignore",
+        "file:au_explainer.py",
+        "file:docs/original_scientific_model_diagram.drawio",
+        "file:docs/original_system_architecture.drawio",
+        "file:docs/report/action_units_model_proposal_slides.pptx",
+        "file:docs/scientific_future_research_roadmap.drawio",
+        "file:docs/scientific_model_diagram.drawio",
+        "file:docs/scientific_model_diagram_simplified.drawio",
+        "file:docs/system_architecture.drawio",
+        "file:inference_au.py",
+        "file:train.py",
+        "file:train_au_2stage.py",
+        "file:train_clipreid.py"
+      ]
+    },
+    {
+      "id": "tests-and-evaluation",
+      "name": "Tests v? evaluation",
+      "description": "Test scripts v? entry ??nh gi? m? h?nh.",
+      "nodeIds": [
+        "file:test.py",
+        "file:tests/__init__.py",
+        "file:tests/test_au_evaluator.py",
+        "file:tests/test_disfa_protocol.py",
+        "file:tests/test_stage2_stability.py"
+      ]
+    }
+  ],
+  "tour": [
+    {
+      "order": 1,
+      "title": "C?u h?nh AU hai giai ?o?n",
+      "description": "B?t ??u t? YAML v? defaults ?? hi?u batch size, LR, pos_weight v? stage settings.",
+      "nodeIds": [
+        "config:configs/au/vit_base_au_2stage.yaml",
+        "file:config/defaults.py"
+      ]
+    },
+    {
+      "order": 2,
+      "title": "Entry point hu?n luy?n AU",
+      "description": "Theo d?i train_au_2stage.py ?? th?y c?ch d?ng fold DISFA, model v? g?i Stage 1/Stage 2.",
+      "nodeIds": [
+        "file:train_au_2stage.py"
+      ]
+    },
+    {
+      "order": 3,
+      "title": "Processor Stage 1/Stage 2",
+      "description": "V?ng l?p hu?n luy?n AU, diagnostics, guardrails v? evaluation n?m ? processor_au_2stage.",
+      "nodeIds": [
+        "file:processor/processor_au_2stage.py"
+      ]
+    },
+    {
+      "order": 4,
+      "title": "M? h?nh CLIP/ViT",
+      "description": "make_model v? backbone CLIP/ViT l? l?i th?ch nghi vision-language cho AU.",
+      "nodeIds": [
+        "file:model/make_model.py"
+      ]
+    },
+    {
+      "order": 5,
+      "title": "Loss, solver v? calibration",
+      "description": "Loss functions v? solver quy?t ??nh ?n ??nh hu?n luy?n multi-label AU imbalance.",
+      "nodeIds": [
+        "file:loss/make_loss.py",
+        "file:solver/make_optimizer.py"
+      ]
+    },
+    {
+      "order": 6,
+      "title": "T?i li?u nghi?n c?u",
+      "description": "walkthrough v? b?o c?o gi?p n?i thay ??i k? thu?t v?i nguy?n nh?n/k?t qu? nghi?n c?u.",
+      "nodeIds": [
+        "document:walkthrough.md",
+        "document:README.md"
+      ]
+    }
+  ]
+}

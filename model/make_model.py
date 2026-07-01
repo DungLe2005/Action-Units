@@ -188,6 +188,17 @@ class build_transformer(nn.Module):
         )
         self.text_encoder = TextEncoder(clip_model)
 
+    def init_au_head_bias_from_pos_weight(self, pos_weight):
+        if self.num_classes != 12:
+            return
+        if pos_weight is None:
+            return
+
+        if hasattr(pos_weight, "detach"):
+            pos_weight = pos_weight.detach()
+        self.classifier.init_bias_from_pos_weight(pos_weight)
+        self.classifier_proj.init_bias_from_pos_weight(pos_weight)
+
     def _encode_image_fp32(self, x, cv_embed=None):
         autocast_context = (
             torch.amp.autocast('cuda', enabled=False)

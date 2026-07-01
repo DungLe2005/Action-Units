@@ -39,6 +39,65 @@ graph TD
 | Bộ chạy thí nghiệm | `train_au_2stage.py` | Điều phối huấn luyện một fold hoặc toàn bộ các fold subject-exclusive. |
 | Kiểm thử ổn định | `tests/test_stage2_stability.py`, `tests/test_disfa_protocol.py`, `tests/test_au_evaluator.py` | Kiểm tra loss đa nhãn, chia dữ liệu, logging và guardrail cho Stage 2. |
 
+## Quy Ước Phân Tích, Ký Hiệu Và Công Thức
+
+Các thay đổi mới trong hệ thống phải được mô tả theo cấu trúc học thuật: **vấn đề quan sát được**, **định nghĩa hiện tượng**, **cơ chế cũ**, **hệ quả của cơ chế cũ**, **cơ chế thay thế**, **công thức mới** và **kỳ vọng đo lường**. Cách viết này giúp liên kết trực tiếp giữa log thực nghiệm, nguyên nhân tối ưu hóa và quyết định sửa đổi mô hình.
+
+Ký hiệu sử dụng trong tài liệu:
+
+| Ký hiệu | Định nghĩa |
+|---|---|
+| `k` | Chỉ số Action Unit, với `k = 1, ..., K` và `K = 12` trong cấu hình DISFA hiện tại. |
+| `y_k` | Nhãn nhị phân của AU thứ `k`, với `y_k = 1` nếu AU xuất hiện và `y_k = 0` nếu không xuất hiện. |
+| `h` | Vector đặc trưng ảnh sau image encoder và BNNeck. |
+| `z_k` | Logit của AU thứ `k`, tức giá trị trước hàm sigmoid. |
+| `p_k` | Xác suất dự đoán của AU thứ `k`, được tính bởi `p_k = sigmoid(z_k)`. |
+| `N_k^+` | Số mẫu dương của AU thứ `k` trong train split. |
+| `N_k^-` | Số mẫu âm của AU thứ `k` trong train split. |
+| `pi_k` | Empirical class prior, tức tần suất dương của AU thứ `k` trong train split. |
+| `w_k^+` | Positive class weight của AU thứ `k` trong Weighted BCE. |
+| `tilde_w_k^+` | Positive class weight sau khi làm mềm bằng power-tempering và clipping. |
+
+Các công thức nền:
+
+```text
+pi_k = N_k^+ / (N_k^+ + N_k^-)
+w_k^+ = N_k^- / N_k^+
+pi_k = 1 / (1 + w_k^+)
+```
+
+Logit, xác suất và quyết định nhị phân tại ngưỡng `0.5`:
+
+```text
+p_k = sigmoid(z_k) = 1 / (1 + exp(-z_k))
+y_hat_k = 1[p_k > 0.5] = 1[z_k > 0]
+```
+
+Weighted BCE cho từng AU:
+
+```text
+L_k = - w_k^+ y_k log(sigmoid(z_k))
+      - (1 - y_k) log(1 - sigmoid(z_k))
+```
+
+Positive prediction rate được dùng trong log chẩn đoán:
+
+```text
+PosRate = (1 / (B K)) sum_i sum_k 1[sigmoid(z_{i,k}) > 0.5]
+```
+
+Trong đó `B` là batch size và `K` là số AU. Nếu `PosRate` cao hơn nhiều so với trung bình `pi_k`, mô hình có dấu hiệu **over-prediction** hoặc **class-prior miscalibration**.
+
+Định nghĩa các hiện tượng chính:
+
+| Thuật ngữ | Định nghĩa thực nghiệm | Dấu hiệu trong log | Hướng xử lý |
+|---|---|---|---|
+| **Optimization divergence** | Quá trình tối ưu mất ổn định, làm gradient, logits hoặc tham số tăng bất thường. | `GradNorm` tăng rất lớn, `MaxLogitAbs` vượt guardrail hoặc xuất hiện non-finite tensor. | Giảm độ khuếch đại loss, tắt AMP khi cần, giảm LR, clipping gradient, tách mục tiêu phụ. |
+| **Class-prior miscalibration** | Xác suất hoặc tần suất dự đoán không tương thích với prior nhãn trong train split. | `EvalPosRate` cao hơn nhiều so với `pi_k`, dù logits hữu hạn. | Khởi tạo bias theo prior, hiệu chỉnh ngưỡng từng AU, theo dõi calibration. |
+| **Power-tempered reweighting** | Làm mềm class weight bằng lũy thừa nhỏ hơn 1 để giảm gradient cực trị. | Raw `pos_weight` của AU hiếm quá lớn. | Thay `w_k^+` bằng `tilde_w_k^+ = min((w_k^+)^gamma, w_max)`. |
+| **Prior-aware bias initialization** | Khởi tạo bias classifier sao cho xác suất ban đầu phản ánh prior dương của từng AU. | Head không bias tạo prior mặc định gần `0.5`. | Dùng `b_k^(0) = log(pi_k / (1 - pi_k)) = -log(w_k^+)`. |
+| **Objective decoupling** | Tách mục tiêu học biểu diễn phụ khỏi mục tiêu phân loại chính khi hai mục tiêu gây xung đột. | ITC regularization kéo backbone khi Stage 2 cần tối ưu AU classification. | Đặt `ITC_LOSS_WEIGHT: 0.0` trong Stage 2 mặc định. |
+
 ## Các Cập Nhật Kỹ Thuật Mới
 
 ### 1. Prompt học riêng theo từng Action Unit
@@ -82,13 +141,83 @@ Stage 2 đã được bổ sung các cơ chế bảo vệ nhằm hạn chế l�
 
 Thiết kế này không che giấu lỗi mô hình; thay vào đó, nó phân biệt rõ lỗi do mixed precision với lỗi do dữ liệu, checkpoint hoặc tham số đã bị hỏng.
 
-### 5. Quy trình DISFA subject-exclusive
+Phân tích hậu nghiệm trên các log lỗi cho thấy Stage 2 có hai dạng suy giảm khác nhau. Dạng thứ nhất là **optimization divergence**: gradient norm tăng từ mức hàng nghìn lên gần mười nghìn, train/eval positive rate lệch lên khoảng `0.5-0.67`, sau đó logits đạt biên độ hàng nghìn. Đây không còn là lỗi số học đơn thuần, mà là mất ổn định tối ưu dưới tác động cộng hưởng của mất cân bằng nhãn, learning-rate warmup và head phân loại mới khởi tạo.
+
+Trong cơ chế cũ, Weighted BCE sử dụng trực tiếp hệ số dương:
+
+```text
+w_k^+ = N_k^- / N_k^+
+L_k = - w_k^+ y_k log sigmoid(z_k) - (1 - y_k) log(1 - sigmoid(z_k))
+```
+
+Với các AU hiếm, `w_k^+` có thể rất lớn, ví dụ fold 0 có AU đạt khoảng `26.96`. Hệ quả là gradient trên một số positive samples bị khuếch đại quá mạnh, làm Stage 2 dễ phân kỳ khi backbone CLIP bắt đầu được fine-tune. Cơ chế mới sử dụng **power-tempered positive reweighting**:
+
+```text
+tilde_w_k^+ = min((w_k^+) ^ gamma, w_max)
+gamma = POS_WEIGHT_POWER = 0.5
+w_max = POS_WEIGHT_MAX = 8.0
+```
+
+Do đó, `26.96` được biến đổi thành khoảng `5.19`. Sự thay thế này vẫn bảo toàn thứ tự mất cân bằng giữa các AU, nhưng giảm độ dốc cực trị của hàm mất mát. Đồng thời, Stage 2 chuyển sang mục tiêu phân loại thuần:
+
+```text
+L_stage2_old = WBCE(z, y; w^+) + lambda_ITC L_ITC
+L_stage2_new = WBCE(z, y; tilde_w^+) + 0 * L_ITC
+```
+
+Về mặt phương pháp, thay đổi này gọi là **loss re-scaling under class imbalance** kết hợp với **objective decoupling** giữa căn chỉnh ảnh-văn bản và phân loại AU. Khi chạy đúng cấu hình mới, log huấn luyện cần hiển thị cả raw và adjusted `pos_weight`, đồng thời ghi `Stage 2 ITC loss weight: 0.000`. Nếu một run vẫn sinh fatal logit guardrail, checkpoint diagnostic nên được xem như bằng chứng phân kỳ tối ưu, không nên resume tiếp từ checkpoint đó.
+
+### 5. Hiệu chỉnh prior cho đầu phân loại AU
+
+Sau khi đã kiểm soát được phân kỳ số học, log mới cho thấy dạng suy giảm thứ hai: **class-prior miscalibration**. Stage 2 không còn sinh logits vô hạn, nhưng `TrainPosRate` và `EvalPosRate` vẫn duy trì quanh `0.4`, cao hơn đáng kể so với prior dương suy ra từ train split. Với fold 0, `pos_weight = N^- / N^+` tương ứng prior dương:
+
+```text
+pi_k = N_k^+ / (N_k^+ + N_k^-)
+pi_k = 1 / (1 + pos_weight_k)
+```
+
+Các giá trị này chỉ nằm khoảng `0.036-0.157`, trung bình xấp xỉ `0.10`. Do đó, positive rate dự đoán quanh `0.4` là bằng chứng mô hình bị lệch ngưỡng quyết định về phía dự đoán dương.
+
+Trong cơ chế cũ, `AUHead` dùng `Linear(..., bias=False)`, nên logit của AU thứ `k` có dạng:
+
+```text
+z_k = w_k^T h
+p_k = sigmoid(z_k)
+y_hat_k = 1[p_k > 0.5] = 1[z_k > 0]
+```
+
+Vì BNNeck có xu hướng chuẩn hóa đặc trưng quanh trung tâm, việc loại bỏ bias tương đương với giả định prior ban đầu gần `0.5` cho mọi AU. Giả định này không phù hợp với AU detection, vì mỗi AU có xác suất xuất hiện khác nhau và dữ liệu DISFA mất cân bằng mạnh. Hệ quả là head phải vừa học đặc trưng phân biệt vừa tự dịch chuyển ngưỡng quyết định, làm tăng over-prediction và làm F1 tại ngưỡng `0.5` kém ổn định.
+
+Cơ chế mới thay thế bằng **prior-aware bias initialization**:
+
+```text
+z_k = w_k^T h + b_k
+b_k^(0) = log(pi_k / (1 - pi_k))
+         = -log(N_k^- / N_k^+)
+         = -log(pos_weight_k)
+p_k^(0) = sigmoid(b_k^(0)) = pi_k
+```
+
+Như vậy, bias khởi tạo biến classifier từ trạng thái mặc định không có prior sang trạng thái có prior lớp. Cách sửa này không thay thế Weighted BCE; nó bổ sung một hiệu chỉnh ở mức logit để điểm xuất phát của mô hình tương thích với phân phối nhãn của train split. Trong quá trình fine-tuning, cả `w_k` và `b_k` vẫn được học bằng gradient descent.
+
+Tương quan cũ - mới có thể tóm tắt như sau:
+
+| Thành phần | Cơ chế cũ | Hệ quả quan sát | Cơ chế mới | Kỳ vọng đo lường |
+|---|---|---|---|---|
+| AU logit | `z_k = w_k^T h` | Ngưỡng quyết định bị neo tại `z_k = 0` | `z_k = w_k^T h + b_k` | Ngưỡng có thể dịch theo từng AU |
+| Prior ban đầu | Mặc định gần `p=0.5` | `EvalPosRate` cao hơn mật độ nhãn thật | `p_k^(0)=pi_k` | `EvalPosRate` gần prior train split hơn |
+| Bias classifier | `bias=False` | Head khó hiệu chỉnh class prior | `bias=True`, `b_k^(0)=-log(pos_weight_k)` | Cải thiện calibration và F1 tại threshold `0.5` |
+| Loss mất cân bằng | Raw `w_k^+` | Gradient cực trị ở AU hiếm | `tilde_w_k^+ = min((w_k^+)^0.5, 8.0)` | Giảm nguy cơ divergence |
+
+Khi chạy đúng, log khởi động sẽ ghi `Initialized AU head biases from train-split class priors`. Về mặt thực nghiệm, thay đổi này được kỳ vọng làm giảm over-prediction ban đầu, đưa `EvalPosRate` gần hơn với mật độ AU thực tế và cải thiện macro F1 ở ngưỡng đánh giá `0.5`. Nếu F1 vẫn thấp trong khi AUC tăng, bước tối ưu tiếp theo nên là **per-AU threshold calibration** trên validation fold thay vì tiếp tục tăng `pos_weight`.
+
+### 6. Quy trình DISFA subject-exclusive
 
 Bộ nạp dữ liệu AU sử dụng chia fold theo chủ thể nhằm tránh rò rỉ thông tin nhận dạng giữa train và validation. `pos_weight` của Weighted BCE được tính từ nhãn thuộc train split của từng fold, nhờ đó tránh việc sử dụng thống kê của tập validation trong quá trình tối ưu.
 
 Khi chạy toàn bộ các fold, hệ thống ghi lại thông tin fold, danh sách chủ thể train/validation, số mẫu, `pos_weight` và các chỉ số đánh giá để phục vụ so sánh thực nghiệm.
 
-### 6. Lịch sử huấn luyện và tiêu chí đánh giá
+### 7. Lịch sử huấn luyện và tiêu chí đánh giá
 
 Stage 2 ghi lịch sử huấn luyện dưới dạng CSV/JSON và có thể sinh biểu đồ khi môi trường hỗ trợ `matplotlib`. Các chỉ số chính bao gồm F1, AUC, accuracy, DISFA-8 macro F1, train positive rate, eval positive rate, gradient norm và biên độ logits. Việc theo dõi đồng thời các đại lượng này giúp tránh kết luận chỉ dựa trên loss, vốn có thể bị ảnh hưởng mạnh bởi mất cân bằng nhãn.
 
@@ -107,6 +236,14 @@ python train_au_2stage.py --config_file configs/au/vit_base_au_2stage.yaml
 ```
 
 Trong chế độ này, Stage 1 học class-specific AU prompts, sau đó Stage 2 tinh chỉnh image encoder và AU heads bằng Weighted BCE.
+
+Sau các thay đổi ổn định Stage 2, log khởi động hợp lệ nên bao gồm:
+
+```text
+Initialized AU head biases from train-split class priors
+Using adjusted Stage 2 pos_weight for DISFA: [...]
+Stage 2 ITC loss weight: 0.000
+```
 
 ### 3. Chạy Stage 2 từ checkpoint Stage 1
 

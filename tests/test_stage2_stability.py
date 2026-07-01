@@ -1,3 +1,4 @@
+import math
 from types import SimpleNamespace
 import unittest
 
@@ -5,6 +6,7 @@ import torch
 import torch.nn as nn
 
 from loss.au_loss import WeightedBCELoss
+from model.au_head import AUHead
 from processor.processor_au_2stage import (
     _evaluate_stage1_itc_loss,
     _stage2_logit_problem,
@@ -55,6 +57,20 @@ def _stage2_cfg():
 
 
 class TestStage2Stability(unittest.TestCase):
+    def test_au_head_uses_trainable_bias(self):
+        head = AUHead(4, 2)
+
+        self.assertIsNotNone(head.classifier.bias)
+        self.assertTrue(head.classifier.bias.requires_grad)
+
+    def test_au_head_bias_can_start_from_class_priors(self):
+        head = AUHead(4, 2)
+
+        head.init_bias_from_pos_weight(torch.tensor([3.0, 1.0]))
+
+        expected = torch.tensor([-math.log(3.0), 0.0])
+        self.assertTrue(torch.allclose(head.classifier.bias.detach(), expected))
+
     def test_dual_head_bce_is_averaged(self):
         loss = WeightedBCELoss()
         logits_a = torch.tensor([[0.0, 1.0], [-1.0, 2.0]])

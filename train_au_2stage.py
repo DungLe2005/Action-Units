@@ -119,6 +119,10 @@ def run_fold(cfg, args, fold_idx):
     logger.info("Fold info: {}".format(fold_info))
 
     model = make_model(cfg, num_class=num_aus, camera_num=1, view_num=1)
+    if bool(getattr(cfg.SOLVER.STAGE2, "INIT_HEAD_BIAS_FROM_PRIOR", True)):
+        model.init_au_head_bias_from_pos_weight(pos_weight)
+        logger.info("Initialized AU head biases from train-split class priors")
+
     device = "cuda" if torch.cuda.is_available() else "cpu"
     loss_func, center_criterion = make_loss(
         cfg, num_classes=num_aus, pos_weight=pos_weight, device=device
